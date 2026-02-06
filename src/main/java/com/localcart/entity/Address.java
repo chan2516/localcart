@@ -49,3 +49,10 @@ public class Address extends AuditableEntity {
 
     @NotBlank
     @Size(max = 100)
+    @Column(nullable = false, length = 100)
+    private String country;
+
+    @Column(name = "is_default")
+    @Builder.Default
+    private Boolean isDefault = false;
+}
