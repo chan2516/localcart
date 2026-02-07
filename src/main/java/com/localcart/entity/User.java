@@ -57,6 +57,71 @@ public class User extends AuditableEntity {
     @Builder.Default
     private Boolean isEmailVerified = false;
 
+    // Security & Recovery Fields
+    @Size(max = 255)
+    @Column(name = "profile_image_url")
+    private String profileImageUrl;
+
+    @Size(max = 100)
+    @Column(name = "password_reset_token", length = 100)
+    private String passwordResetToken;
+
+    @Column(name = "password_reset_token_expiry")
+    private java.time.LocalDateTime passwordResetTokenExpiry;
+
+    @Size(max = 100)
+    @Column(name = "email_verification_token", length = 100)
+    private String emailVerificationToken;
+
+    @Column(name = "email_verification_token_expiry")
+    private java.time.LocalDateTime emailVerificationTokenExpiry;
+
+    @Column(name = "last_login_at")
+    private java.time.LocalDateTime lastLoginAt;
+
+    @Column(name = "failed_login_attempts")
+    @Builder.Default
+    private Integer failedLoginAttempts = 0;
+
+    @Column(name = "account_locked_until")
+    private java.time.LocalDateTime accountLockedUntil;
+
+    // Profile Fields
+    @Column(name = "date_of_birth")
+    private java.time.LocalDate dateOfBirth;
+
+    @Size(max = 20)
+    @Column(name = "gender", length = 20)
+    private String gender;
+
+    @Size(max = 10)
+    @Column(name = "preferred_language", length = 10)
+    @Builder.Default
+    private String preferredLanguage = "en";
+
+    @Size(max = 5)
+    @Column(name = "preferred_currency", length = 5)
+    @Builder.Default
+    private String preferredCurrency = "USD";
+
+    @Size(max = 50)
+    @Column(name = "timezone", length = 50)
+    @Builder.Default
+    private String timezone = "UTC";
+
+    @Size(max = 500)
+    @Column(name = "suspension_reason", length = 500)
+    private String suspensionReason;
+
+    // Two-Factor Authentication
+    @Column(name = "two_factor_enabled")
+    @Builder.Default
+    private Boolean twoFactorEnabled = false;
+
+    @Size(max = 100)
+    @Column(name = "two_factor_secret", length = 100)
+    private String twoFactorSecret;
+
     // Relationships
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

@@ -2,6 +2,8 @@ package com.localcart.repository;
 
 import com.localcart.entity.Vendor;
 import com.localcart.entity.enums.VendorStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -19,6 +21,8 @@ public interface VendorRepository extends JpaRepository<Vendor, Long> {
     boolean existsByBusinessName(String businessName);
     
     List<Vendor> findByStatus(VendorStatus status);
+    
+    Page<Vendor> findByStatus(VendorStatus status, Pageable pageable);
     
     @Query("SELECT v FROM Vendor v WHERE v.status = 'APPROVED' AND v.isDeleted = false")
     List<Vendor> findAllApprovedVendors();
