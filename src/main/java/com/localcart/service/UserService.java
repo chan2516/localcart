@@ -1,6 +1,8 @@
 package com.localcart.service;
 
+import com.localcart.config.PasswordResetProperties;
 import com.localcart.dto.auth.RegisterRequest;
+import com.localcart.service.EmailService;
 import com.localcart.dto.auth.LoginRequest;
 import com.localcart.dto.auth.AuthResponse;
 import com.localcart.entity.User;
@@ -44,6 +46,8 @@ public class UserService implements UserDetailsService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
+    private final EmailService emailService;
+    private final PasswordResetProperties passwordResetProperties;
     private final AuthenticationManager authenticationManager;
 
     /**
@@ -222,6 +226,52 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
 
         log.info("Password changed successfully for user: {}", userId);
+    }
+
+    /**
+     * Request a password reset link by email
+     */
+    @Transactional
+    public void requestPasswordReset(String email) {
+        log.info("Password reset requested for: {}", email);
+
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if (userOptional.isEmpty()) {
+            log.info("Password reset requested for unknown email: {}", email);
+            return;
+        }
+
+        UserDetails userDetails = loadUserByUsername(email);
+        String token = jwtUtils.generatePasswordResetToken(userDetails, passwordResetProperties.getTokenExpiration());
+        String resetLink = passwordResetProperties.getBaseUrl() + token;
+
+        emailService.sendPasswordResetEmail(email, resetLink);
+    }
+
+    /**
+     * Reset password using a valid reset token
+     */
+    @Transactional
+    public void resetPassword(String token, String newPassword) {
+        log.info("Resetting password using token");
+
+        if (!jwtUtils.isTokenValid(token)) {
+            throw new PaymentException("Reset token is invalid or expired", "RESET_TOKEN_INVALID");
+        }
+
+        String tokenType = jwtUtils.getTokenType(token);
+        if (tokenType == null || !"password_reset".equals(tokenType)) {
+            throw new PaymentException("Reset token is invalid", "RESET_TOKEN_INVALID");
+        }
+
+        String email = jwtUtils.extractUsername(token);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new PaymentException("User not found", "USER_NOT_FOUND"));
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+
+        log.info("Password reset successful for user: {}", user.getId());
     }
 
     /**

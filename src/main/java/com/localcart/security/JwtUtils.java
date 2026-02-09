@@ -44,6 +44,22 @@ public class JwtUtils {
     }
 
     /**
+     * Generate password reset token (short-lived)
+     */
+    public String generatePasswordResetToken(UserDetails userDetails, long expiration) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("type", "password_reset");
+        return createToken(claims, userDetails.getUsername(), expiration);
+    }
+
+    /**
+     * Get token type (if present)
+     */
+    public String getTokenType(String token) {
+        return extractClaim(token, claims -> (String) claims.get("type"));
+    }
+
+    /**
      * Create JWT token with claims, subject, and expiration
      */
     private String createToken(Map<String, Object> claims, String subject, long expiration) {

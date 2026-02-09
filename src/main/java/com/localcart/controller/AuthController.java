@@ -4,6 +4,8 @@ import com.localcart.dto.auth.LoginRequest;
 import com.localcart.dto.auth.RegisterRequest;
 import com.localcart.dto.auth.AuthResponse;
 import com.localcart.dto.auth.RefreshTokenRequest;
+import com.localcart.dto.auth.ForgotPasswordRequest;
+import com.localcart.dto.auth.ResetPasswordRequest;
 import com.localcart.entity.User;
 import com.localcart.exception.PaymentException;
 import com.localcart.service.UserService;
@@ -27,6 +29,8 @@ import java.util.Map;
  * - Token refresh
  * - Logout (token revocation)
  * - Current user info
+ * - Forgot password (email with reset link)
+ * - Reset password (with token)
  * 
  * All responses include JWT tokens for frontend to store and use
  */
@@ -324,6 +328,84 @@ public class AuthController {
         } catch (Exception e) {
             log.error("Error changing password: {}", e.getMessage());
             throw new PaymentException("Failed to change password", "PASSWORD_ERROR");
+        }
+    }
+
+    /**
+     * POST /api/v1/auth/forgot-password
+     * 
+     * Request password reset link via email
+     * Sends an email with JWT token reset link
+     * 
+     * Request Body:
+     * {
+     *   "email": "user@example.com"
+     * }
+     * 
+     * Response:
+     * {
+     *   "message": "If the email exists, a password reset link has been sent"
+     * }
+     */
+    @PostMapping("/forgot-password")
+    public ResponseEntity<Map<String, String>> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+        try {
+            log.info("Forgot password request for email: {}", request.getEmail());
+            
+            userService.requestPasswordReset(request.getEmail());
+            
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "If the email exists, a password reset link has been sent");
+            
+            return ResponseEntity.ok(response);
+            
+        } catch (Exception e) {
+            log.error("Error in forgot password: {}", e.getMessage());
+            // Return same message to prevent email enumeration
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "If the email exists, a password reset link has been sent");
+            return ResponseEntity.ok(response);
+        }
+    }
+
+    /**
+     * POST /api/v1/auth/reset-password
+     * 
+     * Reset password using JWT token from email link
+     * 
+     * Request Body:
+     * {
+     *   "token": "eyJhbGciOi...",
+     *   "newPassword": "NewSecurePass123"
+     * }
+     * 
+     * Response:
+     * {
+     *   "message": "Password has been reset successfully"
+     * }
+     */
+    @PostMapping("/reset-password")
+    public ResponseEntity<Map<String, String>> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        try {
+            log.info("Password reset attempt with token");
+            
+            userService.resetPassword(request.getToken(), request.getNewPassword());
+            
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Password has been reset successfully");
+            
+            return ResponseEntity.ok(response);
+            
+        } catch (PaymentException e) {
+            log.warn("Password reset failed: {}", e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("message", e.getMessage()));
+        } catch (Exception e) {
+            log.error("Unexpected error during password reset", e);
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "Password reset failed"));
         }
     }
 }
