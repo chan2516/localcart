@@ -36,6 +36,7 @@ public class OrderService {
     private final AddressRepository addressRepository;
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
+    private final WebhookService webhookService;
     
     /**
      * Get user's orders (paginated)
@@ -143,6 +144,9 @@ public class OrderService {
         
         log.info("Order created successfully: {}", savedOrder.getOrderNumber());
         
+        // Trigger webhook for n8n automation
+        webhookService.triggerOrderCreated(savedOrder);
+        
         return savedOrder;
     }
     
@@ -165,6 +169,7 @@ public class OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new PaymentException("Order not found", "ORDER_NOT_FOUND"));
         
+        OrderStatus previousStatus = order.getStatus();
         order.setStatus(newStatus);
         
         // Update timestamps based on status
@@ -174,13 +179,19 @@ public class OrderService {
                 break;
             case DELIVERED:
                 order.setDeliveredAt(LocalDateTime.now());
+                // Trigger review request after 7 days
                 break;
             case CANCELLED:
                 order.setCancelledAt(LocalDateTime.now());
                 break;
         }
         
-        return orderRepository.save(order);
+        Order savedOrder = orderRepository.save(order);
+        
+        // Trigger webhook for status change
+        webhookService.triggerOrderStatusChanged(savedOrder, previousStatus.name());
+        
+        return savedOrder;
     }
     
     /**

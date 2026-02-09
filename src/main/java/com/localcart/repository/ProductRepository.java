@@ -38,4 +38,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
            "OR LOWER(p.description) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
            "AND p.isActive = true AND p.isDeleted = false")
     Page<Product> searchProducts(@Param("keyword") String keyword, Pageable pageable);
+    
+    @Query("SELECT p FROM Product p WHERE p.stock < :threshold AND p.isActive = true AND p.isDeleted = false")
+    List<Product> findByStockLessThan(@Param("threshold") int threshold);
 }

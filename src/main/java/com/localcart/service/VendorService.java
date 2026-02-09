@@ -40,6 +40,7 @@ public class VendorService {
     private final VendorRepository vendorRepository;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final WebhookService webhookService;
 
     /**
      * Register a new vendor (user applies to become a vendor)
@@ -104,6 +105,9 @@ public class VendorService {
         userRepository.save(user);
         
         log.info("Vendor registration successful. Vendor ID: {}, Status: PENDING", vendor.getId());
+        
+        // Trigger webhook for vendor application
+        webhookService.triggerVendorApplicationSubmitted(vendor);
         
         return convertToDto(vendor);
     }
@@ -198,6 +202,11 @@ public class VendorService {
             }
             
             log.info("Vendor approved. Vendor ID: {}, Approved by: {}", vendorId, adminUserId);
+            
+            vendor = vendorRepository.save(vendor);
+            
+            // Trigger webhook for vendor approval
+            webhookService.triggerVendorApproved(vendor);
         } else if (newStatus == VendorStatus.REJECTED) {
             vendor.setStatus(VendorStatus.REJECTED);
             vendor.setRejectionReason(reason);
@@ -208,9 +217,11 @@ public class VendorService {
             vendor.setRejectionReason(reason);
             
             log.info("Vendor suspended. Vendor ID: {}, Reason: {}", vendorId, reason);
+            
+            vendor = vendorRepository.save(vendor);
+        } else {
+            vendor = vendorRepository.save(vendor);
         }
-        
-        vendor = vendorRepository.save(vendor);
         
         return convertToDto(vendor);
     }

@@ -33,4 +33,10 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     
     @Query("SELECT COUNT(o) FROM Order o WHERE o.user.id = :userId")
     Long countOrdersByUserId(@Param("userId") Long userId);
+    
+    @Query("SELECT o FROM Order o LEFT JOIN FETCH o.items " +
+           "WHERE o.status = 'DELIVERED' " +
+           "AND o.deliveredAt < :cutoffTime " +
+           "AND o.id NOT IN (SELECT DISTINCT r.order.id FROM Review r WHERE r.order IS NOT NULL)")
+    List<Order> findDeliveredOrdersNeedingReview(@Param("cutoffTime") LocalDateTime cutoffTime);
 }
