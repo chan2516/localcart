@@ -507,7 +507,7 @@ payment.mock.success-rate=50     # 50% success rate
 ```properties
 # application-staging.properties
 payment.default_gateway=stripe
-payment.stripe.api-key=
+payment.stripe.api-key=${STRIPE_API_KEY}  # Use environment variable
 ```
 
 ### **Test Cards (Stripe):**
