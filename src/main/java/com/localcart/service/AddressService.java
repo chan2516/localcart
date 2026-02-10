@@ -190,4 +190,24 @@ public class AddressService {
             }
         }
     }
+    
+    /**
+     * Convert Address entity to AddressDto
+     */
+    public AddressDto convertToDto(Address address) {
+        return AddressDto.builder()
+                .id(address.getId())
+                .userId(address.getUser().getId())
+                .street(address.getStreet())
+                .apartment(address.getApartment())
+                .city(address.getCity())
+                .state(address.getState())
+                .country(address.getCountry())
+                .zipCode(address.getZipCode())
+                .addressType(address.getType() != null ? address.getType().toString() : null)
+                .isDefault(address.getIsDefault())
+                .createdAt(address.getCreatedAt() != null ? address.getCreatedAt().toString() : null)
+                .updatedAt(address.getUpdatedAt() != null ? address.getUpdatedAt().toString() : null)
+                .build();
+    }
 }

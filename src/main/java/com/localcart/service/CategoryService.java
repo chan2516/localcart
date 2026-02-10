@@ -167,4 +167,23 @@ public class CategoryService {
         
         categoryRepository.delete(category);
     }
+
+    /**
+     * Convert Category entity to CategoryDto
+     */
+    public CategoryDto convertToDto(Category category) {
+        return CategoryDto.builder()
+                .id(category.getId())
+                .name(category.getName())
+                .slug(category.getSlug())
+                .description(category.getDescription())
+                .imageUrl(null)
+                .parentCategoryId(category.getParent() != null ? category.getParent().getId() : null)
+                .parentCategoryName(category.getParent() != null ? category.getParent().getName() : null)
+                .productCount(category.getProducts() != null ? category.getProducts().size() : 0)
+                .isActive(!category.isDeleted())
+                .createdAt(category.getCreatedAt() != null ? category.getCreatedAt().toString() : null)
+                .updatedAt(category.getUpdatedAt() != null ? category.getUpdatedAt().toString() : null)
+                .build();
+    }
 }

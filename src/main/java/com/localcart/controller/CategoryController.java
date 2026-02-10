@@ -45,8 +45,13 @@ public class CategoryController {
         try {
             log.info("Fetching all categories");
             
+                var categories = categoryService.getAllActiveCategories()
+                    .stream()
+                    .map(categoryService::convertToDto)
+                    .toList();
             Map<String, Object> response = new HashMap<>();
-            response.put("message", "Category listing coming soon");
+            response.put("categories", categories);
+            response.put("totalCount", categories.size());
             
             return ResponseEntity.ok(response);
             
@@ -68,11 +73,8 @@ public class CategoryController {
         try {
             log.info("Fetching category: {}", id);
             
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", "Get category coming soon");
-            response.put("categoryId", id);
-            
-            return ResponseEntity.ok(response);
+            CategoryDto category = categoryService.convertToDto(categoryService.getCategoryById(id));
+            return ResponseEntity.ok(category);
             
         } catch (Exception e) {
             log.error("Error fetching category", e);
@@ -93,13 +95,10 @@ public class CategoryController {
         try {
             log.info("Creating category: {}", request.getName());
             
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", "Create category coming soon");
-            response.put("categoryName", request.getName());
-            
+            CategoryDto category = categoryService.convertToDto(categoryService.createCategory(request));
             return ResponseEntity
                     .status(HttpStatus.CREATED)
-                    .body(response);
+                    .body(category);
             
         } catch (PaymentException e) {
             log.error("Category creation error: {}", e.getMessage());
@@ -127,11 +126,8 @@ public class CategoryController {
         try {
             log.info("Updating category: {}", id);
             
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", "Update category coming soon");
-            response.put("categoryId", id);
-            
-            return ResponseEntity.ok(response);
+            CategoryDto category = categoryService.convertToDto(categoryService.updateCategory(id, request));
+            return ResponseEntity.ok(category);
             
         } catch (PaymentException e) {
             log.error("Category update error: {}", e.getMessage());
@@ -157,6 +153,7 @@ public class CategoryController {
         try {
             log.info("Deleting category: {}", id);
             
+            categoryService.deleteCategory(id);
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Category deleted successfully");
             response.put("categoryId", id);

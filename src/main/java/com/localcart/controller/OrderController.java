@@ -1,17 +1,23 @@
 package com.localcart.controller;
 
 import com.localcart.dto.order.OrderDto;
+import com.localcart.entity.enums.OrderStatus;
 import com.localcart.exception.PaymentException;
+import com.localcart.security.CustomUserDetails;
 import com.localcart.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.constraints.NotBlank;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,20 +54,37 @@ public class OrderController {
     public ResponseEntity<?> listOrders(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) String status) {
+            @RequestParam(required = false) String status,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
         try {
-            log.info("Fetching orders for current user: page={}, size={}, status={}", page, size, status);
+            log.info("Fetching orders for user: {} page={}, size={}, status={}",
+                    userDetails.getUserId(), page, size, status);
+            
+            Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+            Page<OrderDto> orders;
+            
+            if (status != null && !status.isBlank()) {
+                OrderStatus orderStatus = OrderStatus.valueOf(status.toUpperCase());
+                orders = orderService.getUserOrdersByStatus(userDetails.getUserId(), orderStatus, pageable)
+                        .map(orderService::convertToDto);
+            } else {
+                orders = orderService.getUserOrders(userDetails.getUserId(), pageable)
+                        .map(orderService::convertToDto);
+            }
             
             Map<String, Object> response = new HashMap<>();
-            response.put("message", "Order list coming soon");
-            response.put("page", page);
-            response.put("size", size);
-            if (status != null) {
-                response.put("status", status);
-            }
+            response.put("orders", orders.getContent());
+            response.put("currentPage", orders.getNumber());
+            response.put("totalItems", orders.getTotalElements());
+            response.put("totalPages", orders.getTotalPages());
             
             return ResponseEntity.ok(response);
             
+        } catch (IllegalArgumentException e) {
+            log.error("Invalid order status: {}", status);
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorResponse("INVALID_STATUS", "Invalid order status"));
         } catch (Exception e) {
             log.error("Error fetching orders", e);
             return ResponseEntity
@@ -76,21 +99,23 @@ public class OrderController {
      * Get detailed information about a specific order
      */
     @GetMapping("/{id}")
-    public ResponseEntity<?> getOrder(@PathVariable Long id) {
+    public ResponseEntity<?> getOrder(
+            @PathVariable Long id,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
         try {
-            log.info("Fetching order: {}", id);
+            log.info("Fetching order: {} for user: {}", id, userDetails.getUserId());
             
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", "Get order coming soon");
-            response.put("orderId", id);
+            OrderDto order = orderService.convertToDto(
+                    orderService.getUserOrderById(userDetails.getUserId(), id)
+            );
             
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(order);
             
         } catch (PaymentException e) {
-            log.error("Order not found: {}", id);
+            log.error("Order not found or unauthorized: {}", id);
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(new ErrorResponse("NOT_FOUND", "Order not found"));
+                    .body(new ErrorResponse(e.getErrorCode(), e.getMessage()));
         } catch (Exception e) {
             log.error("Error fetching order", e);
             return ResponseEntity
@@ -105,18 +130,19 @@ public class OrderController {
      * Track order status and get tracking information
      */
     @GetMapping("/{id}/track")
-    public ResponseEntity<?> trackOrder(@PathVariable Long id) {
+    public ResponseEntity<?> trackOrder(
+            @PathVariable Long id,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
         try {
-            log.info("Tracking order: {}", id);
+            log.info("Tracking order: {} for user: {}", id, userDetails.getUserId());
             
+            var order = orderService.getUserOrderById(userDetails.getUserId(), id);
             Map<String, Object> response = new HashMap<>();
-            response.put("message", "Track order coming soon");
             response.put("orderId", id);
-            response.put("tracking", new Object() {
-                public String status = "PROCESSING";
-                public String trackingNumber = "TRACK123456";
-                public String estimatedDelivery = "2026-02-12";
-            });
+            response.put("status", order.getStatus().toString());
+            response.put("trackingNumber", order.getTrackingNumber());
+            response.put("shippedAt", order.getShippedAt() != null ? order.getShippedAt().toString() : null);
+            response.put("deliveredAt", order.getDeliveredAt() != null ? order.getDeliveredAt().toString() : null);
             
             return ResponseEntity.ok(response);
             
@@ -124,7 +150,7 @@ public class OrderController {
             log.error("Order not found for tracking: {}", id);
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(new ErrorResponse("NOT_FOUND", "Order not found"));
+                    .body(new ErrorResponse(e.getErrorCode(), e.getMessage()));
         } catch (Exception e) {
             log.error("Error tracking order", e);
             return ResponseEntity
@@ -141,16 +167,16 @@ public class OrderController {
     @PostMapping("/{id}/cancel")
     public ResponseEntity<?> cancelOrder(
             @PathVariable Long id,
-            @RequestParam(required = false) String reason) {
+            @RequestParam(required = false) String reason,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
         try {
-            log.info("Cancelling order: {}, reason: {}", id, reason);
+            log.info("Cancelling order: {} for user: {}", id, userDetails.getUserId());
             
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", "Order cancelled successfully");
-            response.put("orderId", id);
-            response.put("newStatus", "CANCELLED");
+            OrderDto order = orderService.convertToDto(
+                    orderService.cancelOrder(id, userDetails.getUserId(), reason)
+            );
             
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(order);
             
         } catch (PaymentException e) {
             log.error("Cannot cancel order: {}", e.getMessage());

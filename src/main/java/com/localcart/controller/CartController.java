@@ -3,9 +3,11 @@ package com.localcart.controller;
 import com.localcart.dto.cart.AddToCartRequest;
 import com.localcart.dto.cart.CartDto;
 import com.localcart.dto.order.CreateOrderRequest;
+import com.localcart.dto.order.OrderDto;
 import com.localcart.exception.PaymentException;
 import com.localcart.security.CustomUserDetails;
 import com.localcart.service.CartService;
+import com.localcart.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -39,6 +41,7 @@ import java.util.Map;
 public class CartController {
     
     private final CartService cartService;
+    private final OrderService orderService;
     
     /**
      * GET /api/v1/cart
@@ -210,18 +213,19 @@ public class CartController {
      * }
      */
     @PostMapping("/checkout")
-    public ResponseEntity<?> checkout(@Valid @RequestBody CreateOrderRequest request) {
+    public ResponseEntity<?> checkout(
+            @Valid @RequestBody CreateOrderRequest request,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
         try {
-            log.info("Processing checkout for current user");
+            log.info("Processing checkout for user: {}", userDetails.getUserId());
             
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", "Checkout coming soon");
-            response.put("shippingAddressId", request.getShippingAddressId());
-            response.put("paymentMethod", request.getPaymentMethod());
+            OrderDto order = orderService.convertToDto(
+                    orderService.createOrder(userDetails.getUserId(), request)
+            );
             
             return ResponseEntity
                     .status(HttpStatus.CREATED)
-                    .body(response);
+                    .body(order);
             
         } catch (PaymentException e) {
             log.error("Checkout error: {}", e.getMessage());

@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 public class AddressDto {
     
     private Long id;
+    private Long userId;
     
     // Address details
     private String street;

@@ -36,6 +36,8 @@ public class OrderService {
     private final AddressRepository addressRepository;
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
+    private final CouponService couponService;
+    private final ProductImageService productImageService;
     private final WebhookService webhookService;
     
     /**
@@ -45,6 +47,26 @@ public class OrderService {
     public Page<Order> getUserOrders(Long userId, Pageable pageable) {
         log.info("Fetching orders for user: {}", userId);
         return orderRepository.findByUserId(userId, pageable);
+    }
+    /**
+     * Get user's orders by status (paginated)
+     */
+    @Transactional(readOnly = true)
+    public Page<Order> getUserOrdersByStatus(Long userId, OrderStatus status, Pageable pageable) {
+        log.info("Fetching orders for user: {}, status: {}", userId, status);
+        return orderRepository.findByUserIdAndStatus(userId, status, pageable);
+    }
+    
+    /**
+     * Get order by ID for user (ownership check)
+     */
+    @Transactional(readOnly = true)
+    public Order getUserOrderById(Long userId, Long orderId) {
+        Order order = getOrderById(orderId);
+        if (!order.getUser().getId().equals(userId)) {
+            throw new PaymentException("Order does not belong to this user", "UNAUTHORIZED");
+        }
+        return order;
     }
     
     /**
@@ -90,7 +112,10 @@ public class OrderService {
         BigDecimal subtotal = calculateSubtotal(cart);
         BigDecimal tax = calculateTax(subtotal);
         BigDecimal shippingFee = calculateShippingFee(subtotal);
-        BigDecimal discount = BigDecimal.ZERO; // TODO: Apply coupon if provided
+        BigDecimal discount = BigDecimal.ZERO;
+        if (request.getCouponCode() != null && !request.getCouponCode().isBlank()) {
+            discount = couponService.applyCoupon(request.getCouponCode(), subtotal);
+        }
         BigDecimal total = subtotal.add(tax).add(shippingFee).subtract(discount);
         
         // Create order
@@ -246,23 +271,31 @@ public class OrderService {
                 .shippingFee(order.getShippingFee())
                 .discount(order.getDiscount())
                 .total(order.getTotal())
-                .shippingAddressLine(order.getShippingAddress().getStreet())
-                .shippingCity(order.getShippingAddress().getCity())
-                .shippingState(order.getShippingAddress().getState())
-                .shippingCountry(order.getShippingAddress().getCountry())
-                .shippingZipCode(order.getShippingAddress().getZipCode())
+                .shippingAddressId(order.getShippingAddress() != null ? String.valueOf(order.getShippingAddress().getId()) : null)
+                .shippingAddressLine(order.getShippingAddress() != null ? order.getShippingAddress().getStreet() : null)
+                .shippingCity(order.getShippingAddress() != null ? order.getShippingAddress().getCity() : null)
+                .shippingState(order.getShippingAddress() != null ? order.getShippingAddress().getState() : null)
+                .shippingCountry(order.getShippingAddress() != null ? order.getShippingAddress().getCountry() : null)
+                .shippingZipCode(order.getShippingAddress() != null ? order.getShippingAddress().getZipCode() : null)
                 .status(order.getStatus().toString())
                 .trackingNumber(order.getTrackingNumber())
                 .paymentId(order.getPayment() != null ? order.getPayment().getId() : null)
                 .paymentStatus(order.getPayment() != null ? order.getPayment().getStatus().toString() : null)
+                .createdAt(order.getCreatedAt() != null ? order.getCreatedAt().toString() : null)
+                .shippedAt(order.getShippedAt() != null ? order.getShippedAt().toString() : null)
+                .deliveredAt(order.getDeliveredAt() != null ? order.getDeliveredAt().toString() : null)
+                .cancelledAt(order.getCancelledAt() != null ? order.getCancelledAt().toString() : null)
                 .build();
     }
     
     private OrderItemDto convertToOrderItemDto(OrderItem item) {
+        String imageUrl = productImageService.getPrimaryImageUrl(item.getProduct().getId());
         return OrderItemDto.builder()
                 .id(item.getId())
                 .productId(item.getProduct().getId())
                 .productName(item.getProductName())
+                .productSlug(item.getProduct().getSlug())
+                .imageUrl(imageUrl)
                 .priceAtPurchase(item.getUnitPrice())
                 .quantity(item.getQuantity())
                 .subtotal(item.getSubtotal())
