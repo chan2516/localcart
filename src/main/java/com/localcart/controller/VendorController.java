@@ -2,6 +2,7 @@ package com.localcart.controller;
 
 import com.localcart.dto.vendor.*;
 import com.localcart.entity.enums.VendorStatus;
+import com.localcart.security.CustomUserDetails;
 import com.localcart.service.VendorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -58,14 +58,11 @@ public class VendorController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<VendorDto> registerVendor(
             @Valid @RequestBody VendorRegistrationRequest request,
-            @AuthenticationPrincipal UserDetails userDetails) {
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
         
-        log.info("Vendor registration request from user: {}", userDetails.getUsername());
+        log.info("Vendor registration request from user: {}", userDetails.getUserId());
         
-        // TODO: Get user ID from UserDetails (extract from username or custom UserDetails)
-        Long userId = 1L; // Placeholder - implement proper user ID extraction
-        
-        VendorDto vendor = vendorService.registerVendor(userId, request);
+        VendorDto vendor = vendorService.registerVendor(userDetails.getUserId(), request);
         
         return ResponseEntity.status(HttpStatus.CREATED).body(vendor);
     }
@@ -80,14 +77,11 @@ public class VendorController {
     @GetMapping("/me")
     @PreAuthorize("hasRole('VENDOR')")
     public ResponseEntity<VendorDto> getMyVendorProfile(
-            @AuthenticationPrincipal UserDetails userDetails) {
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
         
-        log.info("Fetching vendor profile for user: {}", userDetails.getUsername());
+        log.info("Fetching vendor profile for user: {}", userDetails.getUserId());
         
-        // TODO: Get user ID from UserDetails
-        Long userId = 1L; // Placeholder
-        
-        VendorDto vendor = vendorService.getVendorByUserId(userId);
+        VendorDto vendor = vendorService.getVendorByUserId(userDetails.getUserId());
         
         return ResponseEntity.ok(vendor);
     }
@@ -104,15 +98,12 @@ public class VendorController {
     @PreAuthorize("hasRole('VENDOR')")
     public ResponseEntity<VendorDto> updateMyVendorProfile(
             @Valid @RequestBody VendorUpdateRequest request,
-            @AuthenticationPrincipal UserDetails userDetails) {
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
         
-        log.info("Updating vendor profile for user: {}", userDetails.getUsername());
+        log.info("Updating vendor profile for user: {}", userDetails.getUserId());
         
-        // TODO: Get user ID from UserDetails
-        Long userId = 1L; // Placeholder
-        
-        VendorDto myVendor = vendorService.getVendorByUserId(userId);
-        VendorDto updated = vendorService.updateVendor(myVendor.getId(), userId, request);
+        VendorDto myVendor = vendorService.getVendorByUserId(userDetails.getUserId());
+        VendorDto updated = vendorService.updateVendor(myVendor.getId(), userDetails.getUserId(), request);
         
         return ResponseEntity.ok(updated);
     }
@@ -127,14 +118,11 @@ public class VendorController {
     @GetMapping("/me/dashboard")
     @PreAuthorize("hasRole('VENDOR')")
     public ResponseEntity<VendorDashboardDto> getMyDashboard(
-            @AuthenticationPrincipal UserDetails userDetails) {
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
         
-        log.info("Fetching dashboard for vendor: {}", userDetails.getUsername());
+        log.info("Fetching dashboard for vendor: {}", userDetails.getVendorId());
         
-        // TODO: Get user ID from UserDetails
-        Long userId = 1L; // Placeholder
-        
-        VendorDto myVendor = vendorService.getVendorByUserId(userId);
+        VendorDto myVendor = vendorService.getVendorByUserId(userDetails.getUserId());
         VendorDashboardDto dashboard = vendorService.getVendorDashboard(myVendor.getId());
         
         return ResponseEntity.ok(dashboard);

@@ -299,16 +299,7 @@ public class UserService implements UserDetailsService {
                         "User not found with email: " + username
                 ));
 
-        return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getEmail())
-                .password(user.getPassword())
-                .authorities(user.getRoles().stream()
-                        .map(role -> new org.springframework.security.core.authority.SimpleGrantedAuthority(
-                                "ROLE_" + role.getName().toString()
-                        ))
-                        .toList())
-                .accountLocked(!user.getIsActive())
-                .build();
+        return new com.localcart.security.CustomUserDetails(user);
     }
 
     /**

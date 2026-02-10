@@ -2,7 +2,9 @@ package com.localcart.controller;
 
 import com.localcart.dto.product.CreateProductRequest;
 import com.localcart.dto.product.ProductDto;
+import com.localcart.entity.Product;
 import com.localcart.exception.PaymentException;
+import com.localcart.security.CustomUserDetails;
 import com.localcart.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -57,11 +60,15 @@ public class ProductController {
         try {
             log.info("Fetching products: page={}, size={}", page, size);
             
+            Pageable pageable = Pageable.ofSize(size).withPage(page);
+            Page<ProductDto> products = productService.getAllActiveProducts(pageable)
+                    .map(productService::convertToDto);
+            
             Map<String, Object> response = new HashMap<>();
-            // This will be implemented by ProductService
-            response.put("message", "Product listing coming soon");
-            response.put("page", page);
-            response.put("size", size);
+            response.put("products", products.getContent());
+            response.put("currentPage", products.getNumber());
+            response.put("totalItems", products.getTotalElements());
+            response.put("totalPages", products.getTotalPages());
             
             return ResponseEntity.ok(response);
             
@@ -83,17 +90,19 @@ public class ProductController {
         try {
             log.info("Fetching product: {}", id);
             
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", "Get product by ID coming soon");
-            response.put("productId", id);
+            ProductDto product = productService.convertToDto(productService.getProductById(id));
+            return ResponseEntity.ok(product);
             
-            return ResponseEntity.ok(response);
-            
+        } catch (PaymentException e) {
+            log.error("Product not found: {}", id);
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse(e.getErrorCode(), e.getMessage()));
         } catch (Exception e) {
             log.error("Error fetching product", e);
             return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new ErrorResponse("NOT_FOUND", "Product not found"));
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("ERROR", "Failed to fetch product"));
         }
     }
     
@@ -107,17 +116,19 @@ public class ProductController {
         try {
             log.info("Fetching product by slug: {}", slug);
             
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", "Get product by slug coming soon");
-            response.put("slug", slug);
+            ProductDto product = productService.convertToDto(productService.getProductBySlug(slug));
+            return ResponseEntity.ok(product);
             
-            return ResponseEntity.ok(response);
-            
+        } catch (PaymentException e) {
+            log.error("Product not found with slug: {}", slug);
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse(e.getErrorCode(), e.getMessage()));
         } catch (Exception e) {
             log.error("Error fetching product by slug", e);
             return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new ErrorResponse("NOT_FOUND", "Product not found"));
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("ERROR", "Failed to fetch product"));
         }
     }
     
@@ -138,14 +149,32 @@ public class ProductController {
             @RequestParam(required = false) String q,
             @RequestParam(required = false) Long category,
             @RequestParam(required = false) Double minPrice,
-            @RequestParam(required = false) Double maxPrice) {
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
         try {
             log.info("Searching products: q={}, category={}, minPrice={}, maxPrice={}", 
                     q, category, minPrice, maxPrice);
             
+            Pageable pageable = Pageable.ofSize(size).withPage(page);
+            Page<ProductDto> products;
+            
+            if (category != null) {
+                products = productService.getProductsByCategory(category, pageable)
+                        .map(productService::convertToDto);
+            } else if (q != null && !q.isBlank()) {
+                products = productService.searchProducts(q, pageable)
+                        .map(productService::convertToDto);
+            } else {
+                products = productService.getAllActiveProducts(pageable)
+                        .map(productService::convertToDto);
+            }
+            
             Map<String, Object> response = new HashMap<>();
-            response.put("message", "Search functionality coming soon");
-            response.put("query", q);
+            response.put("products", products.getContent());
+            response.put("currentPage", products.getNumber());
+            response.put("totalItems", products.getTotalElements());
+            response.put("totalPages", products.getTotalPages());
             
             return ResponseEntity.ok(response);
             
@@ -164,17 +193,22 @@ public class ProductController {
      */
     @PostMapping
     @PreAuthorize("hasRole('VENDOR')")
-    public ResponseEntity<?> createProduct(@Valid @RequestBody CreateProductRequest request) {
+    public ResponseEntity<?> createProduct(
+            @Valid @RequestBody CreateProductRequest request,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
         try {
-            log.info("Creating product: {}", request.getName());
+            log.info("Creating product: {} by vendor: {}", request.getName(), userDetails.getVendorId());
             
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", "Create product coming soon");
-            response.put("productName", request.getName());
+            if (userDetails.getVendorId() == null) {
+                throw new PaymentException("User is not registered as a vendor", "NOT_A_VENDOR");
+            }
+            
+            Product product = productService.createProduct(userDetails.getVendorId(), request);
+            ProductDto productDto = productService.convertToDto(product);
             
             return ResponseEntity
                     .status(HttpStatus.CREATED)
-                    .body(response);
+                    .body(productDto);
             
         } catch (PaymentException e) {
             log.error("Product creation error: {}", e.getMessage());
@@ -198,15 +232,19 @@ public class ProductController {
     @PreAuthorize("hasRole('VENDOR')")
     public ResponseEntity<?> updateProduct(
             @PathVariable Long id,
-            @Valid @RequestBody CreateProductRequest request) {
+            @Valid @RequestBody CreateProductRequest request,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
         try {
-            log.info("Updating product: {}", id);
+            log.info("Updating product: {} by vendor: {}", id, userDetails.getVendorId());
             
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", "Update product coming soon");
-            response.put("productId", id);
+            if (userDetails.getVendorId() == null) {
+                throw new PaymentException("User is not registered as a vendor", "NOT_A_VENDOR");
+            }
             
-            return ResponseEntity.ok(response);
+            Product product = productService.updateProduct(id, userDetails.getVendorId(), request);
+            ProductDto productDto = productService.convertToDto(product);
+            
+            return ResponseEntity.ok(productDto);
             
         } catch (PaymentException e) {
             log.error("Product update error: {}", e.getMessage());
@@ -228,9 +266,17 @@ public class ProductController {
      */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('VENDOR')")
-    public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<?> deleteProduct(
+            @PathVariable Long id,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
         try {
-            log.info("Deleting product: {}", id);
+            log.info("Deleting product: {} by vendor: {}", id, userDetails.getVendorId());
+            
+            if (userDetails.getVendorId() == null) {
+                throw new PaymentException("User is not registered as a vendor", "NOT_A_VENDOR");
+            }
+            
+            productService.deleteProduct(id, userDetails.getVendorId());
             
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Product deleted successfully");

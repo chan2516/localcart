@@ -4,12 +4,14 @@ import com.localcart.dto.cart.AddToCartRequest;
 import com.localcart.dto.cart.CartDto;
 import com.localcart.dto.order.CreateOrderRequest;
 import com.localcart.exception.PaymentException;
+import com.localcart.security.CustomUserDetails;
 import com.localcart.service.CartService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,14 +46,12 @@ public class CartController {
      * Retrieve current user's shopping cart with all items and totals
      */
     @GetMapping
-    public ResponseEntity<?> getCart() {
+    public ResponseEntity<?> getCart(@AuthenticationPrincipal CustomUserDetails userDetails) {
         try {
-            log.info("Fetching shopping cart for current user");
+            log.info("Fetching shopping cart for user: {}", userDetails.getUserId());
             
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", "Get cart coming soon");
-            
-            return ResponseEntity.ok(response);
+            CartDto cart = cartService.getCartDto(userDetails.getUserId());
+            return ResponseEntity.ok(cart);
             
         } catch (Exception e) {
             log.error("Error fetching cart", e);
@@ -73,19 +73,19 @@ public class CartController {
      * }
      */
     @PostMapping("/add-item")
-    public ResponseEntity<?> addToCart(@Valid @RequestBody AddToCartRequest request) {
+    public ResponseEntity<?> addToCart(
+            @Valid @RequestBody AddToCartRequest request,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
         try {
-            log.info("Adding product {} to cart with quantity {}", 
-                    request.getProductId(), request.getQuantity());
+            log.info("Adding product {} to cart for user {} with quantity {}", 
+                    request.getProductId(), userDetails.getUserId(), request.getQuantity());
             
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", "Add to cart coming soon");
-            response.put("productId", request.getProductId());
-            response.put("quantity", request.getQuantity());
+            cartService.addToCart(userDetails.getUserId(), request);
+            CartDto cart = cartService.getCartDto(userDetails.getUserId());
             
             return ResponseEntity
                     .status(HttpStatus.CREATED)
-                    .body(response);
+                    .body(cart);
             
         } catch (PaymentException e) {
             log.error("Error adding to cart: {}", e.getMessage());
@@ -113,16 +113,16 @@ public class CartController {
     @PutMapping("/items/{id}")
     public ResponseEntity<?> updateCartItem(
             @PathVariable Long id,
-            @RequestParam Integer quantity) {
+            @RequestParam Integer quantity,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
         try {
-            log.info("Updating cart item {} with quantity {}", id, quantity);
+            log.info("Updating cart item {} to quantity {} for user {}", 
+                    id, quantity, userDetails.getUserId());
             
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", "Update cart item coming soon");
-            response.put("cartItemId", id);
-            response.put("quantity", quantity);
+            cartService.updateCartItemQuantity(userDetails.getUserId(), id, quantity);
+            CartDto cart = cartService.getCartDto(userDetails.getUserId());
             
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(cart);
             
         } catch (PaymentException e) {
             log.error("Error updating cart item: {}", e.getMessage());
@@ -143,9 +143,13 @@ public class CartController {
      * Remove a single item from cart
      */
     @DeleteMapping("/items/{id}")
-    public ResponseEntity<?> removeFromCart(@PathVariable Long id) {
+    public ResponseEntity<?> removeFromCart(
+            @PathVariable Long id,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
         try {
-            log.info("Removing cart item: {}", id);
+            log.info("Removing cart item {} for user {}", id, userDetails.getUserId());
+            
+            cartService.removeFromCart(userDetails.getUserId(), id);
             
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Item removed from cart");
@@ -172,9 +176,11 @@ public class CartController {
      * Clear entire shopping cart
      */
     @DeleteMapping
-    public ResponseEntity<?> clearCart() {
+    public ResponseEntity<?> clearCart(@AuthenticationPrincipal CustomUserDetails userDetails) {
         try {
-            log.info("Clearing shopping cart for current user");
+            log.info("Clearing shopping cart for user: {}", userDetails.getUserId());
+            
+            cartService.clearCart(userDetails.getUserId());
             
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Shopping cart cleared");

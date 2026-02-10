@@ -36,6 +36,7 @@ public class CartService {
     private final CartItemRepository cartItemRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final ProductImageService productImageService;
     
     /**
      * Get or create cart for user
@@ -223,11 +224,15 @@ public class CartService {
         Product product = item.getProduct();
         BigDecimal price = product.getDiscountPrice() != null ? product.getDiscountPrice() : product.getPrice();
         
+        // Get primary image URL
+        String imageUrl = productImageService.getPrimaryImageUrl(product.getId());
+        
         return CartItemDto.builder()
                 .id(item.getId())
                 .productId(product.getId())
                 .productName(product.getName())
                 .productSlug(product.getSlug())
+                .imageUrl(imageUrl)
                 .price(product.getPrice())
                 .discountPrice(product.getDiscountPrice())
                 .quantity(item.getQuantity())

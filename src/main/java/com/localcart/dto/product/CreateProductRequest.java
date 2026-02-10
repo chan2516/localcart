@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * Request object for creating/updating products
@@ -52,4 +53,7 @@ public class CreateProductRequest {
     
     @Builder.Default
     private Boolean isFeatured = false;
+    
+    // Product images (URLs)
+    private List<String> imageUrls;
 }

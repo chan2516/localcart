@@ -32,6 +32,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final VendorRepository vendorRepository;
+    private final ProductImageService productImageService;
     
     /**
      * Get all active products (paginated)
@@ -122,7 +123,14 @@ public class ProductService {
                 .isFeatured(request.getIsFeatured())
                 .build();
         
-        return productRepository.save(product);
+        product = productRepository.save(product);
+        
+        // Add product images if provided
+        if (request.getImageUrls() != null && !request.getImageUrls().isEmpty()) {
+            productImageService.addImagesToProduct(product, request.getImageUrls());
+        }
+        
+        return product;
     }
     
     /**
@@ -161,7 +169,14 @@ public class ProductService {
         product.setIsActive(request.getIsActive());
         product.setIsFeatured(request.getIsFeatured());
         
-        return productRepository.save(product);
+        product = productRepository.save(product);
+        
+        // Update product images if provided
+        if (request.getImageUrls() != null) {
+            productImageService.updateProductImages(product, request.getImageUrls());
+        }
+        
+        return product;
     }
     
     /**
@@ -190,5 +205,34 @@ public class ProductService {
     public List<Product> getFeaturedProducts(int limit) {
         log.info("Fetching featured products, limit: {}", limit);
         return productRepository.findFeaturedProducts(Pageable.ofSize(limit));
+    }
+    
+    /**
+     * Convert Product entity to ProductDto with images
+     */
+    @Transactional(readOnly = true)
+    public ProductDto convertToDto(Product product) {
+        return ProductDto.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .slug(product.getSlug())
+                .description(product.getDescription())
+                .price(product.getPrice())
+                .discountPrice(product.getDiscountPrice())
+                .stock(product.getStock())
+                .sku(product.getSku())
+                .isActive(product.getIsActive())
+                .isFeatured(product.getIsFeatured())
+                .rating(product.getRating())
+                .totalReviews(product.getTotalReviews())
+                .totalSales(product.getTotalSales())
+                .vendorId(product.getVendor().getId())
+                .vendorName(product.getVendor().getBusinessName())
+                .categoryId(product.getCategory().getId())
+                .categoryName(product.getCategory().getName())
+                .imageUrls(productImageService.getProductImageUrls(product.getId()))
+                .createdAt(product.getCreatedAt() != null ? product.getCreatedAt().toString() : null)
+                .updatedAt(product.getUpdatedAt() != null ? product.getUpdatedAt().toString() : null)
+                .build();
     }
 }
