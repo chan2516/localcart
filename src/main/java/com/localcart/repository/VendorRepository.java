@@ -29,4 +29,6 @@ public interface VendorRepository extends JpaRepository<Vendor, Long> {
     
     @Query("SELECT v FROM Vendor v WHERE v.status = 'PENDING' ORDER BY v.createdAt ASC")
     List<Vendor> findPendingVendorApplications();
+
+    Long countByStatus(VendorStatus status);
 }

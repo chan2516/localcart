@@ -41,4 +41,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     
     @Query("SELECT p FROM Product p WHERE p.stock < :threshold AND p.isActive = true AND p.isDeleted = false")
     List<Product> findByStockLessThan(@Param("threshold") int threshold);
+
+    Long countByIsActiveTrue();
+
+    Long countByStockLessThanEqual(int threshold);
 }

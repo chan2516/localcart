@@ -1,8 +1,14 @@
 package com.localcart.controller;
 
-import com.localcart.dto.admin.*;
+import com.localcart.dto.admin.DashboardStatsDto;
+import com.localcart.dto.admin.PlatformMetricsDto;
+import com.localcart.dto.admin.UserManagementRequest;
+import com.localcart.dto.admin.UserSummaryDto;
+import com.localcart.dto.admin.VendorApprovalRequest;
 import com.localcart.dto.vendor.VendorDto;
 import com.localcart.entity.enums.VendorStatus;
+import com.localcart.security.CustomUserDetails;
+import com.localcart.service.AdminService;
 import com.localcart.service.VendorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +20,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -36,7 +41,7 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
 
     private final VendorService vendorService;
-    // TODO: Add AdminService when implemented
+    private final AdminService adminService;
 
     // ===========================
     // VENDOR MANAGEMENT
@@ -123,14 +128,13 @@ public class AdminController {
     @PostMapping("/vendors/approve")
     public ResponseEntity<VendorDto> approveOrRejectVendor(
             @Valid @RequestBody VendorApprovalRequest request,
-            @AuthenticationPrincipal UserDetails userDetails) {
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
         
         log.info("Admin {} - vendor ID: {}, new status: {}", 
             request.getStatus() == VendorStatus.APPROVED ? "approving" : "rejecting",
             request.getVendorId(), request.getStatus());
         
-        // TODO: Get admin user ID from UserDetails
-        Long adminUserId = 1L; // Placeholder
+        Long adminUserId = userDetails.getUserId();
         
         // Validate
         if (request.getStatus() == VendorStatus.REJECTED && 
@@ -170,12 +174,11 @@ public class AdminController {
     public ResponseEntity<VendorDto> suspendVendor(
             @PathVariable Long id,
             @RequestBody VendorApprovalRequest request,
-            @AuthenticationPrincipal UserDetails userDetails) {
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
         
         log.info("Admin suspending vendor - ID: {}, reason: {}", id, request.getReason());
         
-        // TODO: Get admin user ID from UserDetails
-        Long adminUserId = 1L; // Placeholder
+        Long adminUserId = userDetails.getUserId();
         
         VendorDto vendor = vendorService.approveVendor(
             id, 
@@ -211,17 +214,16 @@ public class AdminController {
      * TODO: Implement AdminService for user management
      */
     @PostMapping("/users/manage")
-    public ResponseEntity<String> manageUser(
+        public ResponseEntity<UserSummaryDto> manageUser(
             @Valid @RequestBody UserManagementRequest request,
-            @AuthenticationPrincipal UserDetails userDetails) {
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
         
         log.info("Admin managing user - User ID: {}, Action: {}", 
             request.getUserId(), request.getAction());
         
-        // TODO: Implement in AdminService
-        // adminService.manageUser(request, adminUserId);
+        UserSummaryDto user = adminService.manageUser(request, userDetails.getUserId());
         
-        return ResponseEntity.ok("User management action completed successfully");
+        return ResponseEntity.ok(user);
     }
 
     /**
@@ -232,17 +234,17 @@ public class AdminController {
      * TODO: Implement AdminService with user listing
      */
     @GetMapping("/users")
-    public ResponseEntity<String> getAllUsers(
+    public ResponseEntity<Page<UserSummaryDto>> getAllUsers(
             @RequestParam(required = false) Boolean active,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
         
         log.info("Admin fetching users - active: {}, page: {}, size: {}", active, page, size);
         
-        // TODO: Implement AdminService
-        // Page<UserSummaryDto> users = adminService.getAllUsers(active, pageable);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<UserSummaryDto> users = adminService.getAllUsers(active, pageable);
         
-        return ResponseEntity.ok("User listing - Feature coming soon");
+        return ResponseEntity.ok(users);
     }
 
     /**
@@ -253,13 +255,12 @@ public class AdminController {
      * TODO: Implement AdminService
      */
     @GetMapping("/users/{id}")
-    public ResponseEntity<String> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserSummaryDto> getUserById(@PathVariable Long id) {
         log.info("Admin fetching user details - ID: {}", id);
         
-        // TODO: Implement AdminService
-        // UserSummaryDto user = adminService.getUserById(id);
+        UserSummaryDto user = adminService.getUserById(id);
         
-        return ResponseEntity.ok("User details - Feature coming soon");
+        return ResponseEntity.ok(user);
     }
 
     // ===========================
@@ -278,16 +279,9 @@ public class AdminController {
     @GetMapping("/dashboard")
     public ResponseEntity<DashboardStatsDto> getDashboard() {
         log.info("Admin fetching dashboard statistics");
-        
-        // TODO: Implement AdminService with real statistics
-        DashboardStatsDto stats = DashboardStatsDto.builder()
-            .totalUsers(0L)
-            .totalVendors(0L)
-            .totalOrders(0L)
-            .totalProducts(0L)
-            .pendingVendorApplications(0L)
-            .build();
-        
+
+        DashboardStatsDto stats = adminService.getDashboardStats();
+
         return ResponseEntity.ok(stats);
     }
 
@@ -302,14 +296,14 @@ public class AdminController {
      * TODO: Implement AdminService with metrics calculation
      */
     @GetMapping("/metrics")
-    public ResponseEntity<String> getPlatformMetrics(
+    public ResponseEntity<PlatformMetricsDto> getPlatformMetrics(
             @RequestParam(defaultValue = "MONTH") String period) {
         
         log.info("Admin fetching platform metrics - period: {}", period);
+
+        PlatformMetricsDto metrics = adminService.getPlatformMetrics(period);
         
-        // TODO: Implement AdminService
-        
-        return ResponseEntity.ok("Platform metrics - Feature coming soon");
+        return ResponseEntity.ok(metrics);
     }
 
     // ===========================

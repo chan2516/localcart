@@ -35,6 +35,20 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     
     @Query("SELECT COUNT(o) FROM Order o WHERE o.user.id = :userId")
     Long countOrdersByUserId(@Param("userId") Long userId);
+
+    Long countByStatus(OrderStatus status);
+
+    Long countByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
+
+    @Query("SELECT COALESCE(SUM(o.total), 0) FROM Order o")
+    java.math.BigDecimal sumTotal();
+
+    @Query("SELECT COALESCE(SUM(o.total), 0) FROM Order o WHERE o.createdAt BETWEEN :start AND :end")
+    java.math.BigDecimal sumTotalBetween(@Param("start") LocalDateTime start,
+                                         @Param("end") LocalDateTime end);
+
+    @Query("SELECT COALESCE(AVG(o.total), 0) FROM Order o")
+    java.math.BigDecimal averageOrderValue();
     
     @Query("SELECT o FROM Order o LEFT JOIN FETCH o.items " +
            "WHERE o.status = 'DELIVERED' " +
