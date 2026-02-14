@@ -14,6 +14,7 @@ import com.localcart.repository.RoleRepository;
 import com.localcart.security.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -39,7 +40,6 @@ import java.util.Optional;
  */
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
@@ -48,7 +48,25 @@ public class UserService implements UserDetailsService {
     private final JwtUtils jwtUtils;
     private final EmailService emailService;
     private final PasswordResetProperties passwordResetProperties;
+    @Lazy
     private final AuthenticationManager authenticationManager;
+
+    public UserService(
+            UserRepository userRepository,
+            RoleRepository roleRepository,
+            PasswordEncoder passwordEncoder,
+            JwtUtils jwtUtils,
+            EmailService emailService,
+            PasswordResetProperties passwordResetProperties,
+            @Lazy AuthenticationManager authenticationManager) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtUtils = jwtUtils;
+        this.emailService = emailService;
+        this.passwordResetProperties = passwordResetProperties;
+        this.authenticationManager = authenticationManager;
+    }
 
     /**
      * Register a new user
