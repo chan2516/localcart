@@ -19,9 +19,15 @@ public abstract class BaseEntity implements Serializable {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
+    @Column(name = "is_deleted")
+    private Boolean isDeleted = false;
+
     @PrePersist
     protected void onCreate() {
         // Hook for subclasses
+        if (isDeleted == null) {
+            isDeleted = false;
+        }
     }
 
     @PreUpdate
