@@ -1,0 +1,994 @@
+2026-02-17 10:16:22 [AGGREGATOR] Starting unified log aggregator
+[2026-02-17 10:16:22] [BACKEND] nohup: ignoring input
+[2026-02-17 10:16:22] [BACKEND] [INFO] Scanning for projects...
+[2026-02-17 10:16:22] [BACKEND] [INFO]
+[2026-02-17 10:16:22] [BACKEND] [INFO] ----------------------< com.localcart:localcart >-----------------------
+[2026-02-17 10:16:22] [BACKEND] [INFO] Building localcart 0.0.1-SNAPSHOT
+[2026-02-17 10:16:22] [BACKEND] [INFO]   from pom.xml
+[2026-02-17 10:16:22] [BACKEND] [INFO] --------------------------------[ jar ]---------------------------------
+[2026-02-17 10:16:22] [BACKEND] [INFO]
+[2026-02-17 10:16:22] [BACKEND] [INFO] >>> spring-boot:4.0.2:run (default-cli) > test-compile @ localcart >>>
+[2026-02-17 10:16:22] [BACKEND] [INFO]
+[2026-02-17 10:16:22] [BACKEND] [INFO] --- resources:3.3.1:resources (default-resources) @ localcart ---
+[2026-02-17 10:16:22] [BACKEND] [INFO] Copying 3 resources from src/main/resources to target/classes
+[2026-02-17 10:16:22] [BACKEND] [INFO] Copying 7 resources from src/main/resources to target/classes
+[2026-02-17 10:16:22] [BACKEND] [INFO]
+[2026-02-17 10:16:22] [BACKEND] [INFO] --- compiler:3.14.1:compile (default-compile) @ localcart ---
+[2026-02-17 10:16:22] [BACKEND] [INFO] Nothing to compile - all classes are up to date.
+[2026-02-17 10:16:22] [BACKEND] [INFO]
+[2026-02-17 10:16:22] [BACKEND] [INFO] --- resources:3.3.1:testResources (default-testResources) @ localcart ---
+[2026-02-17 10:16:22] [BACKEND] [INFO] skip non existing resourceDirectory /workspaces/localcart/src/test/resources
+[2026-02-17 10:16:22] [BACKEND] [INFO]
+[2026-02-17 10:16:22] [BACKEND] [INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ localcart ---
+[2026-02-17 10:16:22] [BACKEND] [INFO] Nothing to compile - all classes are up to date.
+[2026-02-17 10:16:22] [BACKEND] [INFO]
+[2026-02-17 10:16:22] [BACKEND] [INFO] <<< spring-boot:4.0.2:run (default-cli) < test-compile @ localcart <<<
+[2026-02-17 10:16:22] [BACKEND] [INFO]
+[2026-02-17 10:16:22] [BACKEND] [INFO]
+[2026-02-17 10:16:22] [BACKEND] [INFO] --- spring-boot:4.0.2:run (default-cli) @ localcart ---
+[2026-02-17 10:16:22] [BACKEND] [INFO] Attaching agents: []
+[2026-02-17 10:16:22] [BACKEND] 09:50:15,935 |-WARN in ch.qos.logback.core.model.processor.AppenderModelHandler - Appender named [ASYNC_FILE] not referenced. Skipping further processing.
+[2026-02-17 10:16:22] [BACKEND] 
+[2026-02-17 10:16:22] [BACKEND] .   ____          _            __ _ _
+[2026-02-17 10:16:22] [BACKEND] /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+[2026-02-17 10:16:22] [BACKEND] ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+[2026-02-17 10:16:22] [BACKEND] \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+[2026-02-17 10:16:22] [BACKEND] '  |____| .__|_| |_|_| |_\__, | / / / /
+[2026-02-17 10:16:22] [BACKEND] =========|_|==============|___/=/_/_/_/
+[2026-02-17 10:16:22] [BACKEND] 
+[2026-02-17 10:16:22] [BACKEND] :: Spring Boot ::                (v4.0.2)
+[2026-02-17 10:16:22] [BACKEND] 
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:16.039652423Z","@version":"1","message":"Starting LocalcartApplication using Java 25.0.1 with PID 29079 (/workspaces/localcart/target/classes started by codespace in /workspaces/localcart)","logger_name":"com.localcart.LocalcartApplication","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:16.049779216Z","@version":"1","message":"Running with Spring Boot v4.0.2, Spring v7.0.3","logger_name":"com.localcart.LocalcartApplication","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:16.050531518Z","@version":"1","message":"The following 1 profile is active: \"dev\"","logger_name":"com.localcart.LocalcartApplication","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:17.302666996Z","@version":"1","message":"Multiple Spring Data modules found, entering strict repository configuration mode","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationDelegate","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:17.30391613Z","@version":"1","message":"Bootstrapping Spring Data JPA repositories in DEFAULT mode.","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationDelegate","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:17.439682163Z","@version":"1","message":"Finished Spring Data repository scanning in 129 ms. Found 14 JPA repository interfaces.","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationDelegate","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:17.470642101Z","@version":"1","message":"Multiple Spring Data modules found, entering strict repository configuration mode","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationDelegate","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:17.471842669Z","@version":"1","message":"Bootstrapping Spring Data Redis repositories in DEFAULT mode.","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationDelegate","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:17.486746784Z","@version":"1","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.localcart.repository.AddressRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:17.487951169Z","@version":"1","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.localcart.repository.CartItemRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:17.488288798Z","@version":"1","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.localcart.repository.CartRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:17.488615768Z","@version":"1","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.localcart.repository.CategoryRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:17.488943809Z","@version":"1","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.localcart.repository.CouponRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:17.489205687Z","@version":"1","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.localcart.repository.OrderItemRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:17.489627603Z","@version":"1","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.localcart.repository.OrderRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:17.489966425Z","@version":"1","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.localcart.repository.PaymentRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:17.490261625Z","@version":"1","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.localcart.repository.ProductImageRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:17.490600656Z","@version":"1","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.localcart.repository.ProductRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:17.490878805Z","@version":"1","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.localcart.repository.ReviewRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:17.491270284Z","@version":"1","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.localcart.repository.RoleRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:17.491598396Z","@version":"1","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.localcart.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:17.491949651Z","@version":"1","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.localcart.repository.VendorRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:17.492106884Z","@version":"1","message":"Finished Spring Data repository scanning in 12 ms. Found 0 Redis repository interfaces.","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationDelegate","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:18.347224955Z","@version":"1","message":"Tomcat initialized with port 8080 (http)","logger_name":"org.springframework.boot.tomcat.TomcatWebServer","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:18.357565356Z","@version":"1","message":"Starting service [Tomcat]","logger_name":"org.apache.catalina.core.StandardService","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:18.357844051Z","@version":"1","message":"Starting Servlet engine: [Apache Tomcat/11.0.15]","logger_name":"org.apache.catalina.core.StandardEngine","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:18.400258988Z","@version":"1","message":"Root WebApplicationContext: initialization completed in 2271 ms","logger_name":"org.springframework.boot.web.context.servlet.WebApplicationContextInitializer","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:18.650744085Z","@version":"1","message":"Filter 'jwtAuthenticationFilter' configured for use","logger_name":"com.localcart.security.JwtAuthenticationFilter","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:18.769620478Z","@version":"1","message":"HHH008540: Processing PersistenceUnitInfo [name: default]","logger_name":"org.hibernate.orm.jpa","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:18.8147647Z","@version":"1","message":"HHH000001: Hibernate ORM core version 7.2.1.Final","logger_name":"org.hibernate.orm.core","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:19.151933558Z","@version":"1","message":"No LoadTimeWeaver setup: ignoring JPA class transformer","logger_name":"org.springframework.orm.jpa.persistenceunit.SpringPersistenceUnitInfo","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:19.174940989Z","@version":"1","message":"HikariPool-1 - Starting...","logger_name":"com.zaxxer.hikari.HikariDataSource","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:19.325952747Z","@version":"1","message":"HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@4ff233f9","logger_name":"com.zaxxer.hikari.pool.HikariPool","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:19.327240066Z","@version":"1","message":"HikariPool-1 - Start completed.","logger_name":"com.zaxxer.hikari.HikariDataSource","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:19.371012311Z","@version":"1","message":"HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)","logger_name":"org.hibernate.orm.deprecation","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:19.40288489Z","@version":"1","message":"HHH10001005: Database info:\n\tDatabase JDBC URL [jdbc:postgresql://localhost:5432/localcart]\n\tDatabase driver: PostgreSQL JDBC Driver\n\tDatabase dialect: PostgreSQLDialect\n\tDatabase version: 15.15\n\tDefault catalog/schema: localcart/public\n\tAutocommit mode: undefined/unknown\n\tIsolation level: READ_COMMITTED [default READ_COMMITTED]\n\tJDBC fetch size: none\n\tPool: DataSourceConnectionProvider\n\tMinimum pool size: undefined/unknown\n\tMaximum pool size: undefined/unknown","logger_name":"org.hibernate.orm.connections.pooling","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:20.813397707Z","@version":"1","message":"HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)","logger_name":"org.hibernate.orm.core","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:20.858424544Z","@version":"1","message":"\n    create table addresses (\n        id bigint generated by default as identity,\n        deleted_at timestamp(6),\n        is_deleted boolean,\n        created_at timestamp(6) not null,\n        created_by varchar(255),\n        updated_at timestamp(6),\n        updated_by varchar(255),\n        address_label varchar(50),\n        apartment varchar(100),\n        city varchar(100) not null,\n        contact_name varchar(100),\n        contact_phone varchar(20),\n        country varchar(100) not null,\n        delivery_instructions varchar(500),\n        is_default boolean,\n        landmark varchar(200),\n        latitude numeric(10,8),\n        longitude numeric(11,8),\n        state varchar(100) not null,\n        street varchar(255) not null,\n        type varchar(20) not null check ((type in ('SHIPPING','BILLING','BOTH'))),\n        zip_code varchar(20) not null,\n        user_id bigint not null,\n        primary key (id)\n    )","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] Hibernate:
+[2026-02-17 10:16:22] [BACKEND] create table addresses (
+[2026-02-17 10:16:22] [BACKEND] id bigint generated by default as identity,
+[2026-02-17 10:16:22] [BACKEND] deleted_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] is_deleted boolean,
+[2026-02-17 10:16:22] [BACKEND] created_at timestamp(6) not null,
+[2026-02-17 10:16:22] [BACKEND] created_by varchar(255),
+[2026-02-17 10:16:22] [BACKEND] updated_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] updated_by varchar(255),
+[2026-02-17 10:16:22] [BACKEND] address_label varchar(50),
+[2026-02-17 10:16:22] [BACKEND] apartment varchar(100),
+[2026-02-17 10:16:22] [BACKEND] city varchar(100) not null,
+[2026-02-17 10:16:22] [BACKEND] contact_name varchar(100),
+[2026-02-17 10:16:22] [BACKEND] contact_phone varchar(20),
+[2026-02-17 10:16:22] [BACKEND] country varchar(100) not null,
+[2026-02-17 10:16:22] [BACKEND] delivery_instructions varchar(500),
+[2026-02-17 10:16:22] [BACKEND] is_default boolean,
+[2026-02-17 10:16:22] [BACKEND] landmark varchar(200),
+[2026-02-17 10:16:22] [BACKEND] latitude numeric(10,8),
+[2026-02-17 10:16:22] [BACKEND] longitude numeric(11,8),
+[2026-02-17 10:16:22] [BACKEND] state varchar(100) not null,
+[2026-02-17 10:16:22] [BACKEND] street varchar(255) not null,
+[2026-02-17 10:16:22] [BACKEND] type varchar(20) not null check ((type in ('SHIPPING','BILLING','BOTH'))),
+[2026-02-17 10:16:22] [BACKEND] zip_code varchar(20) not null,
+[2026-02-17 10:16:22] [BACKEND] user_id bigint not null,
+[2026-02-17 10:16:22] [BACKEND] primary key (id)
+[2026-02-17 10:16:22] [BACKEND] )
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:20.871793158Z","@version":"1","message":"\n    create table cart_items (\n        id bigint generated by default as identity,\n        deleted_at timestamp(6),\n        is_deleted boolean,\n        created_at timestamp(6) not null,\n        created_by varchar(255),\n        updated_at timestamp(6),\n        updated_by varchar(255),\n        quantity integer not null check ((quantity>=1)),\n        cart_id bigint not null,\n        product_id bigint not null,\n        primary key (id)\n    )","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] Hibernate:
+[2026-02-17 10:16:22] [BACKEND] create table cart_items (
+[2026-02-17 10:16:22] [BACKEND] id bigint generated by default as identity,
+[2026-02-17 10:16:22] [BACKEND] deleted_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] is_deleted boolean,
+[2026-02-17 10:16:22] [BACKEND] created_at timestamp(6) not null,
+[2026-02-17 10:16:22] [BACKEND] created_by varchar(255),
+[2026-02-17 10:16:22] [BACKEND] updated_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] updated_by varchar(255),
+[2026-02-17 10:16:22] [BACKEND] quantity integer not null check ((quantity>=1)),
+[2026-02-17 10:16:22] [BACKEND] cart_id bigint not null,
+[2026-02-17 10:16:22] [BACKEND] product_id bigint not null,
+[2026-02-17 10:16:22] [BACKEND] primary key (id)
+[2026-02-17 10:16:22] [BACKEND] )
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:20.879055609Z","@version":"1","message":"\n    create table carts (\n        id bigint generated by default as identity,\n        deleted_at timestamp(6),\n        is_deleted boolean,\n        created_at timestamp(6) not null,\n        created_by varchar(255),\n        updated_at timestamp(6),\n        updated_by varchar(255),\n        user_id bigint not null,\n        primary key (id)\n    )","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] Hibernate:
+[2026-02-17 10:16:22] [BACKEND] create table carts (
+[2026-02-17 10:16:22] [BACKEND] id bigint generated by default as identity,
+[2026-02-17 10:16:22] [BACKEND] deleted_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] is_deleted boolean,
+[2026-02-17 10:16:22] [BACKEND] created_at timestamp(6) not null,
+[2026-02-17 10:16:22] [BACKEND] created_by varchar(255),
+[2026-02-17 10:16:22] [BACKEND] updated_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] updated_by varchar(255),
+[2026-02-17 10:16:22] [BACKEND] user_id bigint not null,
+[2026-02-17 10:16:22] [BACKEND] primary key (id)
+[2026-02-17 10:16:22] [BACKEND] )
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:20.885856818Z","@version":"1","message":"\n    create table categories (\n        id bigint generated by default as identity,\n        deleted_at timestamp(6),\n        is_deleted boolean,\n        created_at timestamp(6) not null,\n        created_by varchar(255),\n        updated_at timestamp(6),\n        updated_by varchar(255),\n        description varchar(500),\n        display_order integer,\n        name varchar(100) not null,\n        slug varchar(100) not null,\n        parent_id bigint,\n        primary key (id)\n    )","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] Hibernate:
+[2026-02-17 10:16:22] [BACKEND] create table categories (
+[2026-02-17 10:16:22] [BACKEND] id bigint generated by default as identity,
+[2026-02-17 10:16:22] [BACKEND] deleted_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] is_deleted boolean,
+[2026-02-17 10:16:22] [BACKEND] created_at timestamp(6) not null,
+[2026-02-17 10:16:22] [BACKEND] created_by varchar(255),
+[2026-02-17 10:16:22] [BACKEND] updated_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] updated_by varchar(255),
+[2026-02-17 10:16:22] [BACKEND] description varchar(500),
+[2026-02-17 10:16:22] [BACKEND] display_order integer,
+[2026-02-17 10:16:22] [BACKEND] name varchar(100) not null,
+[2026-02-17 10:16:22] [BACKEND] slug varchar(100) not null,
+[2026-02-17 10:16:22] [BACKEND] parent_id bigint,
+[2026-02-17 10:16:22] [BACKEND] primary key (id)
+[2026-02-17 10:16:22] [BACKEND] )
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:20.894411851Z","@version":"1","message":"\n    create table coupons (\n        id bigint generated by default as identity,\n        deleted_at timestamp(6),\n        is_deleted boolean,\n        created_at timestamp(6) not null,\n        created_by varchar(255),\n        updated_at timestamp(6),\n        updated_by varchar(255),\n        code varchar(50) not null,\n        coupon_type varchar(20) not null check ((coupon_type in ('PERCENTAGE','FIXED_AMOUNT'))),\n        description varchar(255),\n        discount_value numeric(10,2) not null,\n        is_active boolean,\n        max_discount_amount numeric(10,2),\n        min_purchase_amount numeric(10,2),\n        per_user_limit integer,\n        usage_count integer,\n        usage_limit integer,\n        valid_from timestamp(6),\n        valid_until timestamp(6),\n        product_id bigint,\n        vendor_id bigint not null,\n        primary key (id)\n    )","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] Hibernate:
+[2026-02-17 10:16:22] [BACKEND] create table coupons (
+[2026-02-17 10:16:22] [BACKEND] id bigint generated by default as identity,
+[2026-02-17 10:16:22] [BACKEND] deleted_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] is_deleted boolean,
+[2026-02-17 10:16:22] [BACKEND] created_at timestamp(6) not null,
+[2026-02-17 10:16:22] [BACKEND] created_by varchar(255),
+[2026-02-17 10:16:22] [BACKEND] updated_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] updated_by varchar(255),
+[2026-02-17 10:16:22] [BACKEND] code varchar(50) not null,
+[2026-02-17 10:16:22] [BACKEND] coupon_type varchar(20) not null check ((coupon_type in ('PERCENTAGE','FIXED_AMOUNT'))),
+[2026-02-17 10:16:22] [BACKEND] description varchar(255),
+[2026-02-17 10:16:22] [BACKEND] discount_value numeric(10,2) not null,
+[2026-02-17 10:16:22] [BACKEND] is_active boolean,
+[2026-02-17 10:16:22] [BACKEND] max_discount_amount numeric(10,2),
+[2026-02-17 10:16:22] [BACKEND] min_purchase_amount numeric(10,2),
+[2026-02-17 10:16:22] [BACKEND] per_user_limit integer,
+[2026-02-17 10:16:22] [BACKEND] usage_count integer,
+[2026-02-17 10:16:22] [BACKEND] usage_limit integer,
+[2026-02-17 10:16:22] [BACKEND] valid_from timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] valid_until timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] product_id bigint,
+[2026-02-17 10:16:22] [BACKEND] vendor_id bigint not null,
+[2026-02-17 10:16:22] [BACKEND] primary key (id)
+[2026-02-17 10:16:22] [BACKEND] )
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:20.902583691Z","@version":"1","message":"\n    create table order_items (\n        id bigint generated by default as identity,\n        deleted_at timestamp(6),\n        is_deleted boolean,\n        created_at timestamp(6) not null,\n        created_by varchar(255),\n        updated_at timestamp(6),\n        updated_by varchar(255),\n        product_name varchar(255) not null,\n        quantity integer not null check ((quantity>=1)),\n        subtotal numeric(10,2) not null,\n        unit_price numeric(10,2) not null,\n        order_id bigint not null,\n        product_id bigint not null,\n        vendor_id bigint not null,\n        primary key (id)\n    )","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] Hibernate:
+[2026-02-17 10:16:22] [BACKEND] create table order_items (
+[2026-02-17 10:16:22] [BACKEND] id bigint generated by default as identity,
+[2026-02-17 10:16:22] [BACKEND] deleted_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] is_deleted boolean,
+[2026-02-17 10:16:22] [BACKEND] created_at timestamp(6) not null,
+[2026-02-17 10:16:22] [BACKEND] created_by varchar(255),
+[2026-02-17 10:16:22] [BACKEND] updated_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] updated_by varchar(255),
+[2026-02-17 10:16:22] [BACKEND] product_name varchar(255) not null,
+[2026-02-17 10:16:22] [BACKEND] quantity integer not null check ((quantity>=1)),
+[2026-02-17 10:16:22] [BACKEND] subtotal numeric(10,2) not null,
+[2026-02-17 10:16:22] [BACKEND] unit_price numeric(10,2) not null,
+[2026-02-17 10:16:22] [BACKEND] order_id bigint not null,
+[2026-02-17 10:16:22] [BACKEND] product_id bigint not null,
+[2026-02-17 10:16:22] [BACKEND] vendor_id bigint not null,
+[2026-02-17 10:16:22] [BACKEND] primary key (id)
+[2026-02-17 10:16:22] [BACKEND] )
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:20.914306985Z","@version":"1","message":"\n    create table orders (\n        id bigint generated by default as identity,\n        deleted_at timestamp(6),\n        is_deleted boolean,\n        created_at timestamp(6) not null,\n        created_by varchar(255),\n        updated_at timestamp(6),\n        updated_by varchar(255),\n        cancellation_reason varchar(500),\n        cancelled_at timestamp(6),\n        delivered_at timestamp(6),\n        discount numeric(10,2) not null,\n        notes TEXT,\n        order_number varchar(50) not null,\n        shipped_at timestamp(6),\n        shipping_fee numeric(10,2) not null,\n        status varchar(20) not null check ((status in ('PENDING','PAYMENT_CONFIRMED','PROCESSING','SHIPPED','DELIVERED','CANCELLED','REFUNDED'))),\n        subtotal numeric(10,2) not null,\n        tax numeric(10,2) not null,\n        total numeric(10,2) not null,\n        tracking_number varchar(100),\n        billing_address_id bigint not null,\n        shipping_address_id bigint not null,\n        user_id bigint not null,\n        primary key (id)\n    )","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] Hibernate:
+[2026-02-17 10:16:22] [BACKEND] create table orders (
+[2026-02-17 10:16:22] [BACKEND] id bigint generated by default as identity,
+[2026-02-17 10:16:22] [BACKEND] deleted_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] is_deleted boolean,
+[2026-02-17 10:16:22] [BACKEND] created_at timestamp(6) not null,
+[2026-02-17 10:16:22] [BACKEND] created_by varchar(255),
+[2026-02-17 10:16:22] [BACKEND] updated_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] updated_by varchar(255),
+[2026-02-17 10:16:22] [BACKEND] cancellation_reason varchar(500),
+[2026-02-17 10:16:22] [BACKEND] cancelled_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] delivered_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] discount numeric(10,2) not null,
+[2026-02-17 10:16:22] [BACKEND] notes TEXT,
+[2026-02-17 10:16:22] [BACKEND] order_number varchar(50) not null,
+[2026-02-17 10:16:22] [BACKEND] shipped_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] shipping_fee numeric(10,2) not null,
+[2026-02-17 10:16:22] [BACKEND] status varchar(20) not null check ((status in ('PENDING','PAYMENT_CONFIRMED','PROCESSING','SHIPPED','DELIVERED','CANCELLED','REFUNDED'))),
+[2026-02-17 10:16:22] [BACKEND] subtotal numeric(10,2) not null,
+[2026-02-17 10:16:22] [BACKEND] tax numeric(10,2) not null,
+[2026-02-17 10:16:22] [BACKEND] total numeric(10,2) not null,
+[2026-02-17 10:16:22] [BACKEND] tracking_number varchar(100),
+[2026-02-17 10:16:22] [BACKEND] billing_address_id bigint not null,
+[2026-02-17 10:16:22] [BACKEND] shipping_address_id bigint not null,
+[2026-02-17 10:16:22] [BACKEND] user_id bigint not null,
+[2026-02-17 10:16:22] [BACKEND] primary key (id)
+[2026-02-17 10:16:22] [BACKEND] )
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:20.922090361Z","@version":"1","message":"\n    create table payments (\n        id bigint generated by default as identity,\n        deleted_at timestamp(6),\n        is_deleted boolean,\n        created_at timestamp(6) not null,\n        created_by varchar(255),\n        updated_at timestamp(6),\n        updated_by varchar(255),\n        amount numeric(10,2) not null,\n        failure_reason varchar(500),\n        metadata TEXT,\n        paid_at timestamp(6),\n        payment_method varchar(50) not null,\n        refund_amount numeric(10,2),\n        refunded_at timestamp(6),\n        status varchar(20) not null check ((status in ('PENDING','PROCESSING','COMPLETED','FAILED','REFUNDED','PARTIALLY_REFUNDED','CANCELLED'))),\n        transaction_id varchar(100),\n        order_id bigint not null,\n        primary key (id)\n    )","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] Hibernate:
+[2026-02-17 10:16:22] [BACKEND] create table payments (
+[2026-02-17 10:16:22] [BACKEND] id bigint generated by default as identity,
+[2026-02-17 10:16:22] [BACKEND] deleted_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] is_deleted boolean,
+[2026-02-17 10:16:22] [BACKEND] created_at timestamp(6) not null,
+[2026-02-17 10:16:22] [BACKEND] created_by varchar(255),
+[2026-02-17 10:16:22] [BACKEND] updated_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] updated_by varchar(255),
+[2026-02-17 10:16:22] [BACKEND] amount numeric(10,2) not null,
+[2026-02-17 10:16:22] [BACKEND] failure_reason varchar(500),
+[2026-02-17 10:16:22] [BACKEND] metadata TEXT,
+[2026-02-17 10:16:22] [BACKEND] paid_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] payment_method varchar(50) not null,
+[2026-02-17 10:16:22] [BACKEND] refund_amount numeric(10,2),
+[2026-02-17 10:16:22] [BACKEND] refunded_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] status varchar(20) not null check ((status in ('PENDING','PROCESSING','COMPLETED','FAILED','REFUNDED','PARTIALLY_REFUNDED','CANCELLED'))),
+[2026-02-17 10:16:22] [BACKEND] transaction_id varchar(100),
+[2026-02-17 10:16:22] [BACKEND] order_id bigint not null,
+[2026-02-17 10:16:22] [BACKEND] primary key (id)
+[2026-02-17 10:16:22] [BACKEND] )
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:20.930988113Z","@version":"1","message":"\n    create table product_images (\n        id bigint generated by default as identity,\n        deleted_at timestamp(6),\n        is_deleted boolean,\n        created_at timestamp(6) not null,\n        created_by varchar(255),\n        updated_at timestamp(6),\n        updated_by varchar(255),\n        alt_text varchar(255),\n        display_order integer,\n        image_url varchar(500) not null,\n        is_primary boolean,\n        product_id bigint not null,\n        primary key (id)\n    )","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] Hibernate:
+[2026-02-17 10:16:22] [BACKEND] create table product_images (
+[2026-02-17 10:16:22] [BACKEND] id bigint generated by default as identity,
+[2026-02-17 10:16:22] [BACKEND] deleted_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] is_deleted boolean,
+[2026-02-17 10:16:22] [BACKEND] created_at timestamp(6) not null,
+[2026-02-17 10:16:22] [BACKEND] created_by varchar(255),
+[2026-02-17 10:16:22] [BACKEND] updated_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] updated_by varchar(255),
+[2026-02-17 10:16:22] [BACKEND] alt_text varchar(255),
+[2026-02-17 10:16:22] [BACKEND] display_order integer,
+[2026-02-17 10:16:22] [BACKEND] image_url varchar(500) not null,
+[2026-02-17 10:16:22] [BACKEND] is_primary boolean,
+[2026-02-17 10:16:22] [BACKEND] product_id bigint not null,
+[2026-02-17 10:16:22] [BACKEND] primary key (id)
+[2026-02-17 10:16:22] [BACKEND] )
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:20.939368471Z","@version":"1","message":"\n    create table products (\n        id bigint generated by default as identity,\n        deleted_at timestamp(6),\n        is_deleted boolean,\n        created_at timestamp(6) not null,\n        created_by varchar(255),\n        updated_at timestamp(6),\n        updated_by varchar(255),\n        description TEXT,\n        discount_price numeric(10,2),\n        is_active boolean,\n        is_featured boolean,\n        name varchar(255) not null,\n        price numeric(10,2) not null,\n        rating float(53),\n        sku varchar(50),\n        slug varchar(255) not null,\n        stock integer not null check ((stock>=0)),\n        total_reviews integer,\n        total_sales integer,\n        category_id bigint not null,\n        vendor_id bigint not null,\n        primary key (id)\n    )","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] Hibernate:
+[2026-02-17 10:16:22] [BACKEND] create table products (
+[2026-02-17 10:16:22] [BACKEND] id bigint generated by default as identity,
+[2026-02-17 10:16:22] [BACKEND] deleted_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] is_deleted boolean,
+[2026-02-17 10:16:22] [BACKEND] created_at timestamp(6) not null,
+[2026-02-17 10:16:22] [BACKEND] created_by varchar(255),
+[2026-02-17 10:16:22] [BACKEND] updated_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] updated_by varchar(255),
+[2026-02-17 10:16:22] [BACKEND] description TEXT,
+[2026-02-17 10:16:22] [BACKEND] discount_price numeric(10,2),
+[2026-02-17 10:16:22] [BACKEND] is_active boolean,
+[2026-02-17 10:16:22] [BACKEND] is_featured boolean,
+[2026-02-17 10:16:22] [BACKEND] name varchar(255) not null,
+[2026-02-17 10:16:22] [BACKEND] price numeric(10,2) not null,
+[2026-02-17 10:16:22] [BACKEND] rating float(53),
+[2026-02-17 10:16:22] [BACKEND] sku varchar(50),
+[2026-02-17 10:16:22] [BACKEND] slug varchar(255) not null,
+[2026-02-17 10:16:22] [BACKEND] stock integer not null check ((stock>=0)),
+[2026-02-17 10:16:22] [BACKEND] total_reviews integer,
+[2026-02-17 10:16:22] [BACKEND] total_sales integer,
+[2026-02-17 10:16:22] [BACKEND] category_id bigint not null,
+[2026-02-17 10:16:22] [BACKEND] vendor_id bigint not null,
+[2026-02-17 10:16:22] [BACKEND] primary key (id)
+[2026-02-17 10:16:22] [BACKEND] )
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:20.947011899Z","@version":"1","message":"\n    create table reviews (\n        id bigint generated by default as identity,\n        deleted_at timestamp(6),\n        is_deleted boolean,\n        created_at timestamp(6) not null,\n        created_by varchar(255),\n        updated_at timestamp(6),\n        updated_by varchar(255),\n        comment TEXT,\n        is_verified_purchase boolean,\n        rating integer not null check ((rating<=5) and (rating>=1)),\n        title varchar(100),\n        order_id bigint,\n        product_id bigint not null,\n        user_id bigint not null,\n        vendor_id bigint not null,\n        primary key (id)\n    )","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] Hibernate:
+[2026-02-17 10:16:22] [BACKEND] create table reviews (
+[2026-02-17 10:16:22] [BACKEND] id bigint generated by default as identity,
+[2026-02-17 10:16:22] [BACKEND] deleted_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] is_deleted boolean,
+[2026-02-17 10:16:22] [BACKEND] created_at timestamp(6) not null,
+[2026-02-17 10:16:22] [BACKEND] created_by varchar(255),
+[2026-02-17 10:16:22] [BACKEND] updated_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] updated_by varchar(255),
+[2026-02-17 10:16:22] [BACKEND] comment TEXT,
+[2026-02-17 10:16:22] [BACKEND] is_verified_purchase boolean,
+[2026-02-17 10:16:22] [BACKEND] rating integer not null check ((rating<=5) and (rating>=1)),
+[2026-02-17 10:16:22] [BACKEND] title varchar(100),
+[2026-02-17 10:16:22] [BACKEND] order_id bigint,
+[2026-02-17 10:16:22] [BACKEND] product_id bigint not null,
+[2026-02-17 10:16:22] [BACKEND] user_id bigint not null,
+[2026-02-17 10:16:22] [BACKEND] vendor_id bigint not null,
+[2026-02-17 10:16:22] [BACKEND] primary key (id)
+[2026-02-17 10:16:22] [BACKEND] )
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:20.954599479Z","@version":"1","message":"\n    create table roles (\n        id bigint generated by default as identity,\n        deleted_at timestamp(6),\n        is_deleted boolean,\n        created_at timestamp(6) not null,\n        created_by varchar(255),\n        updated_at timestamp(6),\n        updated_by varchar(255),\n        description varchar(500),\n        name varchar(20) not null check ((name in ('CUSTOMER','VENDOR','ADMIN'))),\n        primary key (id)\n    )","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] Hibernate:
+[2026-02-17 10:16:22] [BACKEND] create table roles (
+[2026-02-17 10:16:22] [BACKEND] id bigint generated by default as identity,
+[2026-02-17 10:16:22] [BACKEND] deleted_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] is_deleted boolean,
+[2026-02-17 10:16:22] [BACKEND] created_at timestamp(6) not null,
+[2026-02-17 10:16:22] [BACKEND] created_by varchar(255),
+[2026-02-17 10:16:22] [BACKEND] updated_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] updated_by varchar(255),
+[2026-02-17 10:16:22] [BACKEND] description varchar(500),
+[2026-02-17 10:16:22] [BACKEND] name varchar(20) not null check ((name in ('CUSTOMER','VENDOR','ADMIN'))),
+[2026-02-17 10:16:22] [BACKEND] primary key (id)
+[2026-02-17 10:16:22] [BACKEND] )
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:20.96177924Z","@version":"1","message":"\n    create table user_roles (\n        user_id bigint not null,\n        role_id bigint not null,\n        primary key (user_id, role_id)\n    )","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] Hibernate:
+[2026-02-17 10:16:22] [BACKEND] create table user_roles (
+[2026-02-17 10:16:22] [BACKEND] user_id bigint not null,
+[2026-02-17 10:16:22] [BACKEND] role_id bigint not null,
+[2026-02-17 10:16:22] [BACKEND] primary key (user_id, role_id)
+[2026-02-17 10:16:22] [BACKEND] )
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:20.966768458Z","@version":"1","message":"\n    create table users (\n        id bigint generated by default as identity,\n        deleted_at timestamp(6),\n        is_deleted boolean,\n        created_at timestamp(6) not null,\n        created_by varchar(255),\n        updated_at timestamp(6),\n        updated_by varchar(255),\n        account_locked_until timestamp(6),\n        date_of_birth date,\n        email varchar(100) not null,\n        email_verification_token varchar(100),\n        email_verification_token_expiry timestamp(6),\n        failed_login_attempts integer,\n        first_name varchar(50) not null,\n        gender varchar(20),\n        is_active boolean,\n        is_email_verified boolean,\n        last_login_at timestamp(6),\n        last_name varchar(50) not null,\n        password varchar(255) not null,\n        password_reset_token varchar(100),\n        password_reset_token_expiry timestamp(6),\n        phone_number varchar(20),\n        preferred_currency varchar(5),\n        preferred_language varchar(10),\n        profile_image_url varchar(255),\n        suspension_reason varchar(500),\n        timezone varchar(50),\n        two_factor_enabled boolean,\n        two_factor_secret varchar(100),\n        primary key (id)\n    )","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] Hibernate:
+[2026-02-17 10:16:22] [BACKEND] create table users (
+[2026-02-17 10:16:22] [BACKEND] id bigint generated by default as identity,
+[2026-02-17 10:16:22] [BACKEND] deleted_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] is_deleted boolean,
+[2026-02-17 10:16:22] [BACKEND] created_at timestamp(6) not null,
+[2026-02-17 10:16:22] [BACKEND] created_by varchar(255),
+[2026-02-17 10:16:22] [BACKEND] updated_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] updated_by varchar(255),
+[2026-02-17 10:16:22] [BACKEND] account_locked_until timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] date_of_birth date,
+[2026-02-17 10:16:22] [BACKEND] email varchar(100) not null,
+[2026-02-17 10:16:22] [BACKEND] email_verification_token varchar(100),
+[2026-02-17 10:16:22] [BACKEND] email_verification_token_expiry timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] failed_login_attempts integer,
+[2026-02-17 10:16:22] [BACKEND] first_name varchar(50) not null,
+[2026-02-17 10:16:22] [BACKEND] gender varchar(20),
+[2026-02-17 10:16:22] [BACKEND] is_active boolean,
+[2026-02-17 10:16:22] [BACKEND] is_email_verified boolean,
+[2026-02-17 10:16:22] [BACKEND] last_login_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] last_name varchar(50) not null,
+[2026-02-17 10:16:22] [BACKEND] password varchar(255) not null,
+[2026-02-17 10:16:22] [BACKEND] password_reset_token varchar(100),
+[2026-02-17 10:16:22] [BACKEND] password_reset_token_expiry timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] phone_number varchar(20),
+[2026-02-17 10:16:22] [BACKEND] preferred_currency varchar(5),
+[2026-02-17 10:16:22] [BACKEND] preferred_language varchar(10),
+[2026-02-17 10:16:22] [BACKEND] profile_image_url varchar(255),
+[2026-02-17 10:16:22] [BACKEND] suspension_reason varchar(500),
+[2026-02-17 10:16:22] [BACKEND] timezone varchar(50),
+[2026-02-17 10:16:22] [BACKEND] two_factor_enabled boolean,
+[2026-02-17 10:16:22] [BACKEND] two_factor_secret varchar(100),
+[2026-02-17 10:16:22] [BACKEND] primary key (id)
+[2026-02-17 10:16:22] [BACKEND] )
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:20.974738758Z","@version":"1","message":"\n    create table vendors (\n        id bigint generated by default as identity,\n        deleted_at timestamp(6),\n        is_deleted boolean,\n        created_at timestamp(6) not null,\n        created_by varchar(255),\n        updated_at timestamp(6),\n        updated_by varchar(255),\n        account_holder_name varchar(100),\n        approved_at date,\n        bank_account_number varchar(100),\n        bank_branch varchar(100),\n        bank_name varchar(100),\n        business_address varchar(255),\n        business_email varchar(100),\n        business_hours_json TEXT,\n        business_license varchar(100),\n        business_name varchar(100) not null,\n        business_phone varchar(20),\n        business_registration_number varchar(100),\n        business_type varchar(50),\n        commission_rate numeric(5,2),\n        description varchar(500),\n        free_shipping_threshold numeric(10,2),\n        ifsc_code varchar(50),\n        kyc_document_url varchar(500),\n        kyc_verified_at timestamp(6),\n        last_payout_at timestamp(6),\n        logo_url varchar(255),\n        minimum_order_value numeric(10,2),\n        pending_payout numeric(15,2),\n        rating float(53),\n        rejection_reason varchar(500),\n        return_address varchar(255),\n        return_policy TEXT,\n        shipping_policy TEXT,\n        status varchar(20) not null check ((status in ('PENDING','APPROVED','SUSPENDED','REJECTED'))),\n        tax_id varchar(50),\n        total_orders bigint,\n        total_reviews integer,\n        total_sales numeric(15,2),\n        website varchar(255),\n        approved_by bigint,\n        kyc_verified_by bigint,\n        user_id bigint not null,\n        primary key (id)\n    )","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] Hibernate:
+[2026-02-17 10:16:22] [BACKEND] create table vendors (
+[2026-02-17 10:16:22] [BACKEND] id bigint generated by default as identity,
+[2026-02-17 10:16:22] [BACKEND] deleted_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] is_deleted boolean,
+[2026-02-17 10:16:22] [BACKEND] created_at timestamp(6) not null,
+[2026-02-17 10:16:22] [BACKEND] created_by varchar(255),
+[2026-02-17 10:16:22] [BACKEND] updated_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] updated_by varchar(255),
+[2026-02-17 10:16:22] [BACKEND] account_holder_name varchar(100),
+[2026-02-17 10:16:22] [BACKEND] approved_at date,
+[2026-02-17 10:16:22] [BACKEND] bank_account_number varchar(100),
+[2026-02-17 10:16:22] [BACKEND] bank_branch varchar(100),
+[2026-02-17 10:16:22] [BACKEND] bank_name varchar(100),
+[2026-02-17 10:16:22] [BACKEND] business_address varchar(255),
+[2026-02-17 10:16:22] [BACKEND] business_email varchar(100),
+[2026-02-17 10:16:22] [BACKEND] business_hours_json TEXT,
+[2026-02-17 10:16:22] [BACKEND] business_license varchar(100),
+[2026-02-17 10:16:22] [BACKEND] business_name varchar(100) not null,
+[2026-02-17 10:16:22] [BACKEND] business_phone varchar(20),
+[2026-02-17 10:16:22] [BACKEND] business_registration_number varchar(100),
+[2026-02-17 10:16:22] [BACKEND] business_type varchar(50),
+[2026-02-17 10:16:22] [BACKEND] commission_rate numeric(5,2),
+[2026-02-17 10:16:22] [BACKEND] description varchar(500),
+[2026-02-17 10:16:22] [BACKEND] free_shipping_threshold numeric(10,2),
+[2026-02-17 10:16:22] [BACKEND] ifsc_code varchar(50),
+[2026-02-17 10:16:22] [BACKEND] kyc_document_url varchar(500),
+[2026-02-17 10:16:22] [BACKEND] kyc_verified_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] last_payout_at timestamp(6),
+[2026-02-17 10:16:22] [BACKEND] logo_url varchar(255),
+[2026-02-17 10:16:22] [BACKEND] minimum_order_value numeric(10,2),
+[2026-02-17 10:16:22] [BACKEND] pending_payout numeric(15,2),
+[2026-02-17 10:16:22] [BACKEND] rating float(53),
+[2026-02-17 10:16:22] [BACKEND] rejection_reason varchar(500),
+[2026-02-17 10:16:22] [BACKEND] return_address varchar(255),
+[2026-02-17 10:16:22] [BACKEND] return_policy TEXT,
+[2026-02-17 10:16:22] [BACKEND] shipping_policy TEXT,
+[2026-02-17 10:16:22] [BACKEND] status varchar(20) not null check ((status in ('PENDING','APPROVED','SUSPENDED','REJECTED'))),
+[2026-02-17 10:16:22] [BACKEND] tax_id varchar(50),
+[2026-02-17 10:16:22] [BACKEND] total_orders bigint,
+[2026-02-17 10:16:22] [BACKEND] total_reviews integer,
+[2026-02-17 10:16:22] [BACKEND] total_sales numeric(15,2),
+[2026-02-17 10:16:22] [BACKEND] website varchar(255),
+[2026-02-17 10:16:22] [BACKEND] approved_by bigint,
+[2026-02-17 10:16:22] [BACKEND] kyc_verified_by bigint,
+[2026-02-17 10:16:22] [BACKEND] user_id bigint not null,
+[2026-02-17 10:16:22] [BACKEND] primary key (id)
+[2026-02-17 10:16:22] [BACKEND] )
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:20.992859318Z","@version":"1","message":"\n    create index idx_cart_item_cart \n       on cart_items (cart_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] Hibernate:
+[2026-02-17 10:16:22] [BACKEND] create index idx_cart_item_cart
+[2026-02-17 10:16:22] [BACKEND] on cart_items (cart_id)
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:20.995813624Z","@version":"1","message":"\n    create index idx_cart_item_product \n       on cart_items (product_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] Hibernate:
+[2026-02-17 10:16:22] [BACKEND] create index idx_cart_item_product
+[2026-02-17 10:16:22] [BACKEND] on cart_items (product_id)
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:20.998627271Z","@version":"1","message":"\n    create index idx_cart_user \n       on carts (user_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] Hibernate:
+[2026-02-17 10:16:22] [BACKEND] create index idx_cart_user
+[2026-02-17 10:16:22] [BACKEND] on carts (user_id)
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.001313427Z","@version":"1","message":"\n    alter table if exists carts \n       drop constraint if exists UK64t7ox312pqal3p7fg9o503c2","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] Hibernate:
+[2026-02-17 10:16:22] [BACKEND] alter table if exists carts
+[2026-02-17 10:16:22] [BACKEND] drop constraint if exists UK64t7ox312pqal3p7fg9o503c2
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.004287306Z","@version":"1","message":"HHH000247: ErrorCode: 0, SQLState: 00000","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.004393775Z","@version":"1","message":"constraint \"uk64t7ox312pqal3p7fg9o503c2\" of relation \"carts\" does not exist, skipping","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.004625196Z","@version":"1","message":"\n    alter table if exists carts \n       add constraint UK64t7ox312pqal3p7fg9o503c2 unique (user_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] Hibernate:
+[2026-02-17 10:16:22] [BACKEND] alter table if exists carts
+[2026-02-17 10:16:22] [BACKEND] add constraint UK64t7ox312pqal3p7fg9o503c2 unique (user_id)
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.007566217Z","@version":"1","message":"\n    create index idx_category_slug \n       on categories (slug)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] Hibernate:
+[2026-02-17 10:16:22] [BACKEND] create index idx_category_slug
+[2026-02-17 10:16:22] [BACKEND] on categories (slug)
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.012638102Z","@version":"1","message":"\n    alter table if exists categories \n       drop constraint if exists UKt8o6pivur7nn124jehx7cygw5","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] Hibernate:
+[2026-02-17 10:16:22] [BACKEND] alter table if exists categories
+[2026-02-17 10:16:22] [BACKEND] drop constraint if exists UKt8o6pivur7nn124jehx7cygw5
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.013925922Z","@version":"1","message":"HHH000247: ErrorCode: 0, SQLState: 00000","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.014036559Z","@version":"1","message":"constraint \"ukt8o6pivur7nn124jehx7cygw5\" of relation \"categories\" does not exist, skipping","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.014194162Z","@version":"1","message":"\n    alter table if exists categories \n       add constraint UKt8o6pivur7nn124jehx7cygw5 unique (name)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] Hibernate:
+[2026-02-17 10:16:22] [BACKEND] alter table if exists categories
+[2026-02-17 10:16:22] [BACKEND] add constraint UKt8o6pivur7nn124jehx7cygw5 unique (name)
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.017399416Z","@version":"1","message":"\n    alter table if exists categories \n       drop constraint if exists UKoul14ho7bctbefv8jywp5v3i2","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] Hibernate:
+[2026-02-17 10:16:22] [BACKEND] alter table if exists categories
+[2026-02-17 10:16:22] [BACKEND] drop constraint if exists UKoul14ho7bctbefv8jywp5v3i2
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.018870454Z","@version":"1","message":"HHH000247: ErrorCode: 0, SQLState: 00000","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.018975029Z","@version":"1","message":"constraint \"ukoul14ho7bctbefv8jywp5v3i2\" of relation \"categories\" does not exist, skipping","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.019099701Z","@version":"1","message":"\n    alter table if exists categories \n       add constraint UKoul14ho7bctbefv8jywp5v3i2 unique (slug)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] Hibernate:
+[2026-02-17 10:16:22] [BACKEND] alter table if exists categories
+[2026-02-17 10:16:22] [BACKEND] add constraint UKoul14ho7bctbefv8jywp5v3i2 unique (slug)
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.021761705Z","@version":"1","message":"\n    create index idx_coupon_code \n       on coupons (code)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] Hibernate:
+[2026-02-17 10:16:22] [BACKEND] create index idx_coupon_code
+[2026-02-17 10:16:22] [BACKEND] on coupons (code)
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.024400594Z","@version":"1","message":"\n    create index idx_coupon_vendor \n       on coupons (vendor_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] Hibernate:
+[2026-02-17 10:16:22] [BACKEND] create index idx_coupon_vendor
+[2026-02-17 10:16:22] [BACKEND] on coupons (vendor_id)
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.027475504Z","@version":"1","message":"\n    create index idx_coupon_product \n       on coupons (product_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] Hibernate:
+[2026-02-17 10:16:22] [BACKEND] create index idx_coupon_product
+[2026-02-17 10:16:22] [BACKEND] on coupons (product_id)
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.030475101Z","@version":"1","message":"\n    alter table if exists coupons \n       drop constraint if exists UKeplt0kkm9yf2of2lnx6c1oy9b","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] Hibernate:
+[2026-02-17 10:16:22] [BACKEND] alter table if exists coupons
+[2026-02-17 10:16:22] [BACKEND] drop constraint if exists UKeplt0kkm9yf2of2lnx6c1oy9b
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.031578838Z","@version":"1","message":"HHH000247: ErrorCode: 0, SQLState: 00000","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.031685867Z","@version":"1","message":"constraint \"ukeplt0kkm9yf2of2lnx6c1oy9b\" of relation \"coupons\" does not exist, skipping","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.031819546Z","@version":"1","message":"\n    alter table if exists coupons \n       add constraint UKeplt0kkm9yf2of2lnx6c1oy9b unique (code)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] Hibernate:
+[2026-02-17 10:16:22] [BACKEND] alter table if exists coupons
+[2026-02-17 10:16:22] [BACKEND] add constraint UKeplt0kkm9yf2of2lnx6c1oy9b unique (code)
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.035130851Z","@version":"1","message":"\n    create index idx_order_item_order \n       on order_items (order_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] Hibernate:
+[2026-02-17 10:16:22] [BACKEND] create index idx_order_item_order
+[2026-02-17 10:16:22] [BACKEND] on order_items (order_id)
+[2026-02-17 10:16:22] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.038191485Z","@version":"1","message":"\n    create index idx_order_item_product \n       on order_items (product_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:22] [BACKEND] Hibernate:
+[2026-02-17 10:16:22] [BACKEND] create index idx_order_item_product
+[2026-02-17 10:16:22] [BACKEND] on order_items (product_id)
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.040875877Z","@version":"1","message":"\n    create index idx_order_item_vendor \n       on order_items (vendor_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] create index idx_order_item_vendor
+[2026-02-17 10:16:23] [BACKEND] on order_items (vendor_id)
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.043729726Z","@version":"1","message":"\n    create index idx_order_user \n       on orders (user_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] create index idx_order_user
+[2026-02-17 10:16:23] [BACKEND] on orders (user_id)
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.046530135Z","@version":"1","message":"\n    create index idx_order_number \n       on orders (order_number)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] create index idx_order_number
+[2026-02-17 10:16:23] [BACKEND] on orders (order_number)
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.049521269Z","@version":"1","message":"\n    create index idx_order_status \n       on orders (status)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] create index idx_order_status
+[2026-02-17 10:16:23] [BACKEND] on orders (status)
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.052418298Z","@version":"1","message":"\n    create index idx_order_created \n       on orders (created_at)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] create index idx_order_created
+[2026-02-17 10:16:23] [BACKEND] on orders (created_at)
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.055829976Z","@version":"1","message":"\n    alter table if exists orders \n       drop constraint if exists UKnthkiu7pgmnqnu86i2jyoe2v7","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists orders
+[2026-02-17 10:16:23] [BACKEND] drop constraint if exists UKnthkiu7pgmnqnu86i2jyoe2v7
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.057014644Z","@version":"1","message":"HHH000247: ErrorCode: 0, SQLState: 00000","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.057113659Z","@version":"1","message":"constraint \"uknthkiu7pgmnqnu86i2jyoe2v7\" of relation \"orders\" does not exist, skipping","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.05729135Z","@version":"1","message":"\n    alter table if exists orders \n       add constraint UKnthkiu7pgmnqnu86i2jyoe2v7 unique (order_number)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists orders
+[2026-02-17 10:16:23] [BACKEND] add constraint UKnthkiu7pgmnqnu86i2jyoe2v7 unique (order_number)
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.060547104Z","@version":"1","message":"\n    create index idx_payment_order \n       on payments (order_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] create index idx_payment_order
+[2026-02-17 10:16:23] [BACKEND] on payments (order_id)
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.063421374Z","@version":"1","message":"\n    create index idx_payment_transaction \n       on payments (transaction_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] create index idx_payment_transaction
+[2026-02-17 10:16:23] [BACKEND] on payments (transaction_id)
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.066256518Z","@version":"1","message":"\n    create index idx_payment_status \n       on payments (status)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] create index idx_payment_status
+[2026-02-17 10:16:23] [BACKEND] on payments (status)
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.069288448Z","@version":"1","message":"\n    alter table if exists payments \n       drop constraint if exists UKlryndveuwa4k5qthti0pkmtlx","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists payments
+[2026-02-17 10:16:23] [BACKEND] drop constraint if exists UKlryndveuwa4k5qthti0pkmtlx
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.070408986Z","@version":"1","message":"HHH000247: ErrorCode: 0, SQLState: 00000","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.070522208Z","@version":"1","message":"constraint \"uklryndveuwa4k5qthti0pkmtlx\" of relation \"payments\" does not exist, skipping","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.070650757Z","@version":"1","message":"\n    alter table if exists payments \n       add constraint UKlryndveuwa4k5qthti0pkmtlx unique (transaction_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists payments
+[2026-02-17 10:16:23] [BACKEND] add constraint UKlryndveuwa4k5qthti0pkmtlx unique (transaction_id)
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.073307779Z","@version":"1","message":"\n    alter table if exists payments \n       drop constraint if exists UK8vo36cen604as7etdfwmyjsxt","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists payments
+[2026-02-17 10:16:23] [BACKEND] drop constraint if exists UK8vo36cen604as7etdfwmyjsxt
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.074662714Z","@version":"1","message":"HHH000247: ErrorCode: 0, SQLState: 00000","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.074750397Z","@version":"1","message":"constraint \"uk8vo36cen604as7etdfwmyjsxt\" of relation \"payments\" does not exist, skipping","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.074859831Z","@version":"1","message":"\n    alter table if exists payments \n       add constraint UK8vo36cen604as7etdfwmyjsxt unique (order_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists payments
+[2026-02-17 10:16:23] [BACKEND] add constraint UK8vo36cen604as7etdfwmyjsxt unique (order_id)
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.077589745Z","@version":"1","message":"\n    create index idx_product_slug \n       on products (slug)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] create index idx_product_slug
+[2026-02-17 10:16:23] [BACKEND] on products (slug)
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.080356415Z","@version":"1","message":"\n    create index idx_product_vendor \n       on products (vendor_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] create index idx_product_vendor
+[2026-02-17 10:16:23] [BACKEND] on products (vendor_id)
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.083279152Z","@version":"1","message":"\n    create index idx_product_category \n       on products (category_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] create index idx_product_category
+[2026-02-17 10:16:23] [BACKEND] on products (category_id)
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.086556239Z","@version":"1","message":"\n    create index idx_product_active \n       on products (is_active)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] create index idx_product_active
+[2026-02-17 10:16:23] [BACKEND] on products (is_active)
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.089691479Z","@version":"1","message":"\n    alter table if exists products \n       drop constraint if exists UKostq1ec3toafnjok09y9l7dox","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists products
+[2026-02-17 10:16:23] [BACKEND] drop constraint if exists UKostq1ec3toafnjok09y9l7dox
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.090791038Z","@version":"1","message":"HHH000247: ErrorCode: 0, SQLState: 00000","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.090876527Z","@version":"1","message":"constraint \"ukostq1ec3toafnjok09y9l7dox\" of relation \"products\" does not exist, skipping","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.090986312Z","@version":"1","message":"\n    alter table if exists products \n       add constraint UKostq1ec3toafnjok09y9l7dox unique (slug)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists products
+[2026-02-17 10:16:23] [BACKEND] add constraint UKostq1ec3toafnjok09y9l7dox unique (slug)
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.094336205Z","@version":"1","message":"\n    create index idx_review_product \n       on reviews (product_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] create index idx_review_product
+[2026-02-17 10:16:23] [BACKEND] on reviews (product_id)
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.097573561Z","@version":"1","message":"\n    create index idx_review_user \n       on reviews (user_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] create index idx_review_user
+[2026-02-17 10:16:23] [BACKEND] on reviews (user_id)
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.100671675Z","@version":"1","message":"\n    create index idx_review_vendor \n       on reviews (vendor_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] create index idx_review_vendor
+[2026-02-17 10:16:23] [BACKEND] on reviews (vendor_id)
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.103417272Z","@version":"1","message":"\n    create index idx_review_rating \n       on reviews (rating)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] create index idx_review_rating
+[2026-02-17 10:16:23] [BACKEND] on reviews (rating)
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.107158491Z","@version":"1","message":"\n    alter table if exists roles \n       drop constraint if exists UKofx66keruapi6vyqpv6f2or37","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists roles
+[2026-02-17 10:16:23] [BACKEND] drop constraint if exists UKofx66keruapi6vyqpv6f2or37
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.108303024Z","@version":"1","message":"HHH000247: ErrorCode: 0, SQLState: 00000","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.108391188Z","@version":"1","message":"constraint \"ukofx66keruapi6vyqpv6f2or37\" of relation \"roles\" does not exist, skipping","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.108554522Z","@version":"1","message":"\n    alter table if exists roles \n       add constraint UKofx66keruapi6vyqpv6f2or37 unique (name)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists roles
+[2026-02-17 10:16:23] [BACKEND] add constraint UKofx66keruapi6vyqpv6f2or37 unique (name)
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.111471809Z","@version":"1","message":"\n    create index idx_user_email \n       on users (email)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] create index idx_user_email
+[2026-02-17 10:16:23] [BACKEND] on users (email)
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.114742227Z","@version":"1","message":"\n    create index idx_user_active \n       on users (is_active)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] create index idx_user_active
+[2026-02-17 10:16:23] [BACKEND] on users (is_active)
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.117663121Z","@version":"1","message":"\n    alter table if exists users \n       drop constraint if exists UK6dotkott2kjsp8vw4d0m25fb7","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists users
+[2026-02-17 10:16:23] [BACKEND] drop constraint if exists UK6dotkott2kjsp8vw4d0m25fb7
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.118725902Z","@version":"1","message":"HHH000247: ErrorCode: 0, SQLState: 00000","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.118809087Z","@version":"1","message":"constraint \"uk6dotkott2kjsp8vw4d0m25fb7\" of relation \"users\" does not exist, skipping","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.118937115Z","@version":"1","message":"\n    alter table if exists users \n       add constraint UK6dotkott2kjsp8vw4d0m25fb7 unique (email)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists users
+[2026-02-17 10:16:23] [BACKEND] add constraint UK6dotkott2kjsp8vw4d0m25fb7 unique (email)
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.122425647Z","@version":"1","message":"\n    create index idx_vendor_status \n       on vendors (status)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] create index idx_vendor_status
+[2026-02-17 10:16:23] [BACKEND] on vendors (status)
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.125571529Z","@version":"1","message":"\n    create index idx_vendor_approved_date \n       on vendors (approved_at)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] create index idx_vendor_approved_date
+[2026-02-17 10:16:23] [BACKEND] on vendors (approved_at)
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.130205382Z","@version":"1","message":"\n    alter table if exists vendors \n       drop constraint if exists UKn3r8ql5jbdd8geulchj3o2gxk","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists vendors
+[2026-02-17 10:16:23] [BACKEND] drop constraint if exists UKn3r8ql5jbdd8geulchj3o2gxk
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.131302917Z","@version":"1","message":"HHH000247: ErrorCode: 0, SQLState: 00000","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.131383908Z","@version":"1","message":"constraint \"ukn3r8ql5jbdd8geulchj3o2gxk\" of relation \"vendors\" does not exist, skipping","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.131527426Z","@version":"1","message":"\n    alter table if exists vendors \n       add constraint UKn3r8ql5jbdd8geulchj3o2gxk unique (business_name)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists vendors
+[2026-02-17 10:16:23] [BACKEND] add constraint UKn3r8ql5jbdd8geulchj3o2gxk unique (business_name)
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.134508375Z","@version":"1","message":"\n    alter table if exists vendors \n       drop constraint if exists UKi4fsfxe266yl9oye02ongwl8","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists vendors
+[2026-02-17 10:16:23] [BACKEND] drop constraint if exists UKi4fsfxe266yl9oye02ongwl8
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.135680429Z","@version":"1","message":"HHH000247: ErrorCode: 0, SQLState: 00000","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.135812194Z","@version":"1","message":"constraint \"uki4fsfxe266yl9oye02ongwl8\" of relation \"vendors\" does not exist, skipping","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.136204365Z","@version":"1","message":"\n    alter table if exists vendors \n       add constraint UKi4fsfxe266yl9oye02ongwl8 unique (user_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists vendors
+[2026-02-17 10:16:23] [BACKEND] add constraint UKi4fsfxe266yl9oye02ongwl8 unique (user_id)
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.14102219Z","@version":"1","message":"\n    alter table if exists addresses \n       add constraint FK1fa36y2oqhao3wgg2rw1pi459 \n       foreign key (user_id) \n       references users","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists addresses
+[2026-02-17 10:16:23] [BACKEND] add constraint FK1fa36y2oqhao3wgg2rw1pi459
+[2026-02-17 10:16:23] [BACKEND] foreign key (user_id)
+[2026-02-17 10:16:23] [BACKEND] references users
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.145474698Z","@version":"1","message":"\n    alter table if exists cart_items \n       add constraint FKpcttvuq4mxppo8sxggjtn5i2c \n       foreign key (cart_id) \n       references carts","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists cart_items
+[2026-02-17 10:16:23] [BACKEND] add constraint FKpcttvuq4mxppo8sxggjtn5i2c
+[2026-02-17 10:16:23] [BACKEND] foreign key (cart_id)
+[2026-02-17 10:16:23] [BACKEND] references carts
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.148261372Z","@version":"1","message":"\n    alter table if exists cart_items \n       add constraint FK1re40cjegsfvw58xrkdp6bac6 \n       foreign key (product_id) \n       references products","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists cart_items
+[2026-02-17 10:16:23] [BACKEND] add constraint FK1re40cjegsfvw58xrkdp6bac6
+[2026-02-17 10:16:23] [BACKEND] foreign key (product_id)
+[2026-02-17 10:16:23] [BACKEND] references products
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.151287241Z","@version":"1","message":"\n    alter table if exists carts \n       add constraint FKb5o626f86h46m4s7ms6ginnop \n       foreign key (user_id) \n       references users","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists carts
+[2026-02-17 10:16:23] [BACKEND] add constraint FKb5o626f86h46m4s7ms6ginnop
+[2026-02-17 10:16:23] [BACKEND] foreign key (user_id)
+[2026-02-17 10:16:23] [BACKEND] references users
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.153362882Z","@version":"1","message":"\n    alter table if exists categories \n       add constraint FKsaok720gsu4u2wrgbk10b5n8d \n       foreign key (parent_id) \n       references categories","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists categories
+[2026-02-17 10:16:23] [BACKEND] add constraint FKsaok720gsu4u2wrgbk10b5n8d
+[2026-02-17 10:16:23] [BACKEND] foreign key (parent_id)
+[2026-02-17 10:16:23] [BACKEND] references categories
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.155873167Z","@version":"1","message":"\n    alter table if exists coupons \n       add constraint FK1y4bgwwy6k404u0dv4jfi1wb4 \n       foreign key (product_id) \n       references products","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists coupons
+[2026-02-17 10:16:23] [BACKEND] add constraint FK1y4bgwwy6k404u0dv4jfi1wb4
+[2026-02-17 10:16:23] [BACKEND] foreign key (product_id)
+[2026-02-17 10:16:23] [BACKEND] references products
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.158634834Z","@version":"1","message":"\n    alter table if exists coupons \n       add constraint FKeo53jdsgc5htpc5wuiyd4vkt6 \n       foreign key (vendor_id) \n       references vendors","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists coupons
+[2026-02-17 10:16:23] [BACKEND] add constraint FKeo53jdsgc5htpc5wuiyd4vkt6
+[2026-02-17 10:16:23] [BACKEND] foreign key (vendor_id)
+[2026-02-17 10:16:23] [BACKEND] references vendors
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.161627161Z","@version":"1","message":"\n    alter table if exists order_items \n       add constraint FKbioxgbv59vetrxe0ejfubep1w \n       foreign key (order_id) \n       references orders","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists order_items
+[2026-02-17 10:16:23] [BACKEND] add constraint FKbioxgbv59vetrxe0ejfubep1w
+[2026-02-17 10:16:23] [BACKEND] foreign key (order_id)
+[2026-02-17 10:16:23] [BACKEND] references orders
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.164893297Z","@version":"1","message":"\n    alter table if exists order_items \n       add constraint FKocimc7dtr037rh4ls4l95nlfi \n       foreign key (product_id) \n       references products","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists order_items
+[2026-02-17 10:16:23] [BACKEND] add constraint FKocimc7dtr037rh4ls4l95nlfi
+[2026-02-17 10:16:23] [BACKEND] foreign key (product_id)
+[2026-02-17 10:16:23] [BACKEND] references products
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.167082528Z","@version":"1","message":"\n    alter table if exists order_items \n       add constraint FKh2b04eyamwe2jqedwv3lbrx7f \n       foreign key (vendor_id) \n       references vendors","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists order_items
+[2026-02-17 10:16:23] [BACKEND] add constraint FKh2b04eyamwe2jqedwv3lbrx7f
+[2026-02-17 10:16:23] [BACKEND] foreign key (vendor_id)
+[2026-02-17 10:16:23] [BACKEND] references vendors
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.169506886Z","@version":"1","message":"\n    alter table if exists orders \n       add constraint FK66jolu65brloux12yi37qy3ky \n       foreign key (billing_address_id) \n       references addresses","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists orders
+[2026-02-17 10:16:23] [BACKEND] add constraint FK66jolu65brloux12yi37qy3ky
+[2026-02-17 10:16:23] [BACKEND] foreign key (billing_address_id)
+[2026-02-17 10:16:23] [BACKEND] references addresses
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.171837703Z","@version":"1","message":"\n    alter table if exists orders \n       add constraint FKmk6q95x8ffidq82wlqjaq7sqc \n       foreign key (shipping_address_id) \n       references addresses","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists orders
+[2026-02-17 10:16:23] [BACKEND] add constraint FKmk6q95x8ffidq82wlqjaq7sqc
+[2026-02-17 10:16:23] [BACKEND] foreign key (shipping_address_id)
+[2026-02-17 10:16:23] [BACKEND] references addresses
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.174067438Z","@version":"1","message":"\n    alter table if exists orders \n       add constraint FK32ql8ubntj5uh44ph9659tiih \n       foreign key (user_id) \n       references users","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists orders
+[2026-02-17 10:16:23] [BACKEND] add constraint FK32ql8ubntj5uh44ph9659tiih
+[2026-02-17 10:16:23] [BACKEND] foreign key (user_id)
+[2026-02-17 10:16:23] [BACKEND] references users
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.176702239Z","@version":"1","message":"\n    alter table if exists payments \n       add constraint FK81gagumt0r8y3rmudcgpbk42l \n       foreign key (order_id) \n       references orders","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists payments
+[2026-02-17 10:16:23] [BACKEND] add constraint FK81gagumt0r8y3rmudcgpbk42l
+[2026-02-17 10:16:23] [BACKEND] foreign key (order_id)
+[2026-02-17 10:16:23] [BACKEND] references orders
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.179546129Z","@version":"1","message":"\n    alter table if exists product_images \n       add constraint FKqnq71xsohugpqwf3c9gxmsuy \n       foreign key (product_id) \n       references products","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists product_images
+[2026-02-17 10:16:23] [BACKEND] add constraint FKqnq71xsohugpqwf3c9gxmsuy
+[2026-02-17 10:16:23] [BACKEND] foreign key (product_id)
+[2026-02-17 10:16:23] [BACKEND] references products
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.182666734Z","@version":"1","message":"\n    alter table if exists products \n       add constraint FKog2rp4qthbtt2lfyhfo32lsw9 \n       foreign key (category_id) \n       references categories","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists products
+[2026-02-17 10:16:23] [BACKEND] add constraint FKog2rp4qthbtt2lfyhfo32lsw9
+[2026-02-17 10:16:23] [BACKEND] foreign key (category_id)
+[2026-02-17 10:16:23] [BACKEND] references categories
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.184797365Z","@version":"1","message":"\n    alter table if exists products \n       add constraint FKs6kdu75k7ub4s95ydsr52p59s \n       foreign key (vendor_id) \n       references vendors","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists products
+[2026-02-17 10:16:23] [BACKEND] add constraint FKs6kdu75k7ub4s95ydsr52p59s
+[2026-02-17 10:16:23] [BACKEND] foreign key (vendor_id)
+[2026-02-17 10:16:23] [BACKEND] references vendors
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.187282957Z","@version":"1","message":"\n    alter table if exists reviews \n       add constraint FKqwgq1lxgahsxdspnwqfac6sv6 \n       foreign key (order_id) \n       references orders","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists reviews
+[2026-02-17 10:16:23] [BACKEND] add constraint FKqwgq1lxgahsxdspnwqfac6sv6
+[2026-02-17 10:16:23] [BACKEND] foreign key (order_id)
+[2026-02-17 10:16:23] [BACKEND] references orders
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.190210533Z","@version":"1","message":"\n    alter table if exists reviews \n       add constraint FKpl51cejpw4gy5swfar8br9ngi \n       foreign key (product_id) \n       references products","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists reviews
+[2026-02-17 10:16:23] [BACKEND] add constraint FKpl51cejpw4gy5swfar8br9ngi
+[2026-02-17 10:16:23] [BACKEND] foreign key (product_id)
+[2026-02-17 10:16:23] [BACKEND] references products
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.192608372Z","@version":"1","message":"\n    alter table if exists reviews \n       add constraint FKcgy7qjc1r99dp117y9en6lxye \n       foreign key (user_id) \n       references users","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists reviews
+[2026-02-17 10:16:23] [BACKEND] add constraint FKcgy7qjc1r99dp117y9en6lxye
+[2026-02-17 10:16:23] [BACKEND] foreign key (user_id)
+[2026-02-17 10:16:23] [BACKEND] references users
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.194843077Z","@version":"1","message":"\n    alter table if exists reviews \n       add constraint FKsg1xksdcv84wvwbvthpg00iao \n       foreign key (vendor_id) \n       references vendors","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists reviews
+[2026-02-17 10:16:23] [BACKEND] add constraint FKsg1xksdcv84wvwbvthpg00iao
+[2026-02-17 10:16:23] [BACKEND] foreign key (vendor_id)
+[2026-02-17 10:16:23] [BACKEND] references vendors
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.197151228Z","@version":"1","message":"\n    alter table if exists user_roles \n       add constraint FKh8ciramu9cc9q3qcqiv4ue8a6 \n       foreign key (role_id) \n       references roles","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists user_roles
+[2026-02-17 10:16:23] [BACKEND] add constraint FKh8ciramu9cc9q3qcqiv4ue8a6
+[2026-02-17 10:16:23] [BACKEND] foreign key (role_id)
+[2026-02-17 10:16:23] [BACKEND] references roles
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.200044851Z","@version":"1","message":"\n    alter table if exists user_roles \n       add constraint FKhfh9dx7w3ubf1co1vdev94g3f \n       foreign key (user_id) \n       references users","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists user_roles
+[2026-02-17 10:16:23] [BACKEND] add constraint FKhfh9dx7w3ubf1co1vdev94g3f
+[2026-02-17 10:16:23] [BACKEND] foreign key (user_id)
+[2026-02-17 10:16:23] [BACKEND] references users
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.202404605Z","@version":"1","message":"\n    alter table if exists vendors \n       add constraint FKh48ek4rh5meeb162rpiiabuvu \n       foreign key (approved_by) \n       references users","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists vendors
+[2026-02-17 10:16:23] [BACKEND] add constraint FKh48ek4rh5meeb162rpiiabuvu
+[2026-02-17 10:16:23] [BACKEND] foreign key (approved_by)
+[2026-02-17 10:16:23] [BACKEND] references users
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.204953846Z","@version":"1","message":"\n    alter table if exists vendors \n       add constraint FKsi74if5mlck37eipfrnofkmg7 \n       foreign key (kyc_verified_by) \n       references users","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists vendors
+[2026-02-17 10:16:23] [BACKEND] add constraint FKsi74if5mlck37eipfrnofkmg7
+[2026-02-17 10:16:23] [BACKEND] foreign key (kyc_verified_by)
+[2026-02-17 10:16:23] [BACKEND] references users
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.207294087Z","@version":"1","message":"\n    alter table if exists vendors \n       add constraint FKiuqso7j7nivq7sb3v3v4j7ein \n       foreign key (user_id) \n       references users","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] alter table if exists vendors
+[2026-02-17 10:16:23] [BACKEND] add constraint FKiuqso7j7nivq7sb3v3v4j7ein
+[2026-02-17 10:16:23] [BACKEND] foreign key (user_id)
+[2026-02-17 10:16:23] [BACKEND] references users
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.210278693Z","@version":"1","message":"Initialized JPA EntityManagerFactory for persistence unit 'default'","logger_name":"org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:21.438490865Z","@version":"1","message":"Hibernate is in classpath; If applicable, HQL parser will be used.","logger_name":"org.springframework.data.jpa.repository.query.QueryEnhancerFactories","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:23.862944925Z","@version":"1","message":"Initializing Payment Gateway Factory","logger_name":"com.localcart.service.payment.gateway.factory.PaymentGatewayFactory","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:23.863243852Z","@version":"1","message":"Registered payment gateway for provider: MOCK","logger_name":"com.localcart.service.payment.gateway.factory.PaymentGatewayFactory","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:23.863313121Z","@version":"1","message":"Mock payment gateway registered","logger_name":"com.localcart.service.payment.gateway.factory.PaymentGatewayFactory","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:23.863369115Z","@version":"1","message":"Registered payment gateway for provider: STRIPE","logger_name":"com.localcart.service.payment.gateway.factory.PaymentGatewayFactory","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:23.863418277Z","@version":"1","message":"Stripe payment gateway registered","logger_name":"com.localcart.service.payment.gateway.factory.PaymentGatewayFactory","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:23.863479832Z","@version":"1","message":"Payment Gateway Factory initialized with 2 providers","logger_name":"com.localcart.service.payment.gateway.factory.PaymentGatewayFactory","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:24.075961681Z","@version":"1","message":"spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning","logger_name":"org.springframework.boot.jpa.autoconfigure.JpaBaseConfiguration$JpaWebConfiguration","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:24.202436525Z","@version":"1","message":"Global AuthenticationManager configured with UserDetailsService bean with name userService","logger_name":"org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:25.833370773Z","@version":"1","message":"Exposing 6 endpoints beneath base path '/actuator'","logger_name":"org.springframework.boot.actuate.endpoint.web.EndpointLinksResolver","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:25.93492113Z","@version":"1","message":"Tomcat started on port 8080 (http) with context path '/'","logger_name":"org.springframework.boot.tomcat.TomcatWebServer","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:25.948189104Z","@version":"1","message":"Started LocalcartApplication in 10.629 seconds (process running for 11.17)","logger_name":"com.localcart.LocalcartApplication","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:40.415062173Z","@version":"1","message":"Initializing Spring DispatcherServlet 'dispatcherServlet'","logger_name":"org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/]","thread_name":"http-nio-8080-exec-1","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:40.415328199Z","@version":"1","message":"Initializing Servlet 'dispatcherServlet'","logger_name":"org.springframework.web.servlet.DispatcherServlet","thread_name":"http-nio-8080-exec-1","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T09:50:40.416854494Z","@version":"1","message":"Completed initialization in 1 ms","logger_name":"org.springframework.web.servlet.DispatcherServlet","thread_name":"http-nio-8080-exec-1","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T10:00:00.007629645Z","@version":"1","message":"Running review request check (delivered 7 days ago)","logger_name":"com.localcart.service.ScheduledAutomationService","thread_name":"scheduling-1","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T10:00:00.065422049Z","@version":"1","message":"\n    select\n        o1_0.id,\n        o1_0.billing_address_id,\n        o1_0.cancellation_reason,\n        o1_0.cancelled_at,\n        o1_0.created_at,\n        o1_0.created_by,\n        o1_0.deleted_at,\n        o1_0.delivered_at,\n        o1_0.discount,\n        o1_0.is_deleted,\n        i1_0.order_id,\n        i1_0.id,\n        i1_0.created_at,\n        i1_0.created_by,\n        i1_0.deleted_at,\n        i1_0.is_deleted,\n        i1_0.product_id,\n        i1_0.product_name,\n        i1_0.quantity,\n        i1_0.subtotal,\n        i1_0.unit_price,\n        i1_0.updated_at,\n        i1_0.updated_by,\n        i1_0.vendor_id,\n        o1_0.notes,\n        o1_0.order_number,\n        o1_0.shipped_at,\n        o1_0.shipping_address_id,\n        o1_0.shipping_fee,\n        o1_0.status,\n        o1_0.subtotal,\n        o1_0.tax,\n        o1_0.total,\n        o1_0.tracking_number,\n        o1_0.updated_at,\n        o1_0.updated_by,\n        o1_0.user_id \n    from\n        orders o1_0 \n    left join\n        order_items i1_0 \n            on o1_0.id=i1_0.order_id \n    where\n        o1_0.status='DELIVERED' \n        and o1_0.delivered_at<? \n        and o1_0.id not in (select\n            distinct r1_0.order_id from reviews r1_0 \n        where\n            r1_0.order_id is not null)","logger_name":"org.hibernate.SQL","thread_name":"scheduling-1","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] select
+[2026-02-17 10:16:23] [BACKEND] o1_0.id,
+[2026-02-17 10:16:23] [BACKEND] o1_0.billing_address_id,
+[2026-02-17 10:16:23] [BACKEND] o1_0.cancellation_reason,
+[2026-02-17 10:16:23] [BACKEND] o1_0.cancelled_at,
+[2026-02-17 10:16:23] [BACKEND] o1_0.created_at,
+[2026-02-17 10:16:23] [BACKEND] o1_0.created_by,
+[2026-02-17 10:16:23] [BACKEND] o1_0.deleted_at,
+[2026-02-17 10:16:23] [BACKEND] o1_0.delivered_at,
+[2026-02-17 10:16:23] [BACKEND] o1_0.discount,
+[2026-02-17 10:16:23] [BACKEND] o1_0.is_deleted,
+[2026-02-17 10:16:23] [BACKEND] i1_0.order_id,
+[2026-02-17 10:16:23] [BACKEND] i1_0.id,
+[2026-02-17 10:16:23] [BACKEND] i1_0.created_at,
+[2026-02-17 10:16:23] [BACKEND] i1_0.created_by,
+[2026-02-17 10:16:23] [BACKEND] i1_0.deleted_at,
+[2026-02-17 10:16:23] [BACKEND] i1_0.is_deleted,
+[2026-02-17 10:16:23] [BACKEND] i1_0.product_id,
+[2026-02-17 10:16:23] [BACKEND] i1_0.product_name,
+[2026-02-17 10:16:23] [BACKEND] i1_0.quantity,
+[2026-02-17 10:16:23] [BACKEND] i1_0.subtotal,
+[2026-02-17 10:16:23] [BACKEND] i1_0.unit_price,
+[2026-02-17 10:16:23] [BACKEND] i1_0.updated_at,
+[2026-02-17 10:16:23] [BACKEND] i1_0.updated_by,
+[2026-02-17 10:16:23] [BACKEND] i1_0.vendor_id,
+[2026-02-17 10:16:23] [BACKEND] o1_0.notes,
+[2026-02-17 10:16:23] [BACKEND] o1_0.order_number,
+[2026-02-17 10:16:23] [BACKEND] o1_0.shipped_at,
+[2026-02-17 10:16:23] [BACKEND] o1_0.shipping_address_id,
+[2026-02-17 10:16:23] [BACKEND] o1_0.shipping_fee,
+[2026-02-17 10:16:23] [BACKEND] o1_0.status,
+[2026-02-17 10:16:23] [BACKEND] o1_0.subtotal,
+[2026-02-17 10:16:23] [BACKEND] o1_0.tax,
+[2026-02-17 10:16:23] [BACKEND] o1_0.total,
+[2026-02-17 10:16:23] [BACKEND] o1_0.tracking_number,
+[2026-02-17 10:16:23] [BACKEND] o1_0.updated_at,
+[2026-02-17 10:16:23] [BACKEND] o1_0.updated_by,
+[2026-02-17 10:16:23] [BACKEND] o1_0.user_id
+[2026-02-17 10:16:23] [BACKEND] from
+[2026-02-17 10:16:23] [BACKEND] orders o1_0
+[2026-02-17 10:16:23] [BACKEND] left join
+[2026-02-17 10:16:23] [BACKEND] order_items i1_0
+[2026-02-17 10:16:23] [BACKEND] on o1_0.id=i1_0.order_id
+[2026-02-17 10:16:23] [BACKEND] where
+[2026-02-17 10:16:23] [BACKEND] o1_0.status='DELIVERED'
+[2026-02-17 10:16:23] [BACKEND] and o1_0.delivered_at<?
+[2026-02-17 10:16:23] [BACKEND] and o1_0.id not in (select
+[2026-02-17 10:16:23] [BACKEND] distinct r1_0.order_id from reviews r1_0
+[2026-02-17 10:16:23] [BACKEND] where
+[2026-02-17 10:16:23] [BACKEND] r1_0.order_id is not null)
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T10:00:00.088469084Z","@version":"1","message":"Found 0 orders needing review requests","logger_name":"com.localcart.service.ScheduledAutomationService","thread_name":"scheduling-1","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T10:00:00.092289053Z","@version":"1","message":"Running abandoned cart check (inactive for 24 hours)","logger_name":"com.localcart.service.ScheduledAutomationService","thread_name":"scheduling-1","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T10:00:00.09896793Z","@version":"1","message":"\n    select\n        c1_0.id,\n        c1_0.created_at,\n        c1_0.created_by,\n        c1_0.deleted_at,\n        c1_0.is_deleted,\n        i1_0.cart_id,\n        i1_0.id,\n        i1_0.created_at,\n        i1_0.created_by,\n        i1_0.deleted_at,\n        i1_0.is_deleted,\n        i1_0.product_id,\n        p1_0.id,\n        p1_0.category_id,\n        p1_0.created_at,\n        p1_0.created_by,\n        p1_0.deleted_at,\n        p1_0.description,\n        p1_0.discount_price,\n        p1_0.is_active,\n        p1_0.is_deleted,\n        p1_0.is_featured,\n        p1_0.name,\n        p1_0.price,\n        p1_0.rating,\n        p1_0.sku,\n        p1_0.slug,\n        p1_0.stock,\n        p1_0.total_reviews,\n        p1_0.total_sales,\n        p1_0.updated_at,\n        p1_0.updated_by,\n        p1_0.vendor_id,\n        i1_0.quantity,\n        i1_0.updated_at,\n        i1_0.updated_by,\n        c1_0.updated_at,\n        c1_0.updated_by,\n        c1_0.user_id \n    from\n        carts c1_0 \n    left join\n        cart_items i1_0 \n            on c1_0.id=i1_0.cart_id \n    left join\n        products p1_0 \n            on p1_0.id=i1_0.product_id \n    where\n        c1_0.updated_at<? \n        and (\n            select\n                count(*) \n            from\n                cart_items i2_0 \n            where\n                c1_0.id=i2_0.cart_id\n        )>0","logger_name":"org.hibernate.SQL","thread_name":"scheduling-1","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [BACKEND] Hibernate:
+[2026-02-17 10:16:23] [BACKEND] select
+[2026-02-17 10:16:23] [BACKEND] c1_0.id,
+[2026-02-17 10:16:23] [BACKEND] c1_0.created_at,
+[2026-02-17 10:16:23] [BACKEND] c1_0.created_by,
+[2026-02-17 10:16:23] [BACKEND] c1_0.deleted_at,
+[2026-02-17 10:16:23] [BACKEND] c1_0.is_deleted,
+[2026-02-17 10:16:23] [BACKEND] i1_0.cart_id,
+[2026-02-17 10:16:23] [BACKEND] i1_0.id,
+[2026-02-17 10:16:23] [BACKEND] i1_0.created_at,
+[2026-02-17 10:16:23] [BACKEND] i1_0.created_by,
+[2026-02-17 10:16:23] [BACKEND] i1_0.deleted_at,
+[2026-02-17 10:16:23] [BACKEND] i1_0.is_deleted,
+[2026-02-17 10:16:23] [BACKEND] i1_0.product_id,
+[2026-02-17 10:16:23] [BACKEND] p1_0.id,
+[2026-02-17 10:16:23] [BACKEND] p1_0.category_id,
+[2026-02-17 10:16:23] [BACKEND] p1_0.created_at,
+[2026-02-17 10:16:23] [BACKEND] p1_0.created_by,
+[2026-02-17 10:16:23] [BACKEND] p1_0.deleted_at,
+[2026-02-17 10:16:23] [BACKEND] p1_0.description,
+[2026-02-17 10:16:23] [BACKEND] p1_0.discount_price,
+[2026-02-17 10:16:23] [BACKEND] p1_0.is_active,
+[2026-02-17 10:16:23] [BACKEND] p1_0.is_deleted,
+[2026-02-17 10:16:23] [BACKEND] p1_0.is_featured,
+[2026-02-17 10:16:23] [BACKEND] p1_0.name,
+[2026-02-17 10:16:23] [BACKEND] p1_0.price,
+[2026-02-17 10:16:23] [BACKEND] p1_0.rating,
+[2026-02-17 10:16:23] [BACKEND] p1_0.sku,
+[2026-02-17 10:16:23] [BACKEND] p1_0.slug,
+[2026-02-17 10:16:23] [BACKEND] p1_0.stock,
+[2026-02-17 10:16:23] [BACKEND] p1_0.total_reviews,
+[2026-02-17 10:16:23] [BACKEND] p1_0.total_sales,
+[2026-02-17 10:16:23] [BACKEND] p1_0.updated_at,
+[2026-02-17 10:16:23] [BACKEND] p1_0.updated_by,
+[2026-02-17 10:16:23] [BACKEND] p1_0.vendor_id,
+[2026-02-17 10:16:23] [BACKEND] i1_0.quantity,
+[2026-02-17 10:16:23] [BACKEND] i1_0.updated_at,
+[2026-02-17 10:16:23] [BACKEND] i1_0.updated_by,
+[2026-02-17 10:16:23] [BACKEND] c1_0.updated_at,
+[2026-02-17 10:16:23] [BACKEND] c1_0.updated_by,
+[2026-02-17 10:16:23] [BACKEND] c1_0.user_id
+[2026-02-17 10:16:23] [BACKEND] from
+[2026-02-17 10:16:23] [BACKEND] carts c1_0
+[2026-02-17 10:16:23] [BACKEND] left join
+[2026-02-17 10:16:23] [BACKEND] cart_items i1_0
+[2026-02-17 10:16:23] [BACKEND] on c1_0.id=i1_0.cart_id
+[2026-02-17 10:16:23] [BACKEND] left join
+[2026-02-17 10:16:23] [BACKEND] products p1_0
+[2026-02-17 10:16:23] [BACKEND] on p1_0.id=i1_0.product_id
+[2026-02-17 10:16:23] [BACKEND] where
+[2026-02-17 10:16:23] [BACKEND] c1_0.updated_at<?
+[2026-02-17 10:16:23] [BACKEND] and (
+[2026-02-17 10:16:23] [BACKEND] select
+[2026-02-17 10:16:23] [BACKEND] count(*)
+[2026-02-17 10:16:23] [BACKEND] from
+[2026-02-17 10:16:23] [BACKEND] cart_items i2_0
+[2026-02-17 10:16:23] [BACKEND] where
+[2026-02-17 10:16:23] [BACKEND] c1_0.id=i2_0.cart_id
+[2026-02-17 10:16:23] [BACKEND] )>0
+[2026-02-17 10:16:23] [BACKEND] {"@timestamp":"2026-02-17T10:00:00.103378751Z","@version":"1","message":"Found 0 abandoned carts","logger_name":"com.localcart.service.ScheduledAutomationService","thread_name":"scheduling-1","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
+[2026-02-17 10:16:23] [DATABASE] The files belonging to this database system will be owned by user "postgres".
+[2026-02-17 10:16:23] [DATABASE] This user must also own the server process.
+[2026-02-17 10:16:23] [DATABASE] 
+[2026-02-17 10:16:23] [DATABASE] The database cluster will be initialized with locale "en_US.utf8".
+[2026-02-17 10:16:23] [DATABASE] The default database encoding has accordingly been set to "UTF8".
+[2026-02-17 10:16:23] [DATABASE] The default text search configuration will be set to "english".
+[2026-02-17 10:16:23] [DATABASE] 
+[2026-02-17 10:16:23] [DATABASE] Data page checksums are disabled.
+[2026-02-17 10:16:23] [DATABASE] 
+[2026-02-17 10:16:23] [DATABASE] fixing permissions on existing directory /var/lib/postgresql/data ... ok
+[2026-02-17 10:16:23] [DATABASE] creating subdirectories ... ok
+[2026-02-17 10:16:23] [DATABASE] selecting dynamic shared memory implementation ... posix
+[2026-02-17 10:16:23] [DATABASE] selecting default max_connections ... 100
+[2026-02-17 10:16:23] [DATABASE] selecting default shared_buffers ... 128MB
+[2026-02-17 10:16:23] [DATABASE] selecting default time zone ... UTC
+[2026-02-17 10:16:23] [DATABASE] creating configuration files ... ok
+[2026-02-17 10:16:23] [DATABASE] running bootstrap script ... ok
+[2026-02-17 10:16:23] [DATABASE] performing post-bootstrap initialization ... ok
+[2026-02-17 10:16:23] [DATABASE] syncing data to disk ... ok
+[2026-02-17 10:16:23] [DATABASE] 
+[2026-02-17 10:16:23] [DATABASE] 
+[2026-02-17 10:16:23] [DATABASE] Success. You can now start the database server using:
+[2026-02-17 10:16:23] [DATABASE] 
+[2026-02-17 10:16:23] [DATABASE] pg_ctl -D /var/lib/postgresql/data -l logfile start
+[2026-02-17 10:16:23] [DATABASE] 
+[2026-02-17 10:16:23] [DATABASE] waiting for server to start....2026-02-17 09:43:53.717 UTC [40] LOG:  starting PostgreSQL 15.15 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+[2026-02-17 10:16:23] [DATABASE] 2026-02-17 09:43:53.718 UTC [40] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+[2026-02-17 10:16:23] [DATABASE] 2026-02-17 09:43:53.723 UTC [43] LOG:  database system was shut down at 2026-02-17 09:43:53 UTC
+[2026-02-17 10:16:23] [DATABASE] 2026-02-17 09:43:53.728 UTC [40] LOG:  database system is ready to accept connections
+[2026-02-17 10:16:23] [DATABASE] done
+[2026-02-17 10:16:23] [DATABASE] server started
+[2026-02-17 10:16:23] [DATABASE] CREATE DATABASE
+[2026-02-17 10:16:23] [DATABASE] 
+[2026-02-17 10:16:23] [DATABASE] 
+[2026-02-17 10:16:23] [DATABASE] /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+[2026-02-17 10:16:23] [DATABASE] 
+[2026-02-17 10:16:23] [DATABASE] waiting for server to shut down....2026-02-17 09:43:53.923 UTC [40] LOG:  received fast shutdown request
+[2026-02-17 10:16:23] [DATABASE] 2026-02-17 09:43:53.954 UTC [40] LOG:  aborting any active transactions
+[2026-02-17 10:16:23] [DATABASE] 2026-02-17 09:43:53.959 UTC [40] LOG:  background worker "logical replication launcher" (PID 46) exited with exit code 1
+[2026-02-17 10:16:23] [DATABASE] 2026-02-17 09:43:53.959 UTC [41] LOG:  shutting down
+[2026-02-17 10:16:23] [DATABASE] 2026-02-17 09:43:53.960 UTC [41] LOG:  checkpoint starting: shutdown immediate
+[2026-02-17 10:16:23] [DATABASE] 2026-02-17 09:43:54.091 UTC [41] LOG:  checkpoint complete: wrote 921 buffers (5.6%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.017 s, sync=0.110 s, total=0.132 s; sync files=301, longest=0.089 s, average=0.001 s; distance=4239 kB, estimate=4239 kB
+[2026-02-17 10:16:23] [DATABASE] 2026-02-17 09:43:54.098 UTC [40] LOG:  database system is shut down
+[2026-02-17 10:16:23] [DATABASE] done
+[2026-02-17 10:16:23] [DATABASE] server stopped
+[2026-02-17 10:16:23] [DATABASE] 
+[2026-02-17 10:16:23] [DATABASE] PostgreSQL init process complete; ready for start up.
+[2026-02-17 10:16:23] [DATABASE] 
+[2026-02-17 10:16:23] [CACHE] 1:C 17 Feb 2026 09:43:50.931 # WARNING Memory overcommit must be enabled! Without it, a background save or replication may fail under low memory condition. Being disabled, it can also cause failures without low memory condition, see https://github.com/jemalloc/jemalloc/issues/1328. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+[2026-02-17 10:16:23] [CACHE] 1:C 17 Feb 2026 09:43:50.932 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+[2026-02-17 10:16:23] [CACHE] 1:C 17 Feb 2026 09:43:50.932 * Redis version=7.4.7, bits=64, commit=00000000, modified=0, pid=1, just started
+[2026-02-17 10:16:23] [CACHE] 1:C 17 Feb 2026 09:43:50.932 # Warning: no config file specified, using the default config. In order to specify a config file use redis-server /path/to/redis.conf
+[2026-02-17 10:16:23] [CACHE] 1:M 17 Feb 2026 09:43:50.932 * Increased maximum number of open files to 10032 (it was originally set to 1024).
+[2026-02-17 10:16:23] [CACHE] 1:M 17 Feb 2026 09:43:50.932 * monotonic clock: POSIX clock_gettime
+[2026-02-17 10:16:23] [CACHE] 1:M 17 Feb 2026 09:43:50.934 * Running mode=standalone, port=6379.
+[2026-02-17 10:16:23] [CACHE] 1:M 17 Feb 2026 09:43:50.935 * Server initialized
+[2026-02-17 10:16:23] [CACHE] 1:M 17 Feb 2026 09:43:50.935 * Ready to accept connections tcp
