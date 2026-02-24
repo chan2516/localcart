@@ -8,9 +8,9 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { toast } from 'sonner'
-import { Mail, Lock, Eye, EyeOff } from 'lucide-react'
+import { Mail, Lock, Eye, EyeOff, Store } from 'lucide-react'
 
-export default function LoginPage() {
+export default function VendorLoginPage() {
   const router = useRouter()
   const { login, isLoading } = useAuthStore()
   const [showPassword, setShowPassword] = useState(false)
@@ -42,7 +42,6 @@ export default function LoginPage() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors((prev) => {
         const newErrors = { ...prev }
@@ -61,8 +60,17 @@ export default function LoginPage() {
 
     try {
       await login(formData.email, formData.password)
+      
+      // Check if user has VENDOR role
+      const user = useAuthStore.getState().user
+      if (user?.role !== 'VENDOR') {
+        toast.error('This account does not have vendor access')
+        useAuthStore.getState().logout()
+        return
+      }
+
       toast.success('Logged in successfully!')
-      router.push('/')
+      router.push('/vendor/dashboard')
     } catch (error: any) {
       const errorMsg = error?.response?.data?.message || 'Invalid email or password'
       toast.error(errorMsg)
@@ -70,12 +78,15 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 to-orange-100 py-12 px-4">
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="text-center space-y-2">
-          <CardTitle className="text-3xl font-bold text-gray-900">Welcome Back</CardTitle>
+          <div className="flex justify-center mb-2">
+            <Store className="h-10 w-10 text-orange-600" />
+          </div>
+          <CardTitle className="text-3xl font-bold text-gray-900">Vendor Portal</CardTitle>
           <CardDescription className="text-gray-600">
-            Sign in to your LocalCart customer account
+            Sign in to your vendor account and manage your store
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -91,7 +102,7 @@ export default function LoginPage() {
                   id="email"
                   name="email"
                   type="email"
-                  placeholder="you@example.com"
+                  placeholder="vendor@example.com"
                   value={formData.email}
                   onChange={handleInputChange}
                   className={`pl-10 ${errors.email ? 'border-red-500' : ''}`}
@@ -125,9 +136,9 @@ export default function LoginPage() {
                   tabIndex={-1}
                 >
                   {showPassword ? (
-                    <EyeOff className="h-4 w-4" />
-                  ) : (
                     <Eye className="h-4 w-4" />
+                  ) : (
+                    <EyeOff className="h-4 w-4" />
                   )}
                 </button>
               </div>
@@ -138,7 +149,7 @@ export default function LoginPage() {
             <div className="flex justify-end">
               <Link
                 href="/auth/forgot-password"
-                className="text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline"
+                className="text-sm font-medium text-orange-600 hover:text-orange-700 hover:underline"
               >
                 Forgot password?
               </Link>
@@ -147,7 +158,7 @@ export default function LoginPage() {
             {/* Login Button */}
             <Button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2"
+              className="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2"
               disabled={isLoading}
             >
               {isLoading ? 'Signing in...' : 'Sign In'}
@@ -167,77 +178,25 @@ export default function LoginPage() {
               type="button"
               variant="outline"
               className="w-full"
-              onClick={() => router.push('/auth/register')}
+              onClick={() => router.push('/auth/vendor/register')}
               disabled={isLoading}
             >
-              Create New Account
+              Register as Vendor
             </Button>
 
-            {/* Vendor & Admin Links */}
+            {/* Back to Customer */}
             <div className="text-center space-y-2 pt-4 border-t">
               <p className="text-sm text-gray-600">
-                Want to sell?{' '}
+                Are you a customer?{' '}
                 <Link
-                  href="/auth/vendor/login"
+                  href="/auth/login"
                   className="font-semibold text-blue-600 hover:text-blue-700 hover:underline"
                 >
-                  Vendor Login
+                  Customer Login
                 </Link>
               </p>
             </div>
           </form>
-        </CardContent>
-      </Card>
-    </div>
-  )
-}
-            <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium">
-                Email
-              </label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="you@example.com"
-                value={formData.email}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label htmlFor="password" className="text-sm font-medium">
-                Password
-              </label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="••••••••"
-                value={formData.password}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-
-            <Button type="submit" disabled={isLoading} className="w-full">
-              {isLoading ? 'Signing in...' : 'Sign In'}
-            </Button>
-          </form>
-
-          <p className="text-center text-sm text-gray-600 mt-6">
-            Don't have an account?{' '}
-            <Link href="/auth/register" className="text-blue-600 hover:underline font-medium">
-              Sign up
-            </Link>
-          </p>
-
-          <p className="text-center text-sm text-gray-600 mt-4">
-            <Link href="/auth/forgot-password" className="text-blue-600 hover:underline">
-              Forgot your password?
-            </Link>
-          </p>
         </CardContent>
       </Card>
     </div>

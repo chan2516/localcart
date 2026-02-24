@@ -29,11 +29,21 @@ interface AuthStore {
 
   // Auth methods
   login: (email: string, password: string) => Promise<void>
-  register: (email: string, password: string, firstName: string, lastName: string) => Promise<void>
+  register: (email: string, password: string, firstName: string, lastName: string, phoneNumber?: string) => Promise<void>
   logout: () => void
   refreshToken: () => Promise<void>
   loadUserFromStorage: () => void
   getProfile: () => Promise<void>
+  
+  // Password reset
+  forgotPassword: (email: string) => Promise<void>
+  resetPassword: (token: string, newPassword: string) => Promise<void>
+  
+  // Vendor methods
+  registerVendor: (businessName: string, description: string, businessPhone: string, businessAddress: string) => Promise<void>
+  
+  // Admin methods
+  createAdminUser: (email: string, password: string, firstName: string, lastName: string) => Promise<void>
 }
 
 export const useAuthStore = create<AuthStore>((set, get) => ({
@@ -67,7 +77,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     }
   },
 
-  register: async (email, password, firstName, lastName) => {
+  register: async (email, password, firstName, lastName, phoneNumber = '') => {
     set({ isLoading: true })
     try {
       const response = await apiClient.post<AuthResponse>('/auth/register', {
@@ -75,6 +85,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         password,
         firstName,
         lastName,
+        phoneNumber,
       })
 
       localStorage.setItem('accessToken', response.accessToken)
@@ -84,6 +95,58 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         user: response.user,
         accessToken: response.accessToken,
         isAuthenticated: true,
+      })
+    } finally {
+      set({ isLoading: false })
+    }
+  },
+
+  forgotPassword: async (email) => {
+    set({ isLoading: true })
+    try {
+      await apiClient.post('/auth/forgot-password', { email })
+    } finally {
+      set({ isLoading: false })
+    }
+  },
+
+  resetPassword: async (token, newPassword) => {
+    set({ isLoading: true })
+    try {
+      await apiClient.post('/auth/reset-password', {
+        token,
+        newPassword,
+      })
+    } finally {
+      set({ isLoading: false })
+    }
+  },
+
+  registerVendor: async (businessName, description, businessPhone, businessAddress) => {
+    set({ isLoading: true })
+    try {
+      const response = await apiClient.post<any>('/vendors/register', {
+        businessName,
+        description,
+        businessPhone,
+        businessAddress,
+      })
+      
+      set({ user: { ...get().user, role: 'VENDOR', vendorId: response.id } as User })
+    } finally {
+      set({ isLoading: false })
+    }
+  },
+
+  createAdminUser: async (email, password, firstName, lastName) => {
+    set({ isLoading: true })
+    try {
+      await apiClient.post('/admin/users/create', {
+        email,
+        password,
+        firstName,
+        lastName,
+        roles: ['ADMIN'],
       })
     } finally {
       set({ isLoading: false })

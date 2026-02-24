@@ -8,9 +8,9 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { toast } from 'sonner'
-import { Mail, Lock, Eye, EyeOff } from 'lucide-react'
+import { Mail, Lock, Eye, EyeOff, Shield } from 'lucide-react'
 
-export default function LoginPage() {
+export default function AdminLoginPage() {
   const router = useRouter()
   const { login, isLoading } = useAuthStore()
   const [showPassword, setShowPassword] = useState(false)
@@ -42,7 +42,6 @@ export default function LoginPage() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors((prev) => {
         const newErrors = { ...prev }
@@ -61,8 +60,17 @@ export default function LoginPage() {
 
     try {
       await login(formData.email, formData.password)
+
+      // Check if user has ADMIN role
+      const user = useAuthStore.getState().user
+      if (user?.role !== 'ADMIN') {
+        toast.error('This account does not have admin access')
+        useAuthStore.getState().logout()
+        return
+      }
+
       toast.success('Logged in successfully!')
-      router.push('/')
+      router.push('/admin/dashboard')
     } catch (error: any) {
       const errorMsg = error?.response?.data?.message || 'Invalid email or password'
       toast.error(errorMsg)
@@ -70,12 +78,15 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-red-100 py-12 px-4">
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="text-center space-y-2">
-          <CardTitle className="text-3xl font-bold text-gray-900">Welcome Back</CardTitle>
+          <div className="flex justify-center mb-2">
+            <Shield className="h-10 w-10 text-red-600" />
+          </div>
+          <CardTitle className="text-3xl font-bold text-gray-900">Admin Panel</CardTitle>
           <CardDescription className="text-gray-600">
-            Sign in to your LocalCart customer account
+            Sign in to your administrator account
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -91,7 +102,7 @@ export default function LoginPage() {
                   id="email"
                   name="email"
                   type="email"
-                  placeholder="you@example.com"
+                  placeholder="admin@example.com"
                   value={formData.email}
                   onChange={handleInputChange}
                   className={`pl-10 ${errors.email ? 'border-red-500' : ''}`}
@@ -125,9 +136,9 @@ export default function LoginPage() {
                   tabIndex={-1}
                 >
                   {showPassword ? (
-                    <EyeOff className="h-4 w-4" />
-                  ) : (
                     <Eye className="h-4 w-4" />
+                  ) : (
+                    <EyeOff className="h-4 w-4" />
                   )}
                 </button>
               </div>
@@ -138,7 +149,7 @@ export default function LoginPage() {
             <div className="flex justify-end">
               <Link
                 href="/auth/forgot-password"
-                className="text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline"
+                className="text-sm font-medium text-red-600 hover:text-red-700 hover:underline"
               >
                 Forgot password?
               </Link>
@@ -147,97 +158,31 @@ export default function LoginPage() {
             {/* Login Button */}
             <Button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2"
+              className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2"
               disabled={isLoading}
             >
               {isLoading ? 'Signing in...' : 'Sign In'}
             </Button>
 
-            {/* Register Link */}
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300" />
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Or</span>
-              </div>
+            {/* Admin Info */}
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-sm text-red-800">
+              <p>
+                <strong>Admin Access Only:</strong> This panel is restricted to authorized administrators only.
+              </p>
             </div>
 
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full"
-              onClick={() => router.push('/auth/register')}
-              disabled={isLoading}
-            >
-              Create New Account
-            </Button>
-
-            {/* Vendor & Admin Links */}
+            {/* Back to Customer */}
             <div className="text-center space-y-2 pt-4 border-t">
               <p className="text-sm text-gray-600">
-                Want to sell?{' '}
                 <Link
-                  href="/auth/vendor/login"
+                  href="/auth/login"
                   className="font-semibold text-blue-600 hover:text-blue-700 hover:underline"
                 >
-                  Vendor Login
+                  Customer Login
                 </Link>
               </p>
             </div>
           </form>
-        </CardContent>
-      </Card>
-    </div>
-  )
-}
-            <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium">
-                Email
-              </label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="you@example.com"
-                value={formData.email}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label htmlFor="password" className="text-sm font-medium">
-                Password
-              </label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="••••••••"
-                value={formData.password}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-
-            <Button type="submit" disabled={isLoading} className="w-full">
-              {isLoading ? 'Signing in...' : 'Sign In'}
-            </Button>
-          </form>
-
-          <p className="text-center text-sm text-gray-600 mt-6">
-            Don't have an account?{' '}
-            <Link href="/auth/register" className="text-blue-600 hover:underline font-medium">
-              Sign up
-            </Link>
-          </p>
-
-          <p className="text-center text-sm text-gray-600 mt-4">
-            <Link href="/auth/forgot-password" className="text-blue-600 hover:underline">
-              Forgot your password?
-            </Link>
-          </p>
         </CardContent>
       </Card>
     </div>

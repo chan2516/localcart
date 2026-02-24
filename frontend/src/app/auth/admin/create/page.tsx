@@ -2,17 +2,16 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import { useAuthStore } from '@/lib/auth-store'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { toast } from 'sonner'
-import { Mail, Lock, User, Phone, Eye, EyeOff, CheckCircle, AlertCircle } from 'lucide-react'
+import { Mail, Lock, User, Eye, EyeOff, CheckCircle, Shield, AlertTriangle } from 'lucide-react'
 
-export default function RegisterPage() {
+export default function CreateAdminPage() {
   const router = useRouter()
-  const { register, isLoading } = useAuthStore()
+  const { createAdminUser, user, isLoading } = useAuthStore()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [formData, setFormData] = useState({
@@ -21,10 +20,37 @@ export default function RegisterPage() {
     confirmPassword: '',
     firstName: '',
     lastName: '',
-    phoneNumber: '',
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [passwordStrength, setPasswordStrength] = useState(0)
+
+  // Check if current user is admin
+  if (user?.role !== 'ADMIN') {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-red-100 py-12 px-4">
+        <Card className="w-full max-w-md shadow-lg">
+          <CardContent className="pt-10 text-center space-y-6">
+            <div className="flex justify-center">
+              <AlertTriangle className="h-16 w-16 text-red-500" />
+            </div>
+            <div className="space-y-2">
+              <CardTitle className="text-2xl font-bold text-gray-900">Access Denied</CardTitle>
+              <CardDescription className="text-base text-gray-600">
+                You need administrator privileges to create admin accounts.
+              </CardDescription>
+            </div>
+
+            <Button
+              onClick={() => router.push('/auth/admin/login')}
+              className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2"
+            >
+              Go to Admin Login
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
 
   const calculatePasswordStrength = (password: string) => {
     let strength = 0
@@ -94,17 +120,11 @@ export default function RegisterPage() {
     }
 
     try {
-      await register(
-        formData.email,
-        formData.password,
-        formData.firstName,
-        formData.lastName,
-        formData.phoneNumber
-      )
-      toast.success('Account created successfully!')
-      router.push('/')
+      await createAdminUser(formData.email, formData.password, formData.firstName, formData.lastName)
+      toast.success('Admin account created successfully!')
+      router.push('/admin/dashboard')
     } catch (error: any) {
-      const errorMsg = error?.response?.data?.message || 'Registration failed. Please try again.'
+      const errorMsg = error?.response?.data?.message || 'Failed to create admin account. Please try again.'
       toast.error(errorMsg)
     }
   }
@@ -122,12 +142,15 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-red-100 py-12 px-4">
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="text-center space-y-2">
-          <CardTitle className="text-3xl font-bold text-gray-900">Create Account</CardTitle>
+          <div className="flex justify-center mb-2">
+            <Shield className="h-10 w-10 text-red-600" />
+          </div>
+          <CardTitle className="text-3xl font-bold text-gray-900">Create Admin Account</CardTitle>
           <CardDescription className="text-gray-600">
-            Join LocalCart and start shopping from local vendors
+            Add a new administrator to the platform
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -184,7 +207,7 @@ export default function RegisterPage() {
                   id="email"
                   name="email"
                   type="email"
-                  placeholder="you@example.com"
+                  placeholder="admin@example.com"
                   value={formData.email}
                   onChange={handleInputChange}
                   className={`pl-10 ${errors.email ? 'border-red-500' : ''}`}
@@ -192,26 +215,6 @@ export default function RegisterPage() {
                 />
               </div>
               {errors.email && <p className="text-sm text-red-500">{errors.email}</p>}
-            </div>
-
-            {/* Phone Number */}
-            <div className="space-y-2">
-              <label htmlFor="phoneNumber" className="text-sm font-semibold text-gray-700">
-                Phone Number (Optional)
-              </label>
-              <div className="relative">
-                <Phone className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                <Input
-                  id="phoneNumber"
-                  name="phoneNumber"
-                  type="tel"
-                  placeholder="+1 (555) 000-0000"
-                  value={formData.phoneNumber}
-                  onChange={handleInputChange}
-                  className="pl-10"
-                  disabled={isLoading}
-                />
-              </div>
             </div>
 
             {/* Password Field */}
@@ -244,7 +247,7 @@ export default function RegisterPage() {
                   )}
                 </button>
               </div>
-              
+
               {formData.password && (
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
@@ -304,163 +307,33 @@ export default function RegisterPage() {
               )}
             </div>
 
-            {/* Register Button */}
-            <Button
-              type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2"
-              disabled={isLoading}
-            >
-              {isLoading ? 'Creating Account...' : 'Create Account'}
-            </Button>
-
-            {/* Sign In Link */}
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300" />
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Already have an account?</span>
-              </div>
+            {/* Warning Box */}
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-sm text-yellow-800">
+              <p>
+                <strong>Note:</strong> This will create an administrator account with full system access.
+              </p>
             </div>
 
+            {/* Create Button */}
+            <Button
+              type="submit"
+              className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Creating Admin...' : 'Create Admin Account'}
+            </Button>
+
+            {/* Cancel Button */}
             <Button
               type="button"
               variant="outline"
               className="w-full"
-              onClick={() => router.push('/auth/login')}
+              onClick={() => router.push('/admin/dashboard')}
               disabled={isLoading}
             >
-              Sign In
-            </Button>
-
-            {/* Vendor Registration */}
-            <div className="text-center space-y-2 pt-4 border-t">
-              <p className="text-sm text-gray-600">
-                Want to sell?{' '}
-                <Link
-                  href="/auth/vendor/register"
-                  className="font-semibold text-blue-600 hover:text-blue-700 hover:underline"
-                >
-                  Become a Vendor
-                </Link>
-              </p>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
-  )
-}
-
-    try {
-      await register(
-        formData.email,
-        formData.password,
-        formData.firstName,
-        formData.lastName
-      )
-      toast.success('Account created successfully!')
-      router.push('/')
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to create account')
-    }
-  }
-
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle className="text-3xl">Create Account</CardTitle>
-          <CardDescription>Join LocalCart and start shopping</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label htmlFor="firstName" className="text-sm font-medium">
-                  First Name
-                </label>
-                <Input
-                  id="firstName"
-                  name="firstName"
-                  placeholder="John"
-                  value={formData.firstName}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <label htmlFor="lastName" className="text-sm font-medium">
-                  Last Name
-                </label>
-                <Input
-                  id="lastName"
-                  name="lastName"
-                  placeholder="Doe"
-                  value={formData.lastName}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium">
-                Email
-              </label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="you@example.com"
-                value={formData.email}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label htmlFor="password" className="text-sm font-medium">
-                Password
-              </label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="••••••••"
-                value={formData.password}
-                onChange={handleInputChange}
-                required
-              />
-              <p className="text-xs text-gray-500">At least 8 characters</p>
-            </div>
-
-            <div className="space-y-2">
-              <label htmlFor="confirmPassword" className="text-sm font-medium">
-                Confirm Password
-              </label>
-              <Input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                placeholder="••••••••"
-                value={formData.confirmPassword}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-
-            <Button type="submit" disabled={isLoading} className="w-full">
-              {isLoading ? 'Creating account...' : 'Create Account'}
+              Cancel
             </Button>
           </form>
-
-          <p className="text-center text-sm text-gray-600 mt-6">
-            Already have an account?{' '}
-            <Link href="/auth/login" className="text-blue-600 hover:underline font-medium">
-              Sign in
-            </Link>
-          </p>
         </CardContent>
       </Card>
     </div>
