@@ -1,54 +1,135 @@
 # 🚀 LocalCart - Quick Start Commands
 
-## TL;DR - Start Everything (5 minutes)
+## ⚡ EASIEST WAY - Start Everything at Once (Windows)
+
+### **Option 1: Separate Windows (RECOMMENDED)**
+This opens Backend and Frontend in separate terminal windows for easy monitoring:
+
+```powershell
+.\start-all-simple.ps1
+```
+
+### **Option 2: Single Window**
+This runs everything in one terminal with combined logs:
+
+```powershell
+.\start-all.ps1
+```
+
+**What Gets Started:**
+- ✅ Docker services (PostgreSQL, Redis, Monitoring)
+- ✅ Spring Boot Backend (port 8080)
+- ✅ Next.js Frontend (port 3000)
+
+**Access URLs after startup:**
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:8080
+- API Health: http://localhost:8080/actuator/health
+
+---
+
+## Manual Start (Step-by-Step)
 
 ### Windows/PowerShell
 ```powershell
-# 1. Start database and supporting services
+# 1. Start infrastructure services
 docker-compose up -d
 
-# 2. Build the project
+# 2. Install frontend dependencies (first time only)
+cd frontend
+npm install
+cd ..
+
+# 3. Build backend
 mvnw.cmd clean install
 
-# 3. Run Spring Boot
+# 4. Start backend (in one terminal)
 mvnw.cmd spring-boot:run
 
-# 4. Test the API
+# 5. Start frontend (in another terminal)
+cd frontend
+npm run dev
+
+# 6. Test the API
 curl http://localhost:8080/actuator/health
 ```
 
 ### Linux/Mac
 ```bash
-# 1. Start database and supporting services
+# 1. Start infrastructure services
 docker-compose up -d
 
-# 2. Build the project
+# 2. Install frontend dependencies (first time only)
+cd frontend
+npm install
+cd ..
+
+# 3. Build backend
 ./mvnw clean install
 
-# 3. Run Spring Boot
+# 4. Start backend (in one terminal)
 ./mvnw spring-boot:run
 
-# 4. Test the API
+# 5. Start frontend (in another terminal)
+cd frontend
+npm run dev
+
+# 6. Test the API
 curl http://localhost:8080/actuator/health
 ```
 
 ---
 
-## Service Ports Reference
+## 📊 Service Ports Reference
 
-| Service | Port | URL |
-|---------|------|-----|
-| Spring Boot API | 8080 | http://localhost:8080 |
-| PostgreSQL DB | 5432 | postgres://localhost:5432 |
-| Redis Cache | 6379 | redis://localhost:6379 |
-| Adminer (DB GUI) | 8081 | http://localhost:8081 |
-| N8N Automation | 5678 | http://localhost:5678 |
-| Prometheus | 9090 | http://localhost:9090 |
-| Grafana | 3001 | http://localhost:3001 |
-| Loki (Logs) | 3100 | http://localhost:3100 |
+| Service | Port | URL | Credentials |
+|---------|------|-----|-------------|
+| **Next.js Frontend** | 3000 | http://localhost:3000 | - |
+| **Spring Boot API** | 8080 | http://localhost:8080 | - |
+| PostgreSQL DB | 5432 | postgres://localhost:5432 | localcart/localcart |
+| Redis Cache | 6379 | redis://localhost:6379 | - |
+| Adminer (DB GUI) | 8081 | http://localhost:8081 | localcart/localcart |
+| N8N Automation | 5678 | http://localhost:5678 | admin/changeme123 |
+| Prometheus | 9090 | http://localhost:9090 | - |
+| Grafana | 3001 | http://localhost:3001 | admin/admin |
+| Loki (Logs) | 3100 | http://localhost:3100 | - |
+
+---
+🛑 Stop All Services
+
+### Windows
+```powershell
+# If using start-all-simple.ps1:
+# Close the Backend and Frontend PowerShell windows, then:
+docker-compose down
+
+# If using start-all.ps1:
+# Press Ctrl+C in the terminal, services will stop automatically
+```
+
+### Linux/Mac
+```bash
+# Stop all running processes (Ctrl+C in each terminal), then:
+docker-compose down
+```
 
 ---
 
+## Essential Commands
+
+### Frontend (Next.js)
+```bash
+cd frontend
+
+# Development mode (with hot reload)
+npm run dev
+
+# Production build
+npm run build
+
+# Start production server
+npm start
+```
 ## Essential Commands
 
 ### Docker

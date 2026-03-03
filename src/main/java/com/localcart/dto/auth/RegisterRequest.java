@@ -33,7 +33,8 @@ public class RegisterRequest {
     @Size(min = 10, max = 15, message = "Phone number must be between 10 and 15 characters")
     private String phoneNumber;
 
-    private boolean registerAsVendor;
+    // Use Boolean (wrapper) instead of boolean (primitive) to allow null values
+    private Boolean registerAsVendor;
     
     // Vendor-specific fields (required if registerAsVendor = true)
     private String businessName;

@@ -70,6 +70,47 @@ services:
     networks:
       - localcart-network
 
+  # Backend (Spring Boot)
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: localcart-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=${POSTGRES_DB:-localcart}
+      - DB_USER=${POSTGRES_USER:-localcart_user}
+      - DB_PASSWORD=${POSTGRES_PASSWORD:-localcart_password}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - JWT_SECRET=${JWT_SECRET:-dev-secret-key-change-in-production-with-32-byte-base64}
+      - N8N_WEBHOOK_URL=http://n8n:5678/webhook
+      - N8N_WEBHOOK_ENABLED=true
+      - AUTOMATION_ENABLED=true
+      - SMTP_HOST=${SMTP_HOST:-}
+      - SMTP_PORT=${SMTP_PORT:-1025}
+      - APP_PASSWORD_RESET_URL=${APP_PASSWORD_RESET_URL:-http://localhost:3000/reset?token=}
+    volumes:
+      - ./logs:/app/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    networks:
+      - localcart-network
+    restart: unless-stopped
+
   # Monitoring Stack
   prometheus:
     image: prom/prometheus:latest
@@ -129,6 +170,24 @@ services:
     command: -config.file=/etc/promtail/config.yml
     depends_on:
       - loki
+    networks:
+      - localcart-network
+    restart: unless-stopped
+
+  # Frontend (Next.js)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: localcart-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8080/api/v1
+      - NODE_ENV=production
+    depends_on:
+      backend:
+        condition: service_healthy
     networks:
       - localcart-network
     restart: unless-stopped
