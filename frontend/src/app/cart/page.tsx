@@ -1,6 +1,6 @@
 'use client'
 
-import { useCart, useRemoveFromCart, useUpdateCartItem, useCheckout } from '@/hooks/use-api'
+import { useCart, useRemoveFromCart, useUpdateCartItem } from '@/hooks/use-api'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -16,7 +16,6 @@ export default function CartPage() {
   const { data: cart, isLoading } = useCart()
   const removeFromCart = useRemoveFromCart()
   const updateCartItem = useUpdateCartItem()
-  const checkout = useCheckout()
   const [isCheckingOut, setIsCheckingOut] = useState(false)
 
   const handleUpdateQuantity = async (itemId: string, quantity: number) => {
@@ -41,9 +40,7 @@ export default function CartPage() {
   const handleCheckout = async () => {
     setIsCheckingOut(true)
     try {
-      await checkout.mutateAsync()
-      toast.success('Order placed successfully!')
-      router.push('/orders')
+      router.push('/checkout')
     } catch (error) {
       toast.error('Failed to checkout')
     } finally {

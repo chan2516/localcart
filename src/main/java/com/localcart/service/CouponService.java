@@ -1,9 +1,13 @@
 package com.localcart.service;
 
+import com.localcart.dto.coupon.CouponDto;
+import com.localcart.dto.coupon.CreateCouponRequest;
 import com.localcart.entity.Coupon;
+import com.localcart.entity.Product;
 import com.localcart.entity.Vendor;
 import com.localcart.exception.PaymentException;
 import com.localcart.repository.CouponRepository;
+import com.localcart.repository.ProductRepository;
 import com.localcart.repository.VendorRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,22 +25,44 @@ public class CouponService {
     
     private final CouponRepository couponRepository;
     private final VendorRepository vendorRepository;
+    private final ProductRepository productRepository;
     
     /**
      * Create a new coupon (Vendor only)
      */
-    public Coupon createCoupon(Long vendorId, Coupon coupon) {
-        log.info("Creating coupon: {} for vendor: {}", coupon.getCode(), vendorId);
+    public Coupon createCoupon(Long vendorId, CreateCouponRequest request) {
+        log.info("Creating coupon: {} for vendor: {}", request.getCode(), vendorId);
         
         Vendor vendor = vendorRepository.findById(vendorId)
                 .orElseThrow(() -> new PaymentException("Vendor not found", "VENDOR_NOT_FOUND"));
         
-        if (couponRepository.existsByCode(coupon.getCode())) {
+        if (couponRepository.existsByCode(request.getCode())) {
             throw new PaymentException("Coupon code already exists", "COUPON_EXISTS");
         }
+
+        Product product = null;
+        if (request.getProductId() != null) {
+            product = productRepository.findById(request.getProductId())
+                    .orElseThrow(() -> new PaymentException("Product not found", "PRODUCT_NOT_FOUND"));
+        }
+
+        Coupon coupon = Coupon.builder()
+                .code(request.getCode().trim().toUpperCase())
+                .description(request.getDescription())
+                .couponType(request.getCouponType())
+                .discountValue(request.getDiscountValue())
+                .minPurchaseAmount(request.getMinPurchaseAmount())
+                .maxDiscountAmount(request.getMaxDiscountAmount())
+                .usageLimit(request.getUsageLimit())
+                .perUserLimit(request.getPerUserLimit())
+                .validFrom(request.getValidFrom())
+                .validUntil(request.getValidUntil())
+                .product(product)
+                .isActive(true)
+                .usageCount(0)
+                .build();
         
         coupon.setVendor(vendor);
-        coupon.setUsageCount(0);
         
         return couponRepository.save(coupon);
     }
@@ -88,5 +114,24 @@ public class CouponService {
         
         coupon.setIsActive(false);
         couponRepository.save(coupon);
+    }
+
+    public CouponDto toDto(Coupon coupon) {
+        return CouponDto.builder()
+                .id(coupon.getId())
+                .code(coupon.getCode())
+                .description(coupon.getDescription())
+                .couponType(coupon.getCouponType())
+                .discountValue(coupon.getDiscountValue())
+                .minPurchaseAmount(coupon.getMinPurchaseAmount())
+                .maxDiscountAmount(coupon.getMaxDiscountAmount())
+                .usageLimit(coupon.getUsageLimit())
+                .usageCount(coupon.getUsageCount())
+                .isActive(coupon.getIsActive())
+                .vendorId(coupon.getVendor() != null ? coupon.getVendor().getId() : null)
+                .productId(coupon.getProduct() != null ? coupon.getProduct().getId() : null)
+                .validFrom(coupon.getValidFrom() != null ? coupon.getValidFrom().toString() : null)
+                .validUntil(coupon.getValidUntil() != null ? coupon.getValidUntil().toString() : null)
+                .build();
     }
 }

@@ -16,9 +16,13 @@ import {
 export default function ProductsPage() {
   const [page, setPage] = useState(1)
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState<string>('')
+  const [selectedCategory, setSelectedCategory] = useState<string>('all')
 
-  const { data: productsData, isLoading } = useSearchQuery(searchQuery, selectedCategory, page)
+  const { data: productsData, isLoading } = useSearchQuery(
+    searchQuery,
+    selectedCategory === 'all' ? undefined : selectedCategory,
+    page
+  )
   const { data: categories } = useCategories()
 
   return (
@@ -44,15 +48,18 @@ export default function ProductsPage() {
         </div>
         <div>
           <label className="block text-sm font-medium mb-2">Category</label>
-          <Select value={selectedCategory} onValueChange={(value) => {
-            setSelectedCategory(value)
-            setPage(1)
-          }}>
+          <Select
+            value={selectedCategory}
+            onValueChange={(value) => {
+              setSelectedCategory(value)
+              setPage(1)
+            }}
+          >
             <SelectTrigger>
               <SelectValue placeholder="All Categories" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Categories</SelectItem>
+              <SelectItem value="all">All Categories</SelectItem>
               {categories?.map((cat) => (
                 <SelectItem key={cat.id} value={cat.id}>
                   {cat.name}
@@ -113,7 +120,7 @@ export default function ProductsPage() {
 }
 
 // Helper function for search query
-function useSearchQuery(query: string, category: string, page: number) {
+function useSearchQuery(query: string, category: string | undefined, page: number) {
   const { data: searchResults, isLoading: searchLoading } = useSearchProducts(query, category)
   const { data: allProducts, isLoading: allLoading } = useProducts(page)
 

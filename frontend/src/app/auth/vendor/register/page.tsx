@@ -41,8 +41,12 @@ export default function VendorRegisterPage() {
   const [vendorFormData, setVendorFormData] = useState({
     businessName: '',
     description: '',
+    businessEmail: '',
     businessPhone: '',
     businessAddress: '',
+    taxId: '',
+    businessRegistrationNumber: '',
+    businessType: '',
   })
 
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -104,12 +108,30 @@ export default function VendorRegisterPage() {
       newErrors.description = 'Description must be at least 20 characters'
     }
 
+    if (!vendorFormData.businessEmail) {
+      newErrors.businessEmail = 'Business email is required'
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(vendorFormData.businessEmail)) {
+      newErrors.businessEmail = 'Please enter a valid business email'
+    }
+
     if (!vendorFormData.businessPhone) {
       newErrors.businessPhone = 'Business phone is required'
     }
 
     if (!vendorFormData.businessAddress) {
       newErrors.businessAddress = 'Business address is required'
+    }
+
+    if (!vendorFormData.taxId) {
+      newErrors.taxId = 'Tax ID is required'
+    }
+
+    if (!vendorFormData.businessRegistrationNumber) {
+      newErrors.businessRegistrationNumber = 'Business registration number is required'
+    }
+
+    if (!vendorFormData.businessType) {
+      newErrors.businessType = 'Business type is required'
     }
 
     setErrors(newErrors)
@@ -186,8 +208,12 @@ export default function VendorRegisterPage() {
       await registerVendor(
         vendorFormData.businessName,
         vendorFormData.description,
+        vendorFormData.businessEmail,
         vendorFormData.businessPhone,
-        vendorFormData.businessAddress
+        vendorFormData.businessAddress,
+        vendorFormData.taxId,
+        vendorFormData.businessRegistrationNumber,
+        vendorFormData.businessType
       )
 
       toast.success('Vendor registration complete! Please wait for admin approval.')
@@ -486,6 +512,29 @@ export default function VendorRegisterPage() {
 
               {/* Business Phone */}
               <div className="space-y-2">
+                <label htmlFor="businessEmail" className="text-sm font-semibold text-gray-700">
+                  Business Email
+                </label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <Input
+                    id="businessEmail"
+                    name="businessEmail"
+                    type="email"
+                    placeholder="store@example.com"
+                    value={vendorFormData.businessEmail}
+                    onChange={handleVendorInputChange}
+                    className={`pl-10 ${errors.businessEmail ? 'border-red-500' : ''}`}
+                    disabled={isLoading}
+                  />
+                </div>
+                {errors.businessEmail && (
+                  <p className="text-sm text-red-500">{errors.businessEmail}</p>
+                )}
+              </div>
+
+              {/* Business Phone */}
+              <div className="space-y-2">
                 <label htmlFor="businessPhone" className="text-sm font-semibold text-gray-700">
                   Business Phone
                 </label>
@@ -526,6 +575,63 @@ export default function VendorRegisterPage() {
                 </div>
                 {errors.businessAddress && (
                   <p className="text-sm text-red-500">{errors.businessAddress}</p>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <label htmlFor="taxId" className="text-sm font-semibold text-gray-700">
+                    Tax ID
+                  </label>
+                  <Input
+                    id="taxId"
+                    name="taxId"
+                    placeholder="GSTIN / Tax ID"
+                    value={vendorFormData.taxId}
+                    onChange={handleVendorInputChange}
+                    className={errors.taxId ? 'border-red-500' : ''}
+                    disabled={isLoading}
+                  />
+                  {errors.taxId && <p className="text-sm text-red-500">{errors.taxId}</p>}
+                </div>
+
+                <div className="space-y-2">
+                  <label
+                    htmlFor="businessRegistrationNumber"
+                    className="text-sm font-semibold text-gray-700"
+                  >
+                    Registration Number
+                  </label>
+                  <Input
+                    id="businessRegistrationNumber"
+                    name="businessRegistrationNumber"
+                    placeholder="Company registration no."
+                    value={vendorFormData.businessRegistrationNumber}
+                    onChange={handleVendorInputChange}
+                    className={errors.businessRegistrationNumber ? 'border-red-500' : ''}
+                    disabled={isLoading}
+                  />
+                  {errors.businessRegistrationNumber && (
+                    <p className="text-sm text-red-500">{errors.businessRegistrationNumber}</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="businessType" className="text-sm font-semibold text-gray-700">
+                  Business Type
+                </label>
+                <Input
+                  id="businessType"
+                  name="businessType"
+                  placeholder="LLC / Sole Proprietor / Pvt Ltd"
+                  value={vendorFormData.businessType}
+                  onChange={handleVendorInputChange}
+                  className={errors.businessType ? 'border-red-500' : ''}
+                  disabled={isLoading}
+                />
+                {errors.businessType && (
+                  <p className="text-sm text-red-500">{errors.businessType}</p>
                 )}
               </div>
 

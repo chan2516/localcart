@@ -36,11 +36,13 @@ export interface CartItem {
 }
 
 export interface Cart {
-  id: string
+  id?: string
+  cartId?: string
   items: CartItem[]
   subtotal: number
   tax: number
   shipping: number
+  shippingFee?: number
   total: number
 }
 
@@ -61,10 +63,19 @@ export interface Order {
 export const useProducts = (page = 1, limit = 12) => {
   return useQuery({
     queryKey: ['products', page, limit],
-    queryFn: () =>
-      apiClient.get<{ content: Product[]; totalElements: number; totalPages: number }>(
-        `/products?page=${page - 1}&limit=${limit}`
-      ),
+    queryFn: async () => {
+      const response = await apiClient.get<{
+        products: Product[]
+        totalItems: number
+        totalPages: number
+      }>(`/products?page=${page - 1}&size=${limit}`)
+
+      return {
+        content: response.products || [],
+        totalElements: response.totalItems || 0,
+        totalPages: response.totalPages || 0,
+      }
+    },
   })
 }
 
@@ -87,11 +98,18 @@ export const useProductBySlug = (slug: string) => {
 export const useSearchProducts = (query: string, category?: string) => {
   return useQuery({
     queryKey: ['products-search', query, category],
-    queryFn: () => {
+    queryFn: async () => {
       const params = new URLSearchParams()
       if (query) params.append('q', query)
       if (category) params.append('category', category)
-      return apiClient.get<Product[]>(`/products/search?${params.toString()}`)
+      params.append('page', '0')
+      params.append('size', '20')
+
+      const response = await apiClient.get<{ products: Product[] }>(
+        `/products/search?${params.toString()}`
+      )
+
+      return response.products || []
     },
     enabled: !!query,
   })
@@ -117,7 +135,13 @@ export const useCategoryById = (id: string) => {
 export const useCart = () => {
   return useQuery({
     queryKey: ['cart'],
-    queryFn: () => apiClient.get<Cart>('/cart'),
+    queryFn: async () => {
+      const cart = await apiClient.get<Cart>('/cart')
+      return {
+        ...cart,
+        shipping: cart.shipping ?? cart.shippingFee ?? 0,
+      }
+    },
   })
 }
 
@@ -138,7 +162,7 @@ export const useUpdateCartItem = () => {
 
   return useMutation({
     mutationFn: (data: { id: string; quantity: number }) =>
-      apiClient.put(`/cart/items/${data.id}`, { quantity: data.quantity }),
+      apiClient.put(`/cart/items/${data.id}?quantity=${data.quantity}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cart'] })
     },
@@ -171,10 +195,19 @@ export const useClearCart = () => {
 export const useOrders = (page = 1, limit = 10) => {
   return useQuery({
     queryKey: ['orders', page, limit],
-    queryFn: () =>
-      apiClient.get<{ content: Order[]; totalElements: number; totalPages: number }>(
-        `/orders?page=${page - 1}&limit=${limit}`
-      ),
+    queryFn: async () => {
+      const response = await apiClient.get<{
+        orders: Order[]
+        totalItems: number
+        totalPages: number
+      }>(`/orders?page=${page - 1}&size=${limit}`)
+
+      return {
+        content: response.orders || [],
+        totalElements: response.totalItems || 0,
+        totalPages: response.totalPages || 0,
+      }
+    },
   })
 }
 
@@ -190,7 +223,14 @@ export const useCheckout = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: () => apiClient.post('/cart/checkout'),
+    mutationFn: (payload: {
+      shippingAddressId: number
+      billingAddressId: number
+      paymentMethod: string
+      couponCode?: string
+      notes?: string
+      deliveryPreference?: string
+    }) => apiClient.post('/cart/checkout', payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cart'] })
       queryClient.invalidateQueries({ queryKey: ['orders'] })
@@ -203,7 +243,9 @@ export const useCancelOrder = () => {
 
   return useMutation({
     mutationFn: (data: { id: string; reason: string }) =>
-      apiClient.post(`/orders/${data.id}/cancel`, { reason: data.reason }),
+      apiClient.post(
+        `/orders/${data.id}/cancel${data.reason ? `?reason=${encodeURIComponent(data.reason)}` : ''}`
+      ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['orders'] })
     },

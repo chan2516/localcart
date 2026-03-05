@@ -10,6 +10,7 @@ import { toast } from 'sonner'
 
 interface Product {
   id: number
+  slug: string
   name: string
   description: string
   price: number
@@ -28,7 +29,7 @@ export default function Home() {
     const fetchProducts = async () => {
       try {
         const response = await apiClient.get<any>('/products?page=0&size=8')
-        setProducts(response.content || [])
+        setProducts(response.products || [])
       } catch (error) {
         console.error('Failed to fetch products:', error)
         toast.error('Failed to load products')
@@ -144,7 +145,7 @@ export default function Home() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {products.map((product) => (
-                <Link key={product.id} href={`/products/${product.id}`}>
+                <Link key={product.id} href={`/products/${product.slug}`}>
                   <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full">
                     <CardContent className="p-0">
                       <div className="relative h-48 bg-gray-100 rounded-t-lg overflow-hidden">

@@ -13,10 +13,13 @@ export function Header() {
 
   useEffect(() => {
     loadUserFromStorage()
+  }, [loadUserFromStorage])
+
+  useEffect(() => {
     if (accessToken) {
       getProfile()
     }
-  }, [])
+  }, [accessToken, getProfile])
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b">

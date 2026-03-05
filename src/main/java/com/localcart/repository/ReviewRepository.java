@@ -14,10 +14,14 @@ import java.util.List;
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     
     List<Review> findByProductId(Long productId);
+
+    Page<Review> findByProductIdOrderByCreatedAtDesc(Long productId, Pageable pageable);
     
     Page<Review> findByProductId(Long productId, Pageable pageable);
     
     List<Review> findByUserId(Long userId);
+
+    Page<Review> findByUserIdOrderByCreatedAtDesc(Long userId, Pageable pageable);
     
     List<Review> findByVendorId(Long vendorId);
     
@@ -33,4 +37,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     Long countByUserId(Long userId);
     
     boolean existsByUserIdAndProductId(Long userId, Long productId);
+
+    Long countByProductId(Long productId);
 }

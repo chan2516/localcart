@@ -13,7 +13,19 @@ export interface User {
 export interface AuthResponse {
   accessToken: string
   refreshToken: string
-  user: User
+  user?: {
+    id?: number | string
+    email?: string
+    firstName?: string
+    lastName?: string
+    roles?: string[]
+    vendorId?: number | string
+  }
+  userId?: number | string
+  email?: string
+  firstName?: string
+  lastName?: string
+  roles?: string[]
 }
 
 interface AuthStore {
@@ -40,7 +52,16 @@ interface AuthStore {
   resetPassword: (token: string, newPassword: string) => Promise<void>
   
   // Vendor methods
-  registerVendor: (businessName: string, description: string, businessPhone: string, businessAddress: string) => Promise<void>
+  registerVendor: (
+    businessName: string,
+    description: string,
+    businessEmail: string,
+    businessPhone: string,
+    businessAddress: string,
+    taxId: string,
+    businessRegistrationNumber: string,
+    businessType: string
+  ) => Promise<void>
   
   // Admin methods
   createAdminUser: (email: string, password: string, firstName: string, lastName: string) => Promise<void>
@@ -56,6 +77,8 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   setAccessToken: (token) => set({ accessToken: token }),
   setLoading: (isLoading) => set({ isLoading }),
 
+  
+  
   login: async (email, password) => {
     set({ isLoading: true })
     try {
@@ -67,11 +90,9 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       localStorage.setItem('accessToken', response.accessToken)
       localStorage.setItem('refreshToken', response.refreshToken)
 
-      set({
-        user: response.user,
-        accessToken: response.accessToken,
-        isAuthenticated: true,
-      })
+      const mappedUser = mapAuthResponseToUser(response)
+      persistAuthCookies(response.accessToken, mappedUser?.role)
+      set({ user: mappedUser, accessToken: response.accessToken, isAuthenticated: !!mappedUser })
     } finally {
       set({ isLoading: false })
     }
@@ -85,17 +106,15 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         password,
         firstName,
         lastName,
-        phoneNumber,
+        ...(phoneNumber.trim() ? { phoneNumber: phoneNumber.trim() } : {}),
       })
 
       localStorage.setItem('accessToken', response.accessToken)
       localStorage.setItem('refreshToken', response.refreshToken)
 
-      set({
-        user: response.user,
-        accessToken: response.accessToken,
-        isAuthenticated: true,
-      })
+      const mappedUser = mapAuthResponseToUser(response)
+      persistAuthCookies(response.accessToken, mappedUser?.role)
+      set({ user: mappedUser, accessToken: response.accessToken, isAuthenticated: !!mappedUser })
     } finally {
       set({ isLoading: false })
     }
@@ -122,14 +141,27 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     }
   },
 
-  registerVendor: async (businessName, description, businessPhone, businessAddress) => {
+  registerVendor: async (
+    businessName,
+    description,
+    businessEmail,
+    businessPhone,
+    businessAddress,
+    taxId,
+    businessRegistrationNumber,
+    businessType
+  ) => {
     set({ isLoading: true })
     try {
       const response = await apiClient.post<any>('/vendors/register', {
         businessName,
         description,
+        businessEmail,
         businessPhone,
         businessAddress,
+        taxId,
+        businessRegistrationNumber,
+        businessType,
       })
       
       set({ user: { ...get().user, role: 'VENDOR', vendorId: response.id } as User })
@@ -156,6 +188,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   logout: () => {
     localStorage.removeItem('accessToken')
     localStorage.removeItem('refreshToken')
+    clearAuthCookies()
     set({
       user: null,
       accessToken: null,
@@ -173,9 +206,11 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       })
 
       localStorage.setItem('accessToken', response.accessToken)
+      const mappedUser = mapAuthResponseToUser(response)
+      persistAuthCookies(response.accessToken, mappedUser?.role)
       set({
         accessToken: response.accessToken,
-        user: response.user,
+        user: mappedUser,
       })
     } catch {
       get().logout()
@@ -193,10 +228,71 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
 
   getProfile: async () => {
     try {
-      const user = await apiClient.get<User>('/auth/profile')
-      set({ user, isAuthenticated: true })
+      const profile = await apiClient.get<any>('/auth/profile')
+      const mappedUser = mapProfileToUser(profile)
+      persistAuthCookies(localStorage.getItem('accessToken'), mappedUser?.role)
+      set({ user: mappedUser, isAuthenticated: !!mappedUser })
     } catch {
       get().logout()
     }
   },
 }))
+
+function mapRole(roles: string[] | undefined): User['role'] {
+  if (!roles || roles.length === 0) return 'CUSTOMER'
+  if (roles.some((role) => role.includes('ADMIN'))) return 'ADMIN'
+  if (roles.some((role) => role.includes('VENDOR'))) return 'VENDOR'
+  return 'CUSTOMER'
+}
+
+function mapAuthResponseToUser(response: AuthResponse): User | null {
+  if (response.user && response.user.id != null && response.user.email) {
+    return {
+      id: String(response.user.id),
+      email: response.user.email,
+      firstName: response.user.firstName,
+      lastName: response.user.lastName,
+      role: mapRole(response.user.roles),
+      vendorId: response.user.vendorId != null ? String(response.user.vendorId) : undefined,
+    }
+  }
+
+  if (response.userId != null && response.email) {
+    return {
+      id: String(response.userId),
+      email: response.email,
+      firstName: response.firstName,
+      lastName: response.lastName,
+      role: mapRole(response.roles),
+    }
+  }
+
+  return null
+}
+
+function mapProfileToUser(profile: any): User | null {
+  if (!profile || profile.userId == null || !profile.email) return null
+
+  return {
+    id: String(profile.userId),
+    email: profile.email,
+    firstName: profile.firstName,
+    lastName: profile.lastName,
+    role: mapRole(profile.roles),
+  }
+}
+
+function persistAuthCookies(token: string | null, role?: User['role']) {
+  if (typeof document === 'undefined' || !token) return
+  const maxAge = 60 * 60 * 24 * 7
+  document.cookie = `lc_access_token=${encodeURIComponent(token)}; Path=/; Max-Age=${maxAge}; SameSite=Lax`
+  if (role) {
+    document.cookie = `lc_role=${role}; Path=/; Max-Age=${maxAge}; SameSite=Lax`
+  }
+}
+
+function clearAuthCookies() {
+  if (typeof document === 'undefined') return
+  document.cookie = 'lc_access_token=; Path=/; Max-Age=0; SameSite=Lax'
+  document.cookie = 'lc_role=; Path=/; Max-Age=0; SameSite=Lax'
+}

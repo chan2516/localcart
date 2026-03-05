@@ -5,6 +5,7 @@ import { useProductBySlug, useAddToCart } from '@/hooks/use-api'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useState } from 'react'
+import { useEffect } from 'react'
 import Image from 'next/image'
 import { Skeleton } from '@/components/ui/skeleton'
 import { toast } from 'sonner'
@@ -19,6 +20,7 @@ export default function ProductPage() {
 
   const { data: product, isLoading } = useProductBySlug(slug)
   const addToCart = useAddToCart()
+  const [reviews, setReviews] = useState<Array<{ id: number; rating: number; title: string; comment: string; userName?: string }>>([])
 
   const handleAddToCart = async () => {
     if (!user) {
@@ -37,6 +39,21 @@ export default function ProductPage() {
       toast.error('Failed to add to cart')
     }
   }
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      if (!product?.id) return
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api/v1'}/reviews/product/${product.id}?page=0&size=5`)
+        const data = await response.json()
+        setReviews(data.reviews || [])
+      } catch {
+        setReviews([])
+      }
+    }
+
+    fetchReviews()
+  }, [product?.id])
 
   if (isLoading) {
     return (
@@ -195,6 +212,25 @@ export default function ProductPage() {
             >
               {addToCart.isPending ? 'Adding...' : 'Add to Cart'}
             </Button>
+            <Link href={`/reviews?productId=${product.id}`}>
+              <Button variant="outline" className="w-full mt-3">
+                Write a Review
+              </Button>
+            </Link>
+          </div>
+
+          <div className="border-t pt-8 mt-8">
+            <h3 className="text-lg font-semibold mb-3">Recent Reviews</h3>
+            {reviews.length === 0 && <p className="text-gray-600">No reviews yet.</p>}
+            <div className="space-y-3">
+              {reviews.map((review) => (
+                <div key={review.id} className="rounded-md border p-3">
+                  <p className="font-medium">{review.title}</p>
+                  <p className="text-sm">{'★'.repeat(review.rating)} {review.userName ? `• ${review.userName}` : ''}</p>
+                  <p className="text-sm text-gray-600">{review.comment}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
