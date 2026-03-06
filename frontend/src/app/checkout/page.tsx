@@ -28,7 +28,7 @@ export default function CheckoutPage() {
   const [addresses, setAddresses] = useState<Address[]>([])
   const [shippingAddressId, setShippingAddressId] = useState<number | null>(null)
   const [billingAddressId, setBillingAddressId] = useState<number | null>(null)
-  const [paymentMethod, setPaymentMethod] = useState('COD')
+  const [paymentMethod, setPaymentMethod] = useState('CREDIT_CARD')
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -119,10 +119,12 @@ export default function CheckoutPage() {
               value={paymentMethod}
               onChange={(e) => setPaymentMethod(e.target.value)}
             >
-              <option value="COD">Cash on Delivery</option>
               <option value="CREDIT_CARD">Credit Card</option>
               <option value="DEBIT_CARD">Debit Card</option>
               <option value="UPI">UPI</option>
+              <option value="NET_BANKING">Net Banking</option>
+              <option value="WALLET">Wallet</option>
+              <option value="BANK_TRANSFER">Bank Transfer</option>
             </select>
           </div>
         </CardContent>

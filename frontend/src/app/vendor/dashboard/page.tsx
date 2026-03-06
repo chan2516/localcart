@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 type ProductForm = {
-  id?: string
+  id?: string | number
   name: string
   slug: string
   description: string
@@ -55,7 +55,7 @@ export default function VendorDashboardPage() {
   const { data: categories } = useCategories()
 
   const [savingProduct, setSavingProduct] = useState(false)
-  const [editingProductId, setEditingProductId] = useState<string | null>(null)
+  const [editingProductId, setEditingProductId] = useState<string | number | null>(null)
   const [productForm, setProductForm] = useState<ProductForm>(initialProductForm)
 
   const [promotions, setPromotions] = useState<Promotion[]>([])
@@ -160,7 +160,7 @@ export default function VendorDashboardPage() {
     }
   }
 
-  const handleDeleteProduct = async (productId: string) => {
+  const handleDeleteProduct = async (productId: string | number) => {
     try {
       await apiClient.delete(`/products/${productId}`)
       toast.success('Product deleted')
@@ -257,7 +257,7 @@ export default function VendorDashboardPage() {
             <select className="h-10 rounded-md border px-3" value={productForm.categoryId} onChange={(e) => setProductForm((prev) => ({ ...prev, categoryId: e.target.value }))}>
               <option value="">Select category</option>
               {(categories || []).map((category) => (
-                <option key={category.id} value={category.id}>{category.name}</option>
+                <option key={category.id} value={String(category.id)}>{category.name}</option>
               ))}
             </select>
           </div>

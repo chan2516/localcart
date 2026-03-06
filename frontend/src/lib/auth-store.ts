@@ -173,13 +173,9 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   createAdminUser: async (email, password, firstName, lastName) => {
     set({ isLoading: true })
     try {
-      await apiClient.post('/admin/users/create', {
-        email,
-        password,
-        firstName,
-        lastName,
-        roles: ['ADMIN'],
-      })
+      void [email, password, firstName, lastName]
+      // Backend currently exposes user management actions, not user creation.
+      throw new Error('Admin user creation endpoint is not available in the current backend API')
     } finally {
       set({ isLoading: false })
     }

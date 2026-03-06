@@ -1,4 +1,3 @@
-nohup: ignoring input
 [INFO] Scanning for projects...
 [INFO] 
 [INFO] ----------------------< com.localcart:localcart >-----------------------
@@ -10,7 +9,7 @@ nohup: ignoring input
 [INFO] 
 [INFO] --- resources:3.3.1:resources (default-resources) @ localcart ---
 [INFO] Copying 3 resources from src/main/resources to target/classes
-[INFO] Copying 7 resources from src/main/resources to target/classes
+[INFO] Copying 8 resources from src/main/resources to target/classes
 [INFO] 
 [INFO] --- compiler:3.14.1:compile (default-compile) @ localcart ---
 [INFO] Nothing to compile - all classes are up to date.
@@ -25,912 +24,168 @@ nohup: ignoring input
 [INFO] 
 [INFO] 
 [INFO] --- spring-boot:4.0.2:run (default-cli) @ localcart ---
-[INFO] Attaching agents: []
-09:50:15,935 |-WARN in ch.qos.logback.core.model.processor.AppenderModelHandler - Appender named [ASYNC_FILE] not referenced. Skipping further processing.
-
-  .   ____          _            __ _ _
- /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
-( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
- \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
-  '  |____| .__|_| |_|_| |_\__, | / / / /
- =========|_|==============|___/=/_/_/_/
-
- :: Spring Boot ::                (v4.0.2)
-
-{"@timestamp":"2026-02-17T09:50:16.039652423Z","@version":"1","message":"Starting LocalcartApplication using Java 25.0.1 with PID 29079 (/workspaces/localcart/target/classes started by codespace in /workspaces/localcart)","logger_name":"com.localcart.LocalcartApplication","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:16.049779216Z","@version":"1","message":"Running with Spring Boot v4.0.2, Spring v7.0.3","logger_name":"com.localcart.LocalcartApplication","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:16.050531518Z","@version":"1","message":"The following 1 profile is active: \"dev\"","logger_name":"com.localcart.LocalcartApplication","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:17.302666996Z","@version":"1","message":"Multiple Spring Data modules found, entering strict repository configuration mode","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationDelegate","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:17.30391613Z","@version":"1","message":"Bootstrapping Spring Data JPA repositories in DEFAULT mode.","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationDelegate","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:17.439682163Z","@version":"1","message":"Finished Spring Data repository scanning in 129 ms. Found 14 JPA repository interfaces.","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationDelegate","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:17.470642101Z","@version":"1","message":"Multiple Spring Data modules found, entering strict repository configuration mode","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationDelegate","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:17.471842669Z","@version":"1","message":"Bootstrapping Spring Data Redis repositories in DEFAULT mode.","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationDelegate","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:17.486746784Z","@version":"1","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.localcart.repository.AddressRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:17.487951169Z","@version":"1","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.localcart.repository.CartItemRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:17.488288798Z","@version":"1","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.localcart.repository.CartRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:17.488615768Z","@version":"1","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.localcart.repository.CategoryRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:17.488943809Z","@version":"1","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.localcart.repository.CouponRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:17.489205687Z","@version":"1","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.localcart.repository.OrderItemRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:17.489627603Z","@version":"1","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.localcart.repository.OrderRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:17.489966425Z","@version":"1","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.localcart.repository.PaymentRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:17.490261625Z","@version":"1","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.localcart.repository.ProductImageRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:17.490600656Z","@version":"1","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.localcart.repository.ProductRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:17.490878805Z","@version":"1","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.localcart.repository.ReviewRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:17.491270284Z","@version":"1","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.localcart.repository.RoleRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:17.491598396Z","@version":"1","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.localcart.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:17.491949651Z","@version":"1","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.localcart.repository.VendorRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:17.492106884Z","@version":"1","message":"Finished Spring Data repository scanning in 12 ms. Found 0 Redis repository interfaces.","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationDelegate","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:18.347224955Z","@version":"1","message":"Tomcat initialized with port 8080 (http)","logger_name":"org.springframework.boot.tomcat.TomcatWebServer","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:18.357565356Z","@version":"1","message":"Starting service [Tomcat]","logger_name":"org.apache.catalina.core.StandardService","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:18.357844051Z","@version":"1","message":"Starting Servlet engine: [Apache Tomcat/11.0.15]","logger_name":"org.apache.catalina.core.StandardEngine","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:18.400258988Z","@version":"1","message":"Root WebApplicationContext: initialization completed in 2271 ms","logger_name":"org.springframework.boot.web.context.servlet.WebApplicationContextInitializer","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:18.650744085Z","@version":"1","message":"Filter 'jwtAuthenticationFilter' configured for use","logger_name":"com.localcart.security.JwtAuthenticationFilter","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:18.769620478Z","@version":"1","message":"HHH008540: Processing PersistenceUnitInfo [name: default]","logger_name":"org.hibernate.orm.jpa","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:18.8147647Z","@version":"1","message":"HHH000001: Hibernate ORM core version 7.2.1.Final","logger_name":"org.hibernate.orm.core","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:19.151933558Z","@version":"1","message":"No LoadTimeWeaver setup: ignoring JPA class transformer","logger_name":"org.springframework.orm.jpa.persistenceunit.SpringPersistenceUnitInfo","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:19.174940989Z","@version":"1","message":"HikariPool-1 - Starting...","logger_name":"com.zaxxer.hikari.HikariDataSource","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:19.325952747Z","@version":"1","message":"HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@4ff233f9","logger_name":"com.zaxxer.hikari.pool.HikariPool","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:19.327240066Z","@version":"1","message":"HikariPool-1 - Start completed.","logger_name":"com.zaxxer.hikari.HikariDataSource","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:19.371012311Z","@version":"1","message":"HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)","logger_name":"org.hibernate.orm.deprecation","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:19.40288489Z","@version":"1","message":"HHH10001005: Database info:\n\tDatabase JDBC URL [jdbc:postgresql://localhost:5432/localcart]\n\tDatabase driver: PostgreSQL JDBC Driver\n\tDatabase dialect: PostgreSQLDialect\n\tDatabase version: 15.15\n\tDefault catalog/schema: localcart/public\n\tAutocommit mode: undefined/unknown\n\tIsolation level: READ_COMMITTED [default READ_COMMITTED]\n\tJDBC fetch size: none\n\tPool: DataSourceConnectionProvider\n\tMinimum pool size: undefined/unknown\n\tMaximum pool size: undefined/unknown","logger_name":"org.hibernate.orm.connections.pooling","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:20.813397707Z","@version":"1","message":"HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)","logger_name":"org.hibernate.orm.core","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:20.858424544Z","@version":"1","message":"\n    create table addresses (\n        id bigint generated by default as identity,\n        deleted_at timestamp(6),\n        is_deleted boolean,\n        created_at timestamp(6) not null,\n        created_by varchar(255),\n        updated_at timestamp(6),\n        updated_by varchar(255),\n        address_label varchar(50),\n        apartment varchar(100),\n        city varchar(100) not null,\n        contact_name varchar(100),\n        contact_phone varchar(20),\n        country varchar(100) not null,\n        delivery_instructions varchar(500),\n        is_default boolean,\n        landmark varchar(200),\n        latitude numeric(10,8),\n        longitude numeric(11,8),\n        state varchar(100) not null,\n        street varchar(255) not null,\n        type varchar(20) not null check ((type in ('SHIPPING','BILLING','BOTH'))),\n        zip_code varchar(20) not null,\n        user_id bigint not null,\n        primary key (id)\n    )","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create table addresses (
-        id bigint generated by default as identity,
-        deleted_at timestamp(6),
-        is_deleted boolean,
-        created_at timestamp(6) not null,
-        created_by varchar(255),
-        updated_at timestamp(6),
-        updated_by varchar(255),
-        address_label varchar(50),
-        apartment varchar(100),
-        city varchar(100) not null,
-        contact_name varchar(100),
-        contact_phone varchar(20),
-        country varchar(100) not null,
-        delivery_instructions varchar(500),
-        is_default boolean,
-        landmark varchar(200),
-        latitude numeric(10,8),
-        longitude numeric(11,8),
-        state varchar(100) not null,
-        street varchar(255) not null,
-        type varchar(20) not null check ((type in ('SHIPPING','BILLING','BOTH'))),
-        zip_code varchar(20) not null,
-        user_id bigint not null,
-        primary key (id)
-    )
-{"@timestamp":"2026-02-17T09:50:20.871793158Z","@version":"1","message":"\n    create table cart_items (\n        id bigint generated by default as identity,\n        deleted_at timestamp(6),\n        is_deleted boolean,\n        created_at timestamp(6) not null,\n        created_by varchar(255),\n        updated_at timestamp(6),\n        updated_by varchar(255),\n        quantity integer not null check ((quantity>=1)),\n        cart_id bigint not null,\n        product_id bigint not null,\n        primary key (id)\n    )","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create table cart_items (
-        id bigint generated by default as identity,
-        deleted_at timestamp(6),
-        is_deleted boolean,
-        created_at timestamp(6) not null,
-        created_by varchar(255),
-        updated_at timestamp(6),
-        updated_by varchar(255),
-        quantity integer not null check ((quantity>=1)),
-        cart_id bigint not null,
-        product_id bigint not null,
-        primary key (id)
-    )
-{"@timestamp":"2026-02-17T09:50:20.879055609Z","@version":"1","message":"\n    create table carts (\n        id bigint generated by default as identity,\n        deleted_at timestamp(6),\n        is_deleted boolean,\n        created_at timestamp(6) not null,\n        created_by varchar(255),\n        updated_at timestamp(6),\n        updated_by varchar(255),\n        user_id bigint not null,\n        primary key (id)\n    )","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create table carts (
-        id bigint generated by default as identity,
-        deleted_at timestamp(6),
-        is_deleted boolean,
-        created_at timestamp(6) not null,
-        created_by varchar(255),
-        updated_at timestamp(6),
-        updated_by varchar(255),
-        user_id bigint not null,
-        primary key (id)
-    )
-{"@timestamp":"2026-02-17T09:50:20.885856818Z","@version":"1","message":"\n    create table categories (\n        id bigint generated by default as identity,\n        deleted_at timestamp(6),\n        is_deleted boolean,\n        created_at timestamp(6) not null,\n        created_by varchar(255),\n        updated_at timestamp(6),\n        updated_by varchar(255),\n        description varchar(500),\n        display_order integer,\n        name varchar(100) not null,\n        slug varchar(100) not null,\n        parent_id bigint,\n        primary key (id)\n    )","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create table categories (
-        id bigint generated by default as identity,
-        deleted_at timestamp(6),
-        is_deleted boolean,
-        created_at timestamp(6) not null,
-        created_by varchar(255),
-        updated_at timestamp(6),
-        updated_by varchar(255),
-        description varchar(500),
-        display_order integer,
-        name varchar(100) not null,
-        slug varchar(100) not null,
-        parent_id bigint,
-        primary key (id)
-    )
-{"@timestamp":"2026-02-17T09:50:20.894411851Z","@version":"1","message":"\n    create table coupons (\n        id bigint generated by default as identity,\n        deleted_at timestamp(6),\n        is_deleted boolean,\n        created_at timestamp(6) not null,\n        created_by varchar(255),\n        updated_at timestamp(6),\n        updated_by varchar(255),\n        code varchar(50) not null,\n        coupon_type varchar(20) not null check ((coupon_type in ('PERCENTAGE','FIXED_AMOUNT'))),\n        description varchar(255),\n        discount_value numeric(10,2) not null,\n        is_active boolean,\n        max_discount_amount numeric(10,2),\n        min_purchase_amount numeric(10,2),\n        per_user_limit integer,\n        usage_count integer,\n        usage_limit integer,\n        valid_from timestamp(6),\n        valid_until timestamp(6),\n        product_id bigint,\n        vendor_id bigint not null,\n        primary key (id)\n    )","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create table coupons (
-        id bigint generated by default as identity,
-        deleted_at timestamp(6),
-        is_deleted boolean,
-        created_at timestamp(6) not null,
-        created_by varchar(255),
-        updated_at timestamp(6),
-        updated_by varchar(255),
-        code varchar(50) not null,
-        coupon_type varchar(20) not null check ((coupon_type in ('PERCENTAGE','FIXED_AMOUNT'))),
-        description varchar(255),
-        discount_value numeric(10,2) not null,
-        is_active boolean,
-        max_discount_amount numeric(10,2),
-        min_purchase_amount numeric(10,2),
-        per_user_limit integer,
-        usage_count integer,
-        usage_limit integer,
-        valid_from timestamp(6),
-        valid_until timestamp(6),
-        product_id bigint,
-        vendor_id bigint not null,
-        primary key (id)
-    )
-{"@timestamp":"2026-02-17T09:50:20.902583691Z","@version":"1","message":"\n    create table order_items (\n        id bigint generated by default as identity,\n        deleted_at timestamp(6),\n        is_deleted boolean,\n        created_at timestamp(6) not null,\n        created_by varchar(255),\n        updated_at timestamp(6),\n        updated_by varchar(255),\n        product_name varchar(255) not null,\n        quantity integer not null check ((quantity>=1)),\n        subtotal numeric(10,2) not null,\n        unit_price numeric(10,2) not null,\n        order_id bigint not null,\n        product_id bigint not null,\n        vendor_id bigint not null,\n        primary key (id)\n    )","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create table order_items (
-        id bigint generated by default as identity,
-        deleted_at timestamp(6),
-        is_deleted boolean,
-        created_at timestamp(6) not null,
-        created_by varchar(255),
-        updated_at timestamp(6),
-        updated_by varchar(255),
-        product_name varchar(255) not null,
-        quantity integer not null check ((quantity>=1)),
-        subtotal numeric(10,2) not null,
-        unit_price numeric(10,2) not null,
-        order_id bigint not null,
-        product_id bigint not null,
-        vendor_id bigint not null,
-        primary key (id)
-    )
-{"@timestamp":"2026-02-17T09:50:20.914306985Z","@version":"1","message":"\n    create table orders (\n        id bigint generated by default as identity,\n        deleted_at timestamp(6),\n        is_deleted boolean,\n        created_at timestamp(6) not null,\n        created_by varchar(255),\n        updated_at timestamp(6),\n        updated_by varchar(255),\n        cancellation_reason varchar(500),\n        cancelled_at timestamp(6),\n        delivered_at timestamp(6),\n        discount numeric(10,2) not null,\n        notes TEXT,\n        order_number varchar(50) not null,\n        shipped_at timestamp(6),\n        shipping_fee numeric(10,2) not null,\n        status varchar(20) not null check ((status in ('PENDING','PAYMENT_CONFIRMED','PROCESSING','SHIPPED','DELIVERED','CANCELLED','REFUNDED'))),\n        subtotal numeric(10,2) not null,\n        tax numeric(10,2) not null,\n        total numeric(10,2) not null,\n        tracking_number varchar(100),\n        billing_address_id bigint not null,\n        shipping_address_id bigint not null,\n        user_id bigint not null,\n        primary key (id)\n    )","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create table orders (
-        id bigint generated by default as identity,
-        deleted_at timestamp(6),
-        is_deleted boolean,
-        created_at timestamp(6) not null,
-        created_by varchar(255),
-        updated_at timestamp(6),
-        updated_by varchar(255),
-        cancellation_reason varchar(500),
-        cancelled_at timestamp(6),
-        delivered_at timestamp(6),
-        discount numeric(10,2) not null,
-        notes TEXT,
-        order_number varchar(50) not null,
-        shipped_at timestamp(6),
-        shipping_fee numeric(10,2) not null,
-        status varchar(20) not null check ((status in ('PENDING','PAYMENT_CONFIRMED','PROCESSING','SHIPPED','DELIVERED','CANCELLED','REFUNDED'))),
-        subtotal numeric(10,2) not null,
-        tax numeric(10,2) not null,
-        total numeric(10,2) not null,
-        tracking_number varchar(100),
-        billing_address_id bigint not null,
-        shipping_address_id bigint not null,
-        user_id bigint not null,
-        primary key (id)
-    )
-{"@timestamp":"2026-02-17T09:50:20.922090361Z","@version":"1","message":"\n    create table payments (\n        id bigint generated by default as identity,\n        deleted_at timestamp(6),\n        is_deleted boolean,\n        created_at timestamp(6) not null,\n        created_by varchar(255),\n        updated_at timestamp(6),\n        updated_by varchar(255),\n        amount numeric(10,2) not null,\n        failure_reason varchar(500),\n        metadata TEXT,\n        paid_at timestamp(6),\n        payment_method varchar(50) not null,\n        refund_amount numeric(10,2),\n        refunded_at timestamp(6),\n        status varchar(20) not null check ((status in ('PENDING','PROCESSING','COMPLETED','FAILED','REFUNDED','PARTIALLY_REFUNDED','CANCELLED'))),\n        transaction_id varchar(100),\n        order_id bigint not null,\n        primary key (id)\n    )","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create table payments (
-        id bigint generated by default as identity,
-        deleted_at timestamp(6),
-        is_deleted boolean,
-        created_at timestamp(6) not null,
-        created_by varchar(255),
-        updated_at timestamp(6),
-        updated_by varchar(255),
-        amount numeric(10,2) not null,
-        failure_reason varchar(500),
-        metadata TEXT,
-        paid_at timestamp(6),
-        payment_method varchar(50) not null,
-        refund_amount numeric(10,2),
-        refunded_at timestamp(6),
-        status varchar(20) not null check ((status in ('PENDING','PROCESSING','COMPLETED','FAILED','REFUNDED','PARTIALLY_REFUNDED','CANCELLED'))),
-        transaction_id varchar(100),
-        order_id bigint not null,
-        primary key (id)
-    )
-{"@timestamp":"2026-02-17T09:50:20.930988113Z","@version":"1","message":"\n    create table product_images (\n        id bigint generated by default as identity,\n        deleted_at timestamp(6),\n        is_deleted boolean,\n        created_at timestamp(6) not null,\n        created_by varchar(255),\n        updated_at timestamp(6),\n        updated_by varchar(255),\n        alt_text varchar(255),\n        display_order integer,\n        image_url varchar(500) not null,\n        is_primary boolean,\n        product_id bigint not null,\n        primary key (id)\n    )","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create table product_images (
-        id bigint generated by default as identity,
-        deleted_at timestamp(6),
-        is_deleted boolean,
-        created_at timestamp(6) not null,
-        created_by varchar(255),
-        updated_at timestamp(6),
-        updated_by varchar(255),
-        alt_text varchar(255),
-        display_order integer,
-        image_url varchar(500) not null,
-        is_primary boolean,
-        product_id bigint not null,
-        primary key (id)
-    )
-{"@timestamp":"2026-02-17T09:50:20.939368471Z","@version":"1","message":"\n    create table products (\n        id bigint generated by default as identity,\n        deleted_at timestamp(6),\n        is_deleted boolean,\n        created_at timestamp(6) not null,\n        created_by varchar(255),\n        updated_at timestamp(6),\n        updated_by varchar(255),\n        description TEXT,\n        discount_price numeric(10,2),\n        is_active boolean,\n        is_featured boolean,\n        name varchar(255) not null,\n        price numeric(10,2) not null,\n        rating float(53),\n        sku varchar(50),\n        slug varchar(255) not null,\n        stock integer not null check ((stock>=0)),\n        total_reviews integer,\n        total_sales integer,\n        category_id bigint not null,\n        vendor_id bigint not null,\n        primary key (id)\n    )","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create table products (
-        id bigint generated by default as identity,
-        deleted_at timestamp(6),
-        is_deleted boolean,
-        created_at timestamp(6) not null,
-        created_by varchar(255),
-        updated_at timestamp(6),
-        updated_by varchar(255),
-        description TEXT,
-        discount_price numeric(10,2),
-        is_active boolean,
-        is_featured boolean,
-        name varchar(255) not null,
-        price numeric(10,2) not null,
-        rating float(53),
-        sku varchar(50),
-        slug varchar(255) not null,
-        stock integer not null check ((stock>=0)),
-        total_reviews integer,
-        total_sales integer,
-        category_id bigint not null,
-        vendor_id bigint not null,
-        primary key (id)
-    )
-{"@timestamp":"2026-02-17T09:50:20.947011899Z","@version":"1","message":"\n    create table reviews (\n        id bigint generated by default as identity,\n        deleted_at timestamp(6),\n        is_deleted boolean,\n        created_at timestamp(6) not null,\n        created_by varchar(255),\n        updated_at timestamp(6),\n        updated_by varchar(255),\n        comment TEXT,\n        is_verified_purchase boolean,\n        rating integer not null check ((rating<=5) and (rating>=1)),\n        title varchar(100),\n        order_id bigint,\n        product_id bigint not null,\n        user_id bigint not null,\n        vendor_id bigint not null,\n        primary key (id)\n    )","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create table reviews (
-        id bigint generated by default as identity,
-        deleted_at timestamp(6),
-        is_deleted boolean,
-        created_at timestamp(6) not null,
-        created_by varchar(255),
-        updated_at timestamp(6),
-        updated_by varchar(255),
-        comment TEXT,
-        is_verified_purchase boolean,
-        rating integer not null check ((rating<=5) and (rating>=1)),
-        title varchar(100),
-        order_id bigint,
-        product_id bigint not null,
-        user_id bigint not null,
-        vendor_id bigint not null,
-        primary key (id)
-    )
-{"@timestamp":"2026-02-17T09:50:20.954599479Z","@version":"1","message":"\n    create table roles (\n        id bigint generated by default as identity,\n        deleted_at timestamp(6),\n        is_deleted boolean,\n        created_at timestamp(6) not null,\n        created_by varchar(255),\n        updated_at timestamp(6),\n        updated_by varchar(255),\n        description varchar(500),\n        name varchar(20) not null check ((name in ('CUSTOMER','VENDOR','ADMIN'))),\n        primary key (id)\n    )","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create table roles (
-        id bigint generated by default as identity,
-        deleted_at timestamp(6),
-        is_deleted boolean,
-        created_at timestamp(6) not null,
-        created_by varchar(255),
-        updated_at timestamp(6),
-        updated_by varchar(255),
-        description varchar(500),
-        name varchar(20) not null check ((name in ('CUSTOMER','VENDOR','ADMIN'))),
-        primary key (id)
-    )
-{"@timestamp":"2026-02-17T09:50:20.96177924Z","@version":"1","message":"\n    create table user_roles (\n        user_id bigint not null,\n        role_id bigint not null,\n        primary key (user_id, role_id)\n    )","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create table user_roles (
-        user_id bigint not null,
-        role_id bigint not null,
-        primary key (user_id, role_id)
-    )
-{"@timestamp":"2026-02-17T09:50:20.966768458Z","@version":"1","message":"\n    create table users (\n        id bigint generated by default as identity,\n        deleted_at timestamp(6),\n        is_deleted boolean,\n        created_at timestamp(6) not null,\n        created_by varchar(255),\n        updated_at timestamp(6),\n        updated_by varchar(255),\n        account_locked_until timestamp(6),\n        date_of_birth date,\n        email varchar(100) not null,\n        email_verification_token varchar(100),\n        email_verification_token_expiry timestamp(6),\n        failed_login_attempts integer,\n        first_name varchar(50) not null,\n        gender varchar(20),\n        is_active boolean,\n        is_email_verified boolean,\n        last_login_at timestamp(6),\n        last_name varchar(50) not null,\n        password varchar(255) not null,\n        password_reset_token varchar(100),\n        password_reset_token_expiry timestamp(6),\n        phone_number varchar(20),\n        preferred_currency varchar(5),\n        preferred_language varchar(10),\n        profile_image_url varchar(255),\n        suspension_reason varchar(500),\n        timezone varchar(50),\n        two_factor_enabled boolean,\n        two_factor_secret varchar(100),\n        primary key (id)\n    )","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create table users (
-        id bigint generated by default as identity,
-        deleted_at timestamp(6),
-        is_deleted boolean,
-        created_at timestamp(6) not null,
-        created_by varchar(255),
-        updated_at timestamp(6),
-        updated_by varchar(255),
-        account_locked_until timestamp(6),
-        date_of_birth date,
-        email varchar(100) not null,
-        email_verification_token varchar(100),
-        email_verification_token_expiry timestamp(6),
-        failed_login_attempts integer,
-        first_name varchar(50) not null,
-        gender varchar(20),
-        is_active boolean,
-        is_email_verified boolean,
-        last_login_at timestamp(6),
-        last_name varchar(50) not null,
-        password varchar(255) not null,
-        password_reset_token varchar(100),
-        password_reset_token_expiry timestamp(6),
-        phone_number varchar(20),
-        preferred_currency varchar(5),
-        preferred_language varchar(10),
-        profile_image_url varchar(255),
-        suspension_reason varchar(500),
-        timezone varchar(50),
-        two_factor_enabled boolean,
-        two_factor_secret varchar(100),
-        primary key (id)
-    )
-{"@timestamp":"2026-02-17T09:50:20.974738758Z","@version":"1","message":"\n    create table vendors (\n        id bigint generated by default as identity,\n        deleted_at timestamp(6),\n        is_deleted boolean,\n        created_at timestamp(6) not null,\n        created_by varchar(255),\n        updated_at timestamp(6),\n        updated_by varchar(255),\n        account_holder_name varchar(100),\n        approved_at date,\n        bank_account_number varchar(100),\n        bank_branch varchar(100),\n        bank_name varchar(100),\n        business_address varchar(255),\n        business_email varchar(100),\n        business_hours_json TEXT,\n        business_license varchar(100),\n        business_name varchar(100) not null,\n        business_phone varchar(20),\n        business_registration_number varchar(100),\n        business_type varchar(50),\n        commission_rate numeric(5,2),\n        description varchar(500),\n        free_shipping_threshold numeric(10,2),\n        ifsc_code varchar(50),\n        kyc_document_url varchar(500),\n        kyc_verified_at timestamp(6),\n        last_payout_at timestamp(6),\n        logo_url varchar(255),\n        minimum_order_value numeric(10,2),\n        pending_payout numeric(15,2),\n        rating float(53),\n        rejection_reason varchar(500),\n        return_address varchar(255),\n        return_policy TEXT,\n        shipping_policy TEXT,\n        status varchar(20) not null check ((status in ('PENDING','APPROVED','SUSPENDED','REJECTED'))),\n        tax_id varchar(50),\n        total_orders bigint,\n        total_reviews integer,\n        total_sales numeric(15,2),\n        website varchar(255),\n        approved_by bigint,\n        kyc_verified_by bigint,\n        user_id bigint not null,\n        primary key (id)\n    )","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create table vendors (
-        id bigint generated by default as identity,
-        deleted_at timestamp(6),
-        is_deleted boolean,
-        created_at timestamp(6) not null,
-        created_by varchar(255),
-        updated_at timestamp(6),
-        updated_by varchar(255),
-        account_holder_name varchar(100),
-        approved_at date,
-        bank_account_number varchar(100),
-        bank_branch varchar(100),
-        bank_name varchar(100),
-        business_address varchar(255),
-        business_email varchar(100),
-        business_hours_json TEXT,
-        business_license varchar(100),
-        business_name varchar(100) not null,
-        business_phone varchar(20),
-        business_registration_number varchar(100),
-        business_type varchar(50),
-        commission_rate numeric(5,2),
-        description varchar(500),
-        free_shipping_threshold numeric(10,2),
-        ifsc_code varchar(50),
-        kyc_document_url varchar(500),
-        kyc_verified_at timestamp(6),
-        last_payout_at timestamp(6),
-        logo_url varchar(255),
-        minimum_order_value numeric(10,2),
-        pending_payout numeric(15,2),
-        rating float(53),
-        rejection_reason varchar(500),
-        return_address varchar(255),
-        return_policy TEXT,
-        shipping_policy TEXT,
-        status varchar(20) not null check ((status in ('PENDING','APPROVED','SUSPENDED','REJECTED'))),
-        tax_id varchar(50),
-        total_orders bigint,
-        total_reviews integer,
-        total_sales numeric(15,2),
-        website varchar(255),
-        approved_by bigint,
-        kyc_verified_by bigint,
-        user_id bigint not null,
-        primary key (id)
-    )
-{"@timestamp":"2026-02-17T09:50:20.992859318Z","@version":"1","message":"\n    create index idx_cart_item_cart \n       on cart_items (cart_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create index idx_cart_item_cart 
-       on cart_items (cart_id)
-{"@timestamp":"2026-02-17T09:50:20.995813624Z","@version":"1","message":"\n    create index idx_cart_item_product \n       on cart_items (product_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create index idx_cart_item_product 
-       on cart_items (product_id)
-{"@timestamp":"2026-02-17T09:50:20.998627271Z","@version":"1","message":"\n    create index idx_cart_user \n       on carts (user_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create index idx_cart_user 
-       on carts (user_id)
-{"@timestamp":"2026-02-17T09:50:21.001313427Z","@version":"1","message":"\n    alter table if exists carts \n       drop constraint if exists UK64t7ox312pqal3p7fg9o503c2","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists carts 
-       drop constraint if exists UK64t7ox312pqal3p7fg9o503c2
-{"@timestamp":"2026-02-17T09:50:21.004287306Z","@version":"1","message":"HHH000247: ErrorCode: 0, SQLState: 00000","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:21.004393775Z","@version":"1","message":"constraint \"uk64t7ox312pqal3p7fg9o503c2\" of relation \"carts\" does not exist, skipping","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:21.004625196Z","@version":"1","message":"\n    alter table if exists carts \n       add constraint UK64t7ox312pqal3p7fg9o503c2 unique (user_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists carts 
-       add constraint UK64t7ox312pqal3p7fg9o503c2 unique (user_id)
-{"@timestamp":"2026-02-17T09:50:21.007566217Z","@version":"1","message":"\n    create index idx_category_slug \n       on categories (slug)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create index idx_category_slug 
-       on categories (slug)
-{"@timestamp":"2026-02-17T09:50:21.012638102Z","@version":"1","message":"\n    alter table if exists categories \n       drop constraint if exists UKt8o6pivur7nn124jehx7cygw5","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists categories 
-       drop constraint if exists UKt8o6pivur7nn124jehx7cygw5
-{"@timestamp":"2026-02-17T09:50:21.013925922Z","@version":"1","message":"HHH000247: ErrorCode: 0, SQLState: 00000","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:21.014036559Z","@version":"1","message":"constraint \"ukt8o6pivur7nn124jehx7cygw5\" of relation \"categories\" does not exist, skipping","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:21.014194162Z","@version":"1","message":"\n    alter table if exists categories \n       add constraint UKt8o6pivur7nn124jehx7cygw5 unique (name)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists categories 
-       add constraint UKt8o6pivur7nn124jehx7cygw5 unique (name)
-{"@timestamp":"2026-02-17T09:50:21.017399416Z","@version":"1","message":"\n    alter table if exists categories \n       drop constraint if exists UKoul14ho7bctbefv8jywp5v3i2","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists categories 
-       drop constraint if exists UKoul14ho7bctbefv8jywp5v3i2
-{"@timestamp":"2026-02-17T09:50:21.018870454Z","@version":"1","message":"HHH000247: ErrorCode: 0, SQLState: 00000","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:21.018975029Z","@version":"1","message":"constraint \"ukoul14ho7bctbefv8jywp5v3i2\" of relation \"categories\" does not exist, skipping","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:21.019099701Z","@version":"1","message":"\n    alter table if exists categories \n       add constraint UKoul14ho7bctbefv8jywp5v3i2 unique (slug)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists categories 
-       add constraint UKoul14ho7bctbefv8jywp5v3i2 unique (slug)
-{"@timestamp":"2026-02-17T09:50:21.021761705Z","@version":"1","message":"\n    create index idx_coupon_code \n       on coupons (code)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create index idx_coupon_code 
-       on coupons (code)
-{"@timestamp":"2026-02-17T09:50:21.024400594Z","@version":"1","message":"\n    create index idx_coupon_vendor \n       on coupons (vendor_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create index idx_coupon_vendor 
-       on coupons (vendor_id)
-{"@timestamp":"2026-02-17T09:50:21.027475504Z","@version":"1","message":"\n    create index idx_coupon_product \n       on coupons (product_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create index idx_coupon_product 
-       on coupons (product_id)
-{"@timestamp":"2026-02-17T09:50:21.030475101Z","@version":"1","message":"\n    alter table if exists coupons \n       drop constraint if exists UKeplt0kkm9yf2of2lnx6c1oy9b","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists coupons 
-       drop constraint if exists UKeplt0kkm9yf2of2lnx6c1oy9b
-{"@timestamp":"2026-02-17T09:50:21.031578838Z","@version":"1","message":"HHH000247: ErrorCode: 0, SQLState: 00000","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:21.031685867Z","@version":"1","message":"constraint \"ukeplt0kkm9yf2of2lnx6c1oy9b\" of relation \"coupons\" does not exist, skipping","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:21.031819546Z","@version":"1","message":"\n    alter table if exists coupons \n       add constraint UKeplt0kkm9yf2of2lnx6c1oy9b unique (code)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists coupons 
-       add constraint UKeplt0kkm9yf2of2lnx6c1oy9b unique (code)
-{"@timestamp":"2026-02-17T09:50:21.035130851Z","@version":"1","message":"\n    create index idx_order_item_order \n       on order_items (order_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create index idx_order_item_order 
-       on order_items (order_id)
-{"@timestamp":"2026-02-17T09:50:21.038191485Z","@version":"1","message":"\n    create index idx_order_item_product \n       on order_items (product_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create index idx_order_item_product 
-       on order_items (product_id)
-{"@timestamp":"2026-02-17T09:50:21.040875877Z","@version":"1","message":"\n    create index idx_order_item_vendor \n       on order_items (vendor_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create index idx_order_item_vendor 
-       on order_items (vendor_id)
-{"@timestamp":"2026-02-17T09:50:21.043729726Z","@version":"1","message":"\n    create index idx_order_user \n       on orders (user_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create index idx_order_user 
-       on orders (user_id)
-{"@timestamp":"2026-02-17T09:50:21.046530135Z","@version":"1","message":"\n    create index idx_order_number \n       on orders (order_number)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create index idx_order_number 
-       on orders (order_number)
-{"@timestamp":"2026-02-17T09:50:21.049521269Z","@version":"1","message":"\n    create index idx_order_status \n       on orders (status)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create index idx_order_status 
-       on orders (status)
-{"@timestamp":"2026-02-17T09:50:21.052418298Z","@version":"1","message":"\n    create index idx_order_created \n       on orders (created_at)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create index idx_order_created 
-       on orders (created_at)
-{"@timestamp":"2026-02-17T09:50:21.055829976Z","@version":"1","message":"\n    alter table if exists orders \n       drop constraint if exists UKnthkiu7pgmnqnu86i2jyoe2v7","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists orders 
-       drop constraint if exists UKnthkiu7pgmnqnu86i2jyoe2v7
-{"@timestamp":"2026-02-17T09:50:21.057014644Z","@version":"1","message":"HHH000247: ErrorCode: 0, SQLState: 00000","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:21.057113659Z","@version":"1","message":"constraint \"uknthkiu7pgmnqnu86i2jyoe2v7\" of relation \"orders\" does not exist, skipping","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:21.05729135Z","@version":"1","message":"\n    alter table if exists orders \n       add constraint UKnthkiu7pgmnqnu86i2jyoe2v7 unique (order_number)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists orders 
-       add constraint UKnthkiu7pgmnqnu86i2jyoe2v7 unique (order_number)
-{"@timestamp":"2026-02-17T09:50:21.060547104Z","@version":"1","message":"\n    create index idx_payment_order \n       on payments (order_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create index idx_payment_order 
-       on payments (order_id)
-{"@timestamp":"2026-02-17T09:50:21.063421374Z","@version":"1","message":"\n    create index idx_payment_transaction \n       on payments (transaction_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create index idx_payment_transaction 
-       on payments (transaction_id)
-{"@timestamp":"2026-02-17T09:50:21.066256518Z","@version":"1","message":"\n    create index idx_payment_status \n       on payments (status)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create index idx_payment_status 
-       on payments (status)
-{"@timestamp":"2026-02-17T09:50:21.069288448Z","@version":"1","message":"\n    alter table if exists payments \n       drop constraint if exists UKlryndveuwa4k5qthti0pkmtlx","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists payments 
-       drop constraint if exists UKlryndveuwa4k5qthti0pkmtlx
-{"@timestamp":"2026-02-17T09:50:21.070408986Z","@version":"1","message":"HHH000247: ErrorCode: 0, SQLState: 00000","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:21.070522208Z","@version":"1","message":"constraint \"uklryndveuwa4k5qthti0pkmtlx\" of relation \"payments\" does not exist, skipping","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:21.070650757Z","@version":"1","message":"\n    alter table if exists payments \n       add constraint UKlryndveuwa4k5qthti0pkmtlx unique (transaction_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists payments 
-       add constraint UKlryndveuwa4k5qthti0pkmtlx unique (transaction_id)
-{"@timestamp":"2026-02-17T09:50:21.073307779Z","@version":"1","message":"\n    alter table if exists payments \n       drop constraint if exists UK8vo36cen604as7etdfwmyjsxt","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists payments 
-       drop constraint if exists UK8vo36cen604as7etdfwmyjsxt
-{"@timestamp":"2026-02-17T09:50:21.074662714Z","@version":"1","message":"HHH000247: ErrorCode: 0, SQLState: 00000","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:21.074750397Z","@version":"1","message":"constraint \"uk8vo36cen604as7etdfwmyjsxt\" of relation \"payments\" does not exist, skipping","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:21.074859831Z","@version":"1","message":"\n    alter table if exists payments \n       add constraint UK8vo36cen604as7etdfwmyjsxt unique (order_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists payments 
-       add constraint UK8vo36cen604as7etdfwmyjsxt unique (order_id)
-{"@timestamp":"2026-02-17T09:50:21.077589745Z","@version":"1","message":"\n    create index idx_product_slug \n       on products (slug)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create index idx_product_slug 
-       on products (slug)
-{"@timestamp":"2026-02-17T09:50:21.080356415Z","@version":"1","message":"\n    create index idx_product_vendor \n       on products (vendor_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create index idx_product_vendor 
-       on products (vendor_id)
-{"@timestamp":"2026-02-17T09:50:21.083279152Z","@version":"1","message":"\n    create index idx_product_category \n       on products (category_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create index idx_product_category 
-       on products (category_id)
-{"@timestamp":"2026-02-17T09:50:21.086556239Z","@version":"1","message":"\n    create index idx_product_active \n       on products (is_active)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create index idx_product_active 
-       on products (is_active)
-{"@timestamp":"2026-02-17T09:50:21.089691479Z","@version":"1","message":"\n    alter table if exists products \n       drop constraint if exists UKostq1ec3toafnjok09y9l7dox","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists products 
-       drop constraint if exists UKostq1ec3toafnjok09y9l7dox
-{"@timestamp":"2026-02-17T09:50:21.090791038Z","@version":"1","message":"HHH000247: ErrorCode: 0, SQLState: 00000","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:21.090876527Z","@version":"1","message":"constraint \"ukostq1ec3toafnjok09y9l7dox\" of relation \"products\" does not exist, skipping","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:21.090986312Z","@version":"1","message":"\n    alter table if exists products \n       add constraint UKostq1ec3toafnjok09y9l7dox unique (slug)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists products 
-       add constraint UKostq1ec3toafnjok09y9l7dox unique (slug)
-{"@timestamp":"2026-02-17T09:50:21.094336205Z","@version":"1","message":"\n    create index idx_review_product \n       on reviews (product_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create index idx_review_product 
-       on reviews (product_id)
-{"@timestamp":"2026-02-17T09:50:21.097573561Z","@version":"1","message":"\n    create index idx_review_user \n       on reviews (user_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create index idx_review_user 
-       on reviews (user_id)
-{"@timestamp":"2026-02-17T09:50:21.100671675Z","@version":"1","message":"\n    create index idx_review_vendor \n       on reviews (vendor_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create index idx_review_vendor 
-       on reviews (vendor_id)
-{"@timestamp":"2026-02-17T09:50:21.103417272Z","@version":"1","message":"\n    create index idx_review_rating \n       on reviews (rating)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create index idx_review_rating 
-       on reviews (rating)
-{"@timestamp":"2026-02-17T09:50:21.107158491Z","@version":"1","message":"\n    alter table if exists roles \n       drop constraint if exists UKofx66keruapi6vyqpv6f2or37","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists roles 
-       drop constraint if exists UKofx66keruapi6vyqpv6f2or37
-{"@timestamp":"2026-02-17T09:50:21.108303024Z","@version":"1","message":"HHH000247: ErrorCode: 0, SQLState: 00000","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:21.108391188Z","@version":"1","message":"constraint \"ukofx66keruapi6vyqpv6f2or37\" of relation \"roles\" does not exist, skipping","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:21.108554522Z","@version":"1","message":"\n    alter table if exists roles \n       add constraint UKofx66keruapi6vyqpv6f2or37 unique (name)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists roles 
-       add constraint UKofx66keruapi6vyqpv6f2or37 unique (name)
-{"@timestamp":"2026-02-17T09:50:21.111471809Z","@version":"1","message":"\n    create index idx_user_email \n       on users (email)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create index idx_user_email 
-       on users (email)
-{"@timestamp":"2026-02-17T09:50:21.114742227Z","@version":"1","message":"\n    create index idx_user_active \n       on users (is_active)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create index idx_user_active 
-       on users (is_active)
-{"@timestamp":"2026-02-17T09:50:21.117663121Z","@version":"1","message":"\n    alter table if exists users \n       drop constraint if exists UK6dotkott2kjsp8vw4d0m25fb7","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists users 
-       drop constraint if exists UK6dotkott2kjsp8vw4d0m25fb7
-{"@timestamp":"2026-02-17T09:50:21.118725902Z","@version":"1","message":"HHH000247: ErrorCode: 0, SQLState: 00000","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:21.118809087Z","@version":"1","message":"constraint \"uk6dotkott2kjsp8vw4d0m25fb7\" of relation \"users\" does not exist, skipping","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:21.118937115Z","@version":"1","message":"\n    alter table if exists users \n       add constraint UK6dotkott2kjsp8vw4d0m25fb7 unique (email)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists users 
-       add constraint UK6dotkott2kjsp8vw4d0m25fb7 unique (email)
-{"@timestamp":"2026-02-17T09:50:21.122425647Z","@version":"1","message":"\n    create index idx_vendor_status \n       on vendors (status)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create index idx_vendor_status 
-       on vendors (status)
-{"@timestamp":"2026-02-17T09:50:21.125571529Z","@version":"1","message":"\n    create index idx_vendor_approved_date \n       on vendors (approved_at)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    create index idx_vendor_approved_date 
-       on vendors (approved_at)
-{"@timestamp":"2026-02-17T09:50:21.130205382Z","@version":"1","message":"\n    alter table if exists vendors \n       drop constraint if exists UKn3r8ql5jbdd8geulchj3o2gxk","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists vendors 
-       drop constraint if exists UKn3r8ql5jbdd8geulchj3o2gxk
-{"@timestamp":"2026-02-17T09:50:21.131302917Z","@version":"1","message":"HHH000247: ErrorCode: 0, SQLState: 00000","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:21.131383908Z","@version":"1","message":"constraint \"ukn3r8ql5jbdd8geulchj3o2gxk\" of relation \"vendors\" does not exist, skipping","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:21.131527426Z","@version":"1","message":"\n    alter table if exists vendors \n       add constraint UKn3r8ql5jbdd8geulchj3o2gxk unique (business_name)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists vendors 
-       add constraint UKn3r8ql5jbdd8geulchj3o2gxk unique (business_name)
-{"@timestamp":"2026-02-17T09:50:21.134508375Z","@version":"1","message":"\n    alter table if exists vendors \n       drop constraint if exists UKi4fsfxe266yl9oye02ongwl8","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists vendors 
-       drop constraint if exists UKi4fsfxe266yl9oye02ongwl8
-{"@timestamp":"2026-02-17T09:50:21.135680429Z","@version":"1","message":"HHH000247: ErrorCode: 0, SQLState: 00000","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:21.135812194Z","@version":"1","message":"constraint \"uki4fsfxe266yl9oye02ongwl8\" of relation \"vendors\" does not exist, skipping","logger_name":"org.hibernate.orm.jdbc.warn","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:21.136204365Z","@version":"1","message":"\n    alter table if exists vendors \n       add constraint UKi4fsfxe266yl9oye02ongwl8 unique (user_id)","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists vendors 
-       add constraint UKi4fsfxe266yl9oye02ongwl8 unique (user_id)
-{"@timestamp":"2026-02-17T09:50:21.14102219Z","@version":"1","message":"\n    alter table if exists addresses \n       add constraint FK1fa36y2oqhao3wgg2rw1pi459 \n       foreign key (user_id) \n       references users","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists addresses 
-       add constraint FK1fa36y2oqhao3wgg2rw1pi459 
-       foreign key (user_id) 
-       references users
-{"@timestamp":"2026-02-17T09:50:21.145474698Z","@version":"1","message":"\n    alter table if exists cart_items \n       add constraint FKpcttvuq4mxppo8sxggjtn5i2c \n       foreign key (cart_id) \n       references carts","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists cart_items 
-       add constraint FKpcttvuq4mxppo8sxggjtn5i2c 
-       foreign key (cart_id) 
-       references carts
-{"@timestamp":"2026-02-17T09:50:21.148261372Z","@version":"1","message":"\n    alter table if exists cart_items \n       add constraint FK1re40cjegsfvw58xrkdp6bac6 \n       foreign key (product_id) \n       references products","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists cart_items 
-       add constraint FK1re40cjegsfvw58xrkdp6bac6 
-       foreign key (product_id) 
-       references products
-{"@timestamp":"2026-02-17T09:50:21.151287241Z","@version":"1","message":"\n    alter table if exists carts \n       add constraint FKb5o626f86h46m4s7ms6ginnop \n       foreign key (user_id) \n       references users","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists carts 
-       add constraint FKb5o626f86h46m4s7ms6ginnop 
-       foreign key (user_id) 
-       references users
-{"@timestamp":"2026-02-17T09:50:21.153362882Z","@version":"1","message":"\n    alter table if exists categories \n       add constraint FKsaok720gsu4u2wrgbk10b5n8d \n       foreign key (parent_id) \n       references categories","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists categories 
-       add constraint FKsaok720gsu4u2wrgbk10b5n8d 
-       foreign key (parent_id) 
-       references categories
-{"@timestamp":"2026-02-17T09:50:21.155873167Z","@version":"1","message":"\n    alter table if exists coupons \n       add constraint FK1y4bgwwy6k404u0dv4jfi1wb4 \n       foreign key (product_id) \n       references products","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists coupons 
-       add constraint FK1y4bgwwy6k404u0dv4jfi1wb4 
-       foreign key (product_id) 
-       references products
-{"@timestamp":"2026-02-17T09:50:21.158634834Z","@version":"1","message":"\n    alter table if exists coupons \n       add constraint FKeo53jdsgc5htpc5wuiyd4vkt6 \n       foreign key (vendor_id) \n       references vendors","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists coupons 
-       add constraint FKeo53jdsgc5htpc5wuiyd4vkt6 
-       foreign key (vendor_id) 
-       references vendors
-{"@timestamp":"2026-02-17T09:50:21.161627161Z","@version":"1","message":"\n    alter table if exists order_items \n       add constraint FKbioxgbv59vetrxe0ejfubep1w \n       foreign key (order_id) \n       references orders","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists order_items 
-       add constraint FKbioxgbv59vetrxe0ejfubep1w 
-       foreign key (order_id) 
-       references orders
-{"@timestamp":"2026-02-17T09:50:21.164893297Z","@version":"1","message":"\n    alter table if exists order_items \n       add constraint FKocimc7dtr037rh4ls4l95nlfi \n       foreign key (product_id) \n       references products","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists order_items 
-       add constraint FKocimc7dtr037rh4ls4l95nlfi 
-       foreign key (product_id) 
-       references products
-{"@timestamp":"2026-02-17T09:50:21.167082528Z","@version":"1","message":"\n    alter table if exists order_items \n       add constraint FKh2b04eyamwe2jqedwv3lbrx7f \n       foreign key (vendor_id) \n       references vendors","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists order_items 
-       add constraint FKh2b04eyamwe2jqedwv3lbrx7f 
-       foreign key (vendor_id) 
-       references vendors
-{"@timestamp":"2026-02-17T09:50:21.169506886Z","@version":"1","message":"\n    alter table if exists orders \n       add constraint FK66jolu65brloux12yi37qy3ky \n       foreign key (billing_address_id) \n       references addresses","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists orders 
-       add constraint FK66jolu65brloux12yi37qy3ky 
-       foreign key (billing_address_id) 
-       references addresses
-{"@timestamp":"2026-02-17T09:50:21.171837703Z","@version":"1","message":"\n    alter table if exists orders \n       add constraint FKmk6q95x8ffidq82wlqjaq7sqc \n       foreign key (shipping_address_id) \n       references addresses","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists orders 
-       add constraint FKmk6q95x8ffidq82wlqjaq7sqc 
-       foreign key (shipping_address_id) 
-       references addresses
-{"@timestamp":"2026-02-17T09:50:21.174067438Z","@version":"1","message":"\n    alter table if exists orders \n       add constraint FK32ql8ubntj5uh44ph9659tiih \n       foreign key (user_id) \n       references users","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists orders 
-       add constraint FK32ql8ubntj5uh44ph9659tiih 
-       foreign key (user_id) 
-       references users
-{"@timestamp":"2026-02-17T09:50:21.176702239Z","@version":"1","message":"\n    alter table if exists payments \n       add constraint FK81gagumt0r8y3rmudcgpbk42l \n       foreign key (order_id) \n       references orders","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists payments 
-       add constraint FK81gagumt0r8y3rmudcgpbk42l 
-       foreign key (order_id) 
-       references orders
-{"@timestamp":"2026-02-17T09:50:21.179546129Z","@version":"1","message":"\n    alter table if exists product_images \n       add constraint FKqnq71xsohugpqwf3c9gxmsuy \n       foreign key (product_id) \n       references products","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists product_images 
-       add constraint FKqnq71xsohugpqwf3c9gxmsuy 
-       foreign key (product_id) 
-       references products
-{"@timestamp":"2026-02-17T09:50:21.182666734Z","@version":"1","message":"\n    alter table if exists products \n       add constraint FKog2rp4qthbtt2lfyhfo32lsw9 \n       foreign key (category_id) \n       references categories","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists products 
-       add constraint FKog2rp4qthbtt2lfyhfo32lsw9 
-       foreign key (category_id) 
-       references categories
-{"@timestamp":"2026-02-17T09:50:21.184797365Z","@version":"1","message":"\n    alter table if exists products \n       add constraint FKs6kdu75k7ub4s95ydsr52p59s \n       foreign key (vendor_id) \n       references vendors","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists products 
-       add constraint FKs6kdu75k7ub4s95ydsr52p59s 
-       foreign key (vendor_id) 
-       references vendors
-{"@timestamp":"2026-02-17T09:50:21.187282957Z","@version":"1","message":"\n    alter table if exists reviews \n       add constraint FKqwgq1lxgahsxdspnwqfac6sv6 \n       foreign key (order_id) \n       references orders","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists reviews 
-       add constraint FKqwgq1lxgahsxdspnwqfac6sv6 
-       foreign key (order_id) 
-       references orders
-{"@timestamp":"2026-02-17T09:50:21.190210533Z","@version":"1","message":"\n    alter table if exists reviews \n       add constraint FKpl51cejpw4gy5swfar8br9ngi \n       foreign key (product_id) \n       references products","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists reviews 
-       add constraint FKpl51cejpw4gy5swfar8br9ngi 
-       foreign key (product_id) 
-       references products
-{"@timestamp":"2026-02-17T09:50:21.192608372Z","@version":"1","message":"\n    alter table if exists reviews \n       add constraint FKcgy7qjc1r99dp117y9en6lxye \n       foreign key (user_id) \n       references users","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists reviews 
-       add constraint FKcgy7qjc1r99dp117y9en6lxye 
-       foreign key (user_id) 
-       references users
-{"@timestamp":"2026-02-17T09:50:21.194843077Z","@version":"1","message":"\n    alter table if exists reviews \n       add constraint FKsg1xksdcv84wvwbvthpg00iao \n       foreign key (vendor_id) \n       references vendors","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists reviews 
-       add constraint FKsg1xksdcv84wvwbvthpg00iao 
-       foreign key (vendor_id) 
-       references vendors
-{"@timestamp":"2026-02-17T09:50:21.197151228Z","@version":"1","message":"\n    alter table if exists user_roles \n       add constraint FKh8ciramu9cc9q3qcqiv4ue8a6 \n       foreign key (role_id) \n       references roles","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists user_roles 
-       add constraint FKh8ciramu9cc9q3qcqiv4ue8a6 
-       foreign key (role_id) 
-       references roles
-{"@timestamp":"2026-02-17T09:50:21.200044851Z","@version":"1","message":"\n    alter table if exists user_roles \n       add constraint FKhfh9dx7w3ubf1co1vdev94g3f \n       foreign key (user_id) \n       references users","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists user_roles 
-       add constraint FKhfh9dx7w3ubf1co1vdev94g3f 
-       foreign key (user_id) 
-       references users
-{"@timestamp":"2026-02-17T09:50:21.202404605Z","@version":"1","message":"\n    alter table if exists vendors \n       add constraint FKh48ek4rh5meeb162rpiiabuvu \n       foreign key (approved_by) \n       references users","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists vendors 
-       add constraint FKh48ek4rh5meeb162rpiiabuvu 
-       foreign key (approved_by) 
-       references users
-{"@timestamp":"2026-02-17T09:50:21.204953846Z","@version":"1","message":"\n    alter table if exists vendors \n       add constraint FKsi74if5mlck37eipfrnofkmg7 \n       foreign key (kyc_verified_by) \n       references users","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists vendors 
-       add constraint FKsi74if5mlck37eipfrnofkmg7 
-       foreign key (kyc_verified_by) 
-       references users
-{"@timestamp":"2026-02-17T09:50:21.207294087Z","@version":"1","message":"\n    alter table if exists vendors \n       add constraint FKiuqso7j7nivq7sb3v3v4j7ein \n       foreign key (user_id) \n       references users","logger_name":"org.hibernate.SQL","thread_name":"main","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    alter table if exists vendors 
-       add constraint FKiuqso7j7nivq7sb3v3v4j7ein 
-       foreign key (user_id) 
-       references users
-{"@timestamp":"2026-02-17T09:50:21.210278693Z","@version":"1","message":"Initialized JPA EntityManagerFactory for persistence unit 'default'","logger_name":"org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:21.438490865Z","@version":"1","message":"Hibernate is in classpath; If applicable, HQL parser will be used.","logger_name":"org.springframework.data.jpa.repository.query.QueryEnhancerFactories","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:23.862944925Z","@version":"1","message":"Initializing Payment Gateway Factory","logger_name":"com.localcart.service.payment.gateway.factory.PaymentGatewayFactory","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:23.863243852Z","@version":"1","message":"Registered payment gateway for provider: MOCK","logger_name":"com.localcart.service.payment.gateway.factory.PaymentGatewayFactory","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:23.863313121Z","@version":"1","message":"Mock payment gateway registered","logger_name":"com.localcart.service.payment.gateway.factory.PaymentGatewayFactory","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:23.863369115Z","@version":"1","message":"Registered payment gateway for provider: STRIPE","logger_name":"com.localcart.service.payment.gateway.factory.PaymentGatewayFactory","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:23.863418277Z","@version":"1","message":"Stripe payment gateway registered","logger_name":"com.localcart.service.payment.gateway.factory.PaymentGatewayFactory","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:23.863479832Z","@version":"1","message":"Payment Gateway Factory initialized with 2 providers","logger_name":"com.localcart.service.payment.gateway.factory.PaymentGatewayFactory","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:24.075961681Z","@version":"1","message":"spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning","logger_name":"org.springframework.boot.jpa.autoconfigure.JpaBaseConfiguration$JpaWebConfiguration","thread_name":"main","level":"WARN","level_value":30000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:24.202436525Z","@version":"1","message":"Global AuthenticationManager configured with UserDetailsService bean with name userService","logger_name":"org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:25.833370773Z","@version":"1","message":"Exposing 6 endpoints beneath base path '/actuator'","logger_name":"org.springframework.boot.actuate.endpoint.web.EndpointLinksResolver","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:25.93492113Z","@version":"1","message":"Tomcat started on port 8080 (http) with context path '/'","logger_name":"org.springframework.boot.tomcat.TomcatWebServer","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:25.948189104Z","@version":"1","message":"Started LocalcartApplication in 10.629 seconds (process running for 11.17)","logger_name":"com.localcart.LocalcartApplication","thread_name":"main","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:40.415062173Z","@version":"1","message":"Initializing Spring DispatcherServlet 'dispatcherServlet'","logger_name":"org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/]","thread_name":"http-nio-8080-exec-1","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:40.415328199Z","@version":"1","message":"Initializing Servlet 'dispatcherServlet'","logger_name":"org.springframework.web.servlet.DispatcherServlet","thread_name":"http-nio-8080-exec-1","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T09:50:40.416854494Z","@version":"1","message":"Completed initialization in 1 ms","logger_name":"org.springframework.web.servlet.DispatcherServlet","thread_name":"http-nio-8080-exec-1","level":"INFO","level_value":20000,"application":"localcart","tags":["COMMONS-LOGGING"],"service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T10:00:00.007629645Z","@version":"1","message":"Running review request check (delivered 7 days ago)","logger_name":"com.localcart.service.ScheduledAutomationService","thread_name":"scheduling-1","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T10:00:00.065422049Z","@version":"1","message":"\n    select\n        o1_0.id,\n        o1_0.billing_address_id,\n        o1_0.cancellation_reason,\n        o1_0.cancelled_at,\n        o1_0.created_at,\n        o1_0.created_by,\n        o1_0.deleted_at,\n        o1_0.delivered_at,\n        o1_0.discount,\n        o1_0.is_deleted,\n        i1_0.order_id,\n        i1_0.id,\n        i1_0.created_at,\n        i1_0.created_by,\n        i1_0.deleted_at,\n        i1_0.is_deleted,\n        i1_0.product_id,\n        i1_0.product_name,\n        i1_0.quantity,\n        i1_0.subtotal,\n        i1_0.unit_price,\n        i1_0.updated_at,\n        i1_0.updated_by,\n        i1_0.vendor_id,\n        o1_0.notes,\n        o1_0.order_number,\n        o1_0.shipped_at,\n        o1_0.shipping_address_id,\n        o1_0.shipping_fee,\n        o1_0.status,\n        o1_0.subtotal,\n        o1_0.tax,\n        o1_0.total,\n        o1_0.tracking_number,\n        o1_0.updated_at,\n        o1_0.updated_by,\n        o1_0.user_id \n    from\n        orders o1_0 \n    left join\n        order_items i1_0 \n            on o1_0.id=i1_0.order_id \n    where\n        o1_0.status='DELIVERED' \n        and o1_0.delivered_at<? \n        and o1_0.id not in (select\n            distinct r1_0.order_id from reviews r1_0 \n        where\n            r1_0.order_id is not null)","logger_name":"org.hibernate.SQL","thread_name":"scheduling-1","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    select
-        o1_0.id,
-        o1_0.billing_address_id,
-        o1_0.cancellation_reason,
-        o1_0.cancelled_at,
-        o1_0.created_at,
-        o1_0.created_by,
-        o1_0.deleted_at,
-        o1_0.delivered_at,
-        o1_0.discount,
-        o1_0.is_deleted,
-        i1_0.order_id,
-        i1_0.id,
-        i1_0.created_at,
-        i1_0.created_by,
-        i1_0.deleted_at,
-        i1_0.is_deleted,
-        i1_0.product_id,
-        i1_0.product_name,
-        i1_0.quantity,
-        i1_0.subtotal,
-        i1_0.unit_price,
-        i1_0.updated_at,
-        i1_0.updated_by,
-        i1_0.vendor_id,
-        o1_0.notes,
-        o1_0.order_number,
-        o1_0.shipped_at,
-        o1_0.shipping_address_id,
-        o1_0.shipping_fee,
-        o1_0.status,
-        o1_0.subtotal,
-        o1_0.tax,
-        o1_0.total,
-        o1_0.tracking_number,
-        o1_0.updated_at,
-        o1_0.updated_by,
-        o1_0.user_id 
-    from
-        orders o1_0 
-    left join
-        order_items i1_0 
-            on o1_0.id=i1_0.order_id 
-    where
-        o1_0.status='DELIVERED' 
-        and o1_0.delivered_at<? 
-        and o1_0.id not in (select
-            distinct r1_0.order_id from reviews r1_0 
-        where
-            r1_0.order_id is not null)
-{"@timestamp":"2026-02-17T10:00:00.088469084Z","@version":"1","message":"Found 0 orders needing review requests","logger_name":"com.localcart.service.ScheduledAutomationService","thread_name":"scheduling-1","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T10:00:00.092289053Z","@version":"1","message":"Running abandoned cart check (inactive for 24 hours)","logger_name":"com.localcart.service.ScheduledAutomationService","thread_name":"scheduling-1","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
-{"@timestamp":"2026-02-17T10:00:00.09896793Z","@version":"1","message":"\n    select\n        c1_0.id,\n        c1_0.created_at,\n        c1_0.created_by,\n        c1_0.deleted_at,\n        c1_0.is_deleted,\n        i1_0.cart_id,\n        i1_0.id,\n        i1_0.created_at,\n        i1_0.created_by,\n        i1_0.deleted_at,\n        i1_0.is_deleted,\n        i1_0.product_id,\n        p1_0.id,\n        p1_0.category_id,\n        p1_0.created_at,\n        p1_0.created_by,\n        p1_0.deleted_at,\n        p1_0.description,\n        p1_0.discount_price,\n        p1_0.is_active,\n        p1_0.is_deleted,\n        p1_0.is_featured,\n        p1_0.name,\n        p1_0.price,\n        p1_0.rating,\n        p1_0.sku,\n        p1_0.slug,\n        p1_0.stock,\n        p1_0.total_reviews,\n        p1_0.total_sales,\n        p1_0.updated_at,\n        p1_0.updated_by,\n        p1_0.vendor_id,\n        i1_0.quantity,\n        i1_0.updated_at,\n        i1_0.updated_by,\n        c1_0.updated_at,\n        c1_0.updated_by,\n        c1_0.user_id \n    from\n        carts c1_0 \n    left join\n        cart_items i1_0 \n            on c1_0.id=i1_0.cart_id \n    left join\n        products p1_0 \n            on p1_0.id=i1_0.product_id \n    where\n        c1_0.updated_at<? \n        and (\n            select\n                count(*) \n            from\n                cart_items i2_0 \n            where\n                c1_0.id=i2_0.cart_id\n        )>0","logger_name":"org.hibernate.SQL","thread_name":"scheduling-1","level":"DEBUG","level_value":10000,"application":"localcart","service":"localcart","env":"dev"}
-Hibernate: 
-    select
-        c1_0.id,
-        c1_0.created_at,
-        c1_0.created_by,
-        c1_0.deleted_at,
-        c1_0.is_deleted,
-        i1_0.cart_id,
-        i1_0.id,
-        i1_0.created_at,
-        i1_0.created_by,
-        i1_0.deleted_at,
-        i1_0.is_deleted,
-        i1_0.product_id,
-        p1_0.id,
-        p1_0.category_id,
-        p1_0.created_at,
-        p1_0.created_by,
-        p1_0.deleted_at,
-        p1_0.description,
-        p1_0.discount_price,
-        p1_0.is_active,
-        p1_0.is_deleted,
-        p1_0.is_featured,
-        p1_0.name,
-        p1_0.price,
-        p1_0.rating,
-        p1_0.sku,
-        p1_0.slug,
-        p1_0.stock,
-        p1_0.total_reviews,
-        p1_0.total_sales,
-        p1_0.updated_at,
-        p1_0.updated_by,
-        p1_0.vendor_id,
-        i1_0.quantity,
-        i1_0.updated_at,
-        i1_0.updated_by,
-        c1_0.updated_at,
-        c1_0.updated_by,
-        c1_0.user_id 
-    from
-        carts c1_0 
-    left join
-        cart_items i1_0 
-            on c1_0.id=i1_0.cart_id 
-    left join
-        products p1_0 
-            on p1_0.id=i1_0.product_id 
-    where
-        c1_0.updated_at<? 
-        and (
-            select
-                count(*) 
-            from
-                cart_items i2_0 
-            where
-                c1_0.id=i2_0.cart_id
-        )>0
-{"@timestamp":"2026-02-17T10:00:00.103378751Z","@version":"1","message":"Found 0 abandoned carts","logger_name":"com.localcart.service.ScheduledAutomationService","thread_name":"scheduling-1","level":"INFO","level_value":20000,"application":"localcart","service":"localcart","env":"dev"}
+[WARNING] Error injecting: org.springframework.boot.maven.RunMojo
+java.lang.TypeNotPresentException: Type org.springframework.boot.maven.RunMojo not present
+    at org.eclipse.sisu.space.URLClassSpace.loadClass (URLClassSpace.java:149)
+    at org.eclipse.sisu.space.NamedClass.load (NamedClass.java:48)
+    at org.eclipse.sisu.space.AbstractDeferredClass.get (AbstractDeferredClass.java:50)
+    at com.google.inject.internal.ProviderInternalFactory.provision (ProviderInternalFactory.java:86)
+    at com.google.inject.internal.InternalFactoryToInitializableAdapter.provision (InternalFactoryToInitializableAdapter.java:57)
+    at com.google.inject.internal.ProviderInternalFactory$1.call (ProviderInternalFactory.java:67)
+    at com.google.inject.internal.ProvisionListenerStackCallback$Provision.provision (ProvisionListenerStackCallback.java:109)
+    at com.google.inject.internal.ProvisionListenerStackCallback$Provision.provision (ProvisionListenerStackCallback.java:124)
+    at com.google.inject.internal.ProvisionListenerStackCallback.provision (ProvisionListenerStackCallback.java:66)
+    at com.google.inject.internal.ProviderInternalFactory.circularGet (ProviderInternalFactory.java:62)
+    at com.google.inject.internal.InternalFactoryToInitializableAdapter.get (InternalFactoryToInitializableAdapter.java:47)
+    at com.google.inject.internal.InjectorImpl$1.get (InjectorImpl.java:1101)
+    at org.eclipse.sisu.inject.Guice4$2.get (Guice4.java:235)
+    at org.eclipse.sisu.inject.LazyBeanEntry.getValue (LazyBeanEntry.java:83)
+    at org.eclipse.sisu.plexus.LazyPlexusBean.getValue (LazyPlexusBean.java:53)
+    at org.codehaus.plexus.DefaultPlexusContainer.lookup (DefaultPlexusContainer.java:267)
+    at org.codehaus.plexus.DefaultPlexusContainer.lookup (DefaultPlexusContainer.java:259)
+    at org.apache.maven.plugin.internal.DefaultMavenPluginManager.getConfiguredMojo (DefaultMavenPluginManager.java:503)
+    at org.apache.maven.plugin.DefaultBuildPluginManager.executeMojo (DefaultBuildPluginManager.java:114)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.doExecute2 (MojoExecutor.java:328)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.doExecute (MojoExecutor.java:316)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:212)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:174)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.access$000 (MojoExecutor.java:75)
+    at org.apache.maven.lifecycle.internal.MojoExecutor$1.run (MojoExecutor.java:162)
+    at org.apache.maven.plugin.DefaultMojosExecutionStrategy.execute (DefaultMojosExecutionStrategy.java:39)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:159)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:105)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:73)
+    at org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build (SingleThreadedBuilder.java:53)
+    at org.apache.maven.lifecycle.internal.LifecycleStarter.execute (LifecycleStarter.java:118)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:261)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:173)
+    at org.apache.maven.DefaultMaven.execute (DefaultMaven.java:101)
+    at org.apache.maven.cli.MavenCli.execute (MavenCli.java:919)
+    at org.apache.maven.cli.MavenCli.doMain (MavenCli.java:285)
+    at org.apache.maven.cli.MavenCli.main (MavenCli.java:207)
+    at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0 (Native Method)
+    at jdk.internal.reflect.NativeMethodAccessorImpl.invoke (NativeMethodAccessorImpl.java:62)
+    at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke (DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke (Method.java:566)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced (Launcher.java:255)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launch (Launcher.java:201)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode (Launcher.java:361)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.main (Launcher.java:314)
+Caused by: java.lang.UnsupportedClassVersionError: org/springframework/boot/maven/RunMojo has been compiled by a more recent version of the Java Runtime (class file version 61.0), this version of the Java Runtime only recognizes class file versions up to 55.0
+    at java.lang.ClassLoader.defineClass1 (Native Method)
+    at java.lang.ClassLoader.defineClass (ClassLoader.java:1017)
+    at java.security.SecureClassLoader.defineClass (SecureClassLoader.java:174)
+    at java.net.URLClassLoader.defineClass (URLClassLoader.java:555)
+    at java.net.URLClassLoader$1.run (URLClassLoader.java:458)
+    at java.net.URLClassLoader$1.run (URLClassLoader.java:452)
+    at java.security.AccessController.doPrivileged (Native Method)
+    at java.net.URLClassLoader.findClass (URLClassLoader.java:451)
+    at org.codehaus.plexus.classworlds.realm.ClassRealm.findClassInternal (ClassRealm.java:256)
+    at org.codehaus.plexus.classworlds.realm.ClassRealm.loadClassFromSelf (ClassRealm.java:351)
+    at org.codehaus.plexus.classworlds.strategy.SelfFirstStrategy.loadClass (SelfFirstStrategy.java:36)
+    at org.codehaus.plexus.classworlds.realm.ClassRealm.unsynchronizedLoadClass (ClassRealm.java:225)
+    at org.codehaus.plexus.classworlds.realm.ClassRealm.loadClass (ClassRealm.java:210)
+    at org.codehaus.plexus.classworlds.realm.ClassRealm.loadClass (ClassRealm.java:205)
+    at org.eclipse.sisu.space.URLClassSpace.loadClass (URLClassSpace.java:141)
+    at org.eclipse.sisu.space.NamedClass.load (NamedClass.java:48)
+    at org.eclipse.sisu.space.AbstractDeferredClass.get (AbstractDeferredClass.java:50)
+    at com.google.inject.internal.ProviderInternalFactory.provision (ProviderInternalFactory.java:86)
+    at com.google.inject.internal.InternalFactoryToInitializableAdapter.provision (InternalFactoryToInitializableAdapter.java:57)
+    at com.google.inject.internal.ProviderInternalFactory$1.call (ProviderInternalFactory.java:67)
+    at com.google.inject.internal.ProvisionListenerStackCallback$Provision.provision (ProvisionListenerStackCallback.java:109)
+    at com.google.inject.internal.ProvisionListenerStackCallback$Provision.provision (ProvisionListenerStackCallback.java:124)
+    at com.google.inject.internal.ProvisionListenerStackCallback.provision (ProvisionListenerStackCallback.java:66)
+    at com.google.inject.internal.ProviderInternalFactory.circularGet (ProviderInternalFactory.java:62)
+    at com.google.inject.internal.InternalFactoryToInitializableAdapter.get (InternalFactoryToInitializableAdapter.java:47)
+    at com.google.inject.internal.InjectorImpl$1.get (InjectorImpl.java:1101)
+    at org.eclipse.sisu.inject.Guice4$2.get (Guice4.java:235)
+    at org.eclipse.sisu.inject.LazyBeanEntry.getValue (LazyBeanEntry.java:83)
+    at org.eclipse.sisu.plexus.LazyPlexusBean.getValue (LazyPlexusBean.java:53)
+    at org.codehaus.plexus.DefaultPlexusContainer.lookup (DefaultPlexusContainer.java:267)
+    at org.codehaus.plexus.DefaultPlexusContainer.lookup (DefaultPlexusContainer.java:259)
+    at org.apache.maven.plugin.internal.DefaultMavenPluginManager.getConfiguredMojo (DefaultMavenPluginManager.java:503)
+    at org.apache.maven.plugin.DefaultBuildPluginManager.executeMojo (DefaultBuildPluginManager.java:114)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.doExecute2 (MojoExecutor.java:328)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.doExecute (MojoExecutor.java:316)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:212)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:174)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.access$000 (MojoExecutor.java:75)
+    at org.apache.maven.lifecycle.internal.MojoExecutor$1.run (MojoExecutor.java:162)
+    at org.apache.maven.plugin.DefaultMojosExecutionStrategy.execute (DefaultMojosExecutionStrategy.java:39)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:159)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:105)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:73)
+    at org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build (SingleThreadedBuilder.java:53)
+    at org.apache.maven.lifecycle.internal.LifecycleStarter.execute (LifecycleStarter.java:118)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:261)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:173)
+    at org.apache.maven.DefaultMaven.execute (DefaultMaven.java:101)
+    at org.apache.maven.cli.MavenCli.execute (MavenCli.java:919)
+    at org.apache.maven.cli.MavenCli.doMain (MavenCli.java:285)
+    at org.apache.maven.cli.MavenCli.main (MavenCli.java:207)
+    at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0 (Native Method)
+    at jdk.internal.reflect.NativeMethodAccessorImpl.invoke (NativeMethodAccessorImpl.java:62)
+    at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke (DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke (Method.java:566)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced (Launcher.java:255)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launch (Launcher.java:201)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode (Launcher.java:361)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.main (Launcher.java:314)
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  4.163 s
+[INFO] Finished at: 2026-03-06T06:29:43Z
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:4.0.2:run (default-cli) on project localcart: Execution default-cli of goal org.springframework.boot:spring-boot-maven-plugin:4.0.2:run failed: Unable to load the mojo 'run' in the plugin 'org.springframework.boot:spring-boot-maven-plugin:4.0.2' due to an API incompatibility: org.codehaus.plexus.component.repository.exception.ComponentLookupException: org/springframework/boot/maven/RunMojo has been compiled by a more recent version of the Java Runtime (class file version 61.0), this version of the Java Runtime only recognizes class file versions up to 55.0
+[ERROR] -----------------------------------------------------
+[ERROR] realm =    plugin>org.springframework.boot:spring-boot-maven-plugin:4.0.2
+[ERROR] strategy = org.codehaus.plexus.classworlds.strategy.SelfFirstStrategy
+[ERROR] urls[0] = file:/home/codespace/.m2/repository/org/springframework/boot/spring-boot-maven-plugin/4.0.2/spring-boot-maven-plugin-4.0.2.jar
+[ERROR] urls[1] = file:/home/codespace/.m2/repository/org/springframework/boot/spring-boot-buildpack-platform/4.0.2/spring-boot-buildpack-platform-4.0.2.jar
+[ERROR] urls[2] = file:/home/codespace/.m2/repository/net/java/dev/jna/jna-platform/5.17.0/jna-platform-5.17.0.jar
+[ERROR] urls[3] = file:/home/codespace/.m2/repository/net/java/dev/jna/jna/5.17.0/jna-5.17.0.jar
+[ERROR] urls[4] = file:/home/codespace/.m2/repository/org/apache/commons/commons-compress/1.27.1/commons-compress-1.27.1.jar
+[ERROR] urls[5] = file:/home/codespace/.m2/repository/commons-codec/commons-codec/1.17.1/commons-codec-1.17.1.jar
+[ERROR] urls[6] = file:/home/codespace/.m2/repository/org/apache/commons/commons-lang3/3.16.0/commons-lang3-3.16.0.jar
+[ERROR] urls[7] = file:/home/codespace/.m2/repository/org/apache/httpcomponents/client5/httpclient5/5.5.2/httpclient5-5.5.2.jar
+[ERROR] urls[8] = file:/home/codespace/.m2/repository/org/apache/httpcomponents/core5/httpcore5/5.3.6/httpcore5-5.3.6.jar
+[ERROR] urls[9] = file:/home/codespace/.m2/repository/org/apache/httpcomponents/core5/httpcore5-h2/5.3.6/httpcore5-h2-5.3.6.jar
+[ERROR] urls[10] = file:/home/codespace/.m2/repository/org/tomlj/tomlj/1.0.0/tomlj-1.0.0.jar
+[ERROR] urls[11] = file:/home/codespace/.m2/repository/org/antlr/antlr4-runtime/4.7.2/antlr4-runtime-4.7.2.jar
+[ERROR] urls[12] = file:/home/codespace/.m2/repository/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar
+[ERROR] urls[13] = file:/home/codespace/.m2/repository/tools/jackson/core/jackson-databind/3.0.4/jackson-databind-3.0.4.jar
+[ERROR] urls[14] = file:/home/codespace/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.20/jackson-annotations-2.20.jar
+[ERROR] urls[15] = file:/home/codespace/.m2/repository/tools/jackson/core/jackson-core/3.0.4/jackson-core-3.0.4.jar
+[ERROR] urls[16] = file:/home/codespace/.m2/repository/org/springframework/boot/spring-boot-loader-tools/4.0.2/spring-boot-loader-tools-4.0.2.jar
+[ERROR] urls[17] = file:/home/codespace/.m2/repository/org/apache/maven/shared/maven-common-artifact-filters/3.4.0/maven-common-artifact-filters-3.4.0.jar
+[ERROR] urls[18] = file:/home/codespace/.m2/repository/org/sonatype/plexus/plexus-build-api/0.0.7/plexus-build-api-0.0.7.jar
+[ERROR] urls[19] = file:/home/codespace/.m2/repository/org/springframework/spring-core/7.0.3/spring-core-7.0.3.jar
+[ERROR] urls[20] = file:/home/codespace/.m2/repository/commons-logging/commons-logging/1.3.5/commons-logging-1.3.5.jar
+[ERROR] urls[21] = file:/home/codespace/.m2/repository/org/jspecify/jspecify/1.0.0/jspecify-1.0.0.jar
+[ERROR] urls[22] = file:/home/codespace/.m2/repository/org/springframework/spring-context/7.0.3/spring-context-7.0.3.jar
+[ERROR] urls[23] = file:/home/codespace/.m2/repository/org/springframework/spring-aop/7.0.3/spring-aop-7.0.3.jar
+[ERROR] urls[24] = file:/home/codespace/.m2/repository/org/springframework/spring-beans/7.0.3/spring-beans-7.0.3.jar
+[ERROR] urls[25] = file:/home/codespace/.m2/repository/org/springframework/spring-expression/7.0.3/spring-expression-7.0.3.jar
+[ERROR] urls[26] = file:/home/codespace/.m2/repository/io/micrometer/micrometer-observation/1.16.2/micrometer-observation-1.16.2.jar
+[ERROR] urls[27] = file:/home/codespace/.m2/repository/io/micrometer/micrometer-commons/1.16.2/micrometer-commons-1.16.2.jar
+[ERROR] urls[28] = file:/home/codespace/.m2/repository/org/apache/maven/plugins/maven-shade-plugin/3.6.0/maven-shade-plugin-3.6.0.jar
+[ERROR] urls[29] = file:/home/codespace/.m2/repository/org/codehaus/plexus/plexus-utils/3.5.1/plexus-utils-3.5.1.jar
+[ERROR] urls[30] = file:/home/codespace/.m2/repository/org/ow2/asm/asm/9.7/asm-9.7.jar
+[ERROR] urls[31] = file:/home/codespace/.m2/repository/org/ow2/asm/asm-commons/9.7/asm-commons-9.7.jar
+[ERROR] urls[32] = file:/home/codespace/.m2/repository/org/ow2/asm/asm-tree/9.7/asm-tree-9.7.jar
+[ERROR] urls[33] = file:/home/codespace/.m2/repository/org/jdom/jdom2/2.0.6.1/jdom2-2.0.6.1.jar
+[ERROR] urls[34] = file:/home/codespace/.m2/repository/commons-io/commons-io/2.16.1/commons-io-2.16.1.jar
+[ERROR] urls[35] = file:/home/codespace/.m2/repository/org/vafer/jdependency/2.10/jdependency-2.10.jar
+[ERROR] Number of foreign imports: 1
+[ERROR] import: Entry[import  from realm ClassRealm[maven.api, parent: null]]
+[ERROR] 
+[ERROR] -----------------------------------------------------
+[ERROR] 
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/PluginContainerException

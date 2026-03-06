@@ -3,35 +3,40 @@ import { apiClient } from '@/lib/api-client'
 
 // Types
 export interface Product {
-  id: string
+  id: string | number
   name: string
   slug: string
   description: string
   price: number
   discountPrice?: number
   stock: number
-  categoryId: string
-  vendorId: string
-  featured: boolean
-  status: string
+  categoryId: string | number
+  vendorId: string | number
+  isFeatured?: boolean
+  isActive?: boolean
   imageUrls?: string[]
   createdAt: string
   updatedAt: string
 }
 
 export interface Category {
-  id: string
+  id: string | number
   name: string
   slug: string
   description?: string
-  parentId?: string
+  parentId?: string | number
 }
 
 export interface CartItem {
-  id: string
-  productId: string
+  id: string | number
+  productId: string | number
   quantity: number
-  product: Product
+  product?: Product
+  productName?: string
+  productSlug?: string
+  price?: number
+  discountPrice?: number
+  subtotal?: number
   imageUrl?: string
 }
 
@@ -47,13 +52,14 @@ export interface Cart {
 }
 
 export interface Order {
-  id: string
+  id: string | number
   orderNumber: string
-  userId: string
+  userId: string | number
   items: CartItem[]
   subtotal: number
   tax: number
   shipping: number
+  shippingFee?: number
   total: number
   status: string
   createdAt: string
@@ -95,23 +101,39 @@ export const useProductBySlug = (slug: string) => {
   })
 }
 
-export const useSearchProducts = (query: string, category?: string) => {
+export const useSearchProducts = (query: string, category?: string, page = 1, limit = 20) => {
   return useQuery({
-    queryKey: ['products-search', query, category],
+    queryKey: ['products-search', query, category, page, limit],
     queryFn: async () => {
+      const normalizedQuery = query.trim()
       const params = new URLSearchParams()
-      if (query) params.append('q', query)
-      if (category) params.append('category', category)
-      params.append('page', '0')
-      params.append('size', '20')
+      if (normalizedQuery) params.append('q', normalizedQuery)
 
-      const response = await apiClient.get<{ products: Product[] }>(
+      if (category) {
+        const categoryId = Number(category)
+        if (Number.isFinite(categoryId) && categoryId > 0) {
+          params.append('category', String(categoryId))
+        }
+      }
+
+      params.append('page', String(Math.max(0, page - 1)))
+      params.append('size', String(limit))
+
+      const response = await apiClient.get<{
+        products: Product[]
+        totalItems: number
+        totalPages: number
+      }>(
         `/products/search?${params.toString()}`
       )
 
-      return response.products || []
+      return {
+        content: response.products || [],
+        totalElements: response.totalItems || 0,
+        totalPages: response.totalPages || 0,
+      }
     },
-    enabled: !!query,
+    enabled: !!query.trim() || !!category,
   })
 }
 
@@ -119,7 +141,13 @@ export const useSearchProducts = (query: string, category?: string) => {
 export const useCategories = () => {
   return useQuery({
     queryKey: ['categories'],
-    queryFn: () => apiClient.get<Category[]>('/categories'),
+    queryFn: async () => {
+      const response = await apiClient.get<{ categories?: Category[] } | Category[]>('/categories')
+      if (Array.isArray(response)) {
+        return response
+      }
+      return response.categories || []
+    },
   })
 }
 
@@ -137,8 +165,32 @@ export const useCart = () => {
     queryKey: ['cart'],
     queryFn: async () => {
       const cart = await apiClient.get<Cart>('/cart')
+
+      const normalizedItems = (cart.items || []).map((item) => {
+        if (item.product) return item
+
+        return {
+          ...item,
+          product: {
+            id: item.productId,
+            name: item.productName || 'Product',
+            slug: item.productSlug || String(item.productId || ''),
+            description: '',
+            price: Number(item.price || 0),
+            discountPrice: item.discountPrice != null ? Number(item.discountPrice) : undefined,
+            stock: 0,
+            categoryId: '',
+            vendorId: '',
+            imageUrls: item.imageUrl ? [item.imageUrl] : [],
+            createdAt: '',
+            updatedAt: '',
+          },
+        }
+      })
+
       return {
         ...cart,
+        items: normalizedItems,
         shipping: cart.shipping ?? cart.shippingFee ?? 0,
       }
     },
@@ -149,7 +201,7 @@ export const useAddToCart = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: { productId: string; quantity: number }) =>
+    mutationFn: (data: { productId: string | number; quantity: number }) =>
       apiClient.post('/cart/add-item', data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cart'] })
@@ -161,7 +213,7 @@ export const useUpdateCartItem = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: { id: string; quantity: number }) =>
+    mutationFn: (data: { id: string | number; quantity: number }) =>
       apiClient.put(`/cart/items/${data.id}?quantity=${data.quantity}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cart'] })
@@ -173,7 +225,7 @@ export const useRemoveFromCart = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (id: string) => apiClient.delete(`/cart/items/${id}`),
+    mutationFn: (id: string | number) => apiClient.delete(`/cart/items/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cart'] })
     },
@@ -202,8 +254,13 @@ export const useOrders = (page = 1, limit = 10) => {
         totalPages: number
       }>(`/orders?page=${page - 1}&size=${limit}`)
 
+      const normalizedOrders = (response.orders || []).map((order) => ({
+        ...order,
+        shipping: order.shipping ?? order.shippingFee ?? 0,
+      }))
+
       return {
-        content: response.orders || [],
+        content: normalizedOrders,
         totalElements: response.totalItems || 0,
         totalPages: response.totalPages || 0,
       }
@@ -214,7 +271,13 @@ export const useOrders = (page = 1, limit = 10) => {
 export const useOrderById = (id: string) => {
   return useQuery({
     queryKey: ['order', id],
-    queryFn: () => apiClient.get<Order>(`/orders/${id}`),
+    queryFn: async () => {
+      const order = await apiClient.get<Order>(`/orders/${id}`)
+      return {
+        ...order,
+        shipping: order.shipping ?? order.shippingFee ?? 0,
+      }
+    },
     enabled: !!id,
   })
 }

@@ -18,7 +18,7 @@ export default function CartPage() {
   const updateCartItem = useUpdateCartItem()
   const [isCheckingOut, setIsCheckingOut] = useState(false)
 
-  const handleUpdateQuantity = async (itemId: string, quantity: number) => {
+  const handleUpdateQuantity = async (itemId: string | number, quantity: number) => {
     if (quantity < 1) return
     try {
       await updateCartItem.mutateAsync({ id: itemId, quantity })
@@ -28,7 +28,7 @@ export default function CartPage() {
     }
   }
 
-  const handleRemoveItem = async (itemId: string) => {
+  const handleRemoveItem = async (itemId: string | number) => {
     try {
       await removeFromCart.mutateAsync(itemId)
       toast.success('Removed from cart')
@@ -85,7 +85,7 @@ export default function CartPage() {
                   {item.imageUrl ? (
                     <Image
                       src={item.imageUrl}
-                      alt={item.product.name}
+                      alt={item.product?.name || item.productName || 'Cart product image'}
                       fill
                       className="object-cover"
                     />
@@ -98,14 +98,14 @@ export default function CartPage() {
 
                 {/* Product Details */}
                 <div className="flex-1">
-                  <Link href={`/products/${item.product.slug}`} className="hover:text-blue-600">
-                    <h3 className="font-semibold text-lg mb-2">{item.product.name}</h3>
+                  <Link href={`/products/${item.product?.slug || item.productSlug || ''}`} className="hover:text-blue-600">
+                    <h3 className="font-semibold text-lg mb-2">{item.product?.name || item.productName || 'Product'}</h3>
                   </Link>
 
                   <div className="flex justify-between items-end">
                     <div>
                       <p className="text-gray-600 mb-4">
-                        ${item.product.price.toFixed(2)} each
+                        ${Number(item.product?.price ?? item.price ?? 0).toFixed(2)} each
                       </p>
                       <div className="flex items-center gap-2">
                         <button
@@ -134,7 +134,7 @@ export default function CartPage() {
 
                     <div className="text-right">
                       <p className="text-xl font-bold mb-4">
-                        ${(item.product.price * item.quantity).toFixed(2)}
+                        ${Number(item.subtotal ?? (Number(item.product?.price ?? item.price ?? 0) * item.quantity)).toFixed(2)}
                       </p>
                       <button
                         onClick={() => handleRemoveItem(item.id)}

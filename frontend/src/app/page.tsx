@@ -14,10 +14,10 @@ interface Product {
   name: string
   description: string
   price: number
-  discountedPrice?: number
+  discountPrice?: number
   imageUrl?: string
-  rating: number
-  stockQuantity: number
+  rating?: number
+  stock: number
   vendorName?: string
 }
 
@@ -29,7 +29,19 @@ export default function Home() {
     const fetchProducts = async () => {
       try {
         const response = await apiClient.get<any>('/products?page=0&size=8')
-        setProducts(response.products || [])
+        const mapped = (response.products || []).map((product: any) => ({
+          id: product.id,
+          slug: product.slug,
+          name: product.name,
+          description: product.description || '',
+          price: Number(product.price || 0),
+          discountPrice: product.discountPrice != null ? Number(product.discountPrice) : undefined,
+          imageUrl: Array.isArray(product.imageUrls) && product.imageUrls.length > 0 ? product.imageUrls[0] : undefined,
+          rating: product.rating != null ? Number(product.rating) : undefined,
+          stock: Number(product.stock || 0),
+          vendorName: product.vendorName,
+        }))
+        setProducts(mapped)
       } catch (error) {
         console.error('Failed to fetch products:', error)
         toast.error('Failed to load products')
@@ -160,7 +172,7 @@ export default function Home() {
                             <Package className="h-16 w-16 text-gray-300" />
                           </div>
                         )}
-                        {product.discountedPrice && (
+                        {product.discountPrice && (
                           <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded text-xs font-bold">
                             SALE
                           </div>
@@ -175,13 +187,13 @@ export default function Home() {
                         </p>
                         <div className="flex items-center gap-1 mb-2">
                           <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
-                          <span className="text-sm font-medium">{product.rating.toFixed(1)}</span>
+                          <span className="text-sm font-medium">{(product.rating ?? 0).toFixed(1)}</span>
                         </div>
                         <div className="flex items-baseline gap-2">
-                          {product.discountedPrice ? (
+                          {product.discountPrice ? (
                             <>
                               <span className="text-lg font-bold text-gray-900">
-                                ${product.discountedPrice.toFixed(2)}
+                                ${product.discountPrice.toFixed(2)}
                               </span>
                               <span className="text-sm text-gray-500 line-through">
                                 ${product.price.toFixed(2)}
@@ -193,12 +205,12 @@ export default function Home() {
                             </span>
                           )}
                         </div>
-                        {product.stockQuantity <= 5 && product.stockQuantity > 0 && (
+                        {product.stock <= 5 && product.stock > 0 && (
                           <p className="text-xs text-orange-600 mt-2">
-                            Only {product.stockQuantity} left!
+                            Only {product.stock} left!
                           </p>
                         )}
-                        {product.stockQuantity === 0 && (
+                        {product.stock === 0 && (
                           <p className="text-xs text-red-600 mt-2">Out of Stock</p>
                         )}
                       </div>

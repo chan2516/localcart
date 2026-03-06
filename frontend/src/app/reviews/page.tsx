@@ -49,17 +49,37 @@ export default function ReviewsPage() {
   }, [isAuthenticated])
 
   const submitReview = async () => {
-    if (!productId || !title || !comment) {
-      toast.error('Product ID, title, and comment are required')
+    const parsedProductId = Number(productId)
+    const parsedRating = Number(rating)
+    const normalizedTitle = title.trim()
+    const normalizedComment = comment.trim()
+
+    if (!Number.isInteger(parsedProductId) || parsedProductId <= 0) {
+      toast.error('Product ID must be a valid positive number')
+      return
+    }
+
+    if (!Number.isInteger(parsedRating) || parsedRating < 1 || parsedRating > 5) {
+      toast.error('Rating must be between 1 and 5')
+      return
+    }
+
+    if (normalizedTitle.length < 10 || normalizedTitle.length > 200) {
+      toast.error('Title must be between 10 and 200 characters')
+      return
+    }
+
+    if (normalizedComment.length < 20 || normalizedComment.length > 2000) {
+      toast.error('Comment must be between 20 and 2000 characters')
       return
     }
 
     try {
       await apiClient.post('/reviews', {
-        productId: Number(productId),
-        rating: Number(rating),
-        title,
-        comment,
+        productId: parsedProductId,
+        rating: parsedRating,
+        title: normalizedTitle,
+        comment: normalizedComment,
       })
       toast.success('Review submitted')
       setTitle('')

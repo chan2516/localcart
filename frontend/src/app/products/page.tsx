@@ -61,7 +61,7 @@ export default function ProductsPage() {
             <SelectContent>
               <SelectItem value="all">All Categories</SelectItem>
               {categories?.map((cat) => (
-                <SelectItem key={cat.id} value={cat.id}>
+                <SelectItem key={cat.id} value={String(cat.id)}>
                   {cat.name}
                 </SelectItem>
               ))}
@@ -121,16 +121,12 @@ export default function ProductsPage() {
 
 // Helper function for search query
 function useSearchQuery(query: string, category: string | undefined, page: number) {
-  const { data: searchResults, isLoading: searchLoading } = useSearchProducts(query, category)
+  const { data: searchResults, isLoading: searchLoading } = useSearchProducts(query, category, page)
   const { data: allProducts, isLoading: allLoading } = useProducts(page)
 
-  if (query) {
+  if (query || category) {
     return {
-      data: {
-        content: searchResults || [],
-        totalElements: (searchResults || []).length,
-        totalPages: 1,
-      },
+      data: searchResults,
       isLoading: searchLoading,
     }
   }

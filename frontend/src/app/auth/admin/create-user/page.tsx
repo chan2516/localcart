@@ -24,6 +24,7 @@ export default function AdminCreateUserPage() {
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [passwordStrength, setPasswordStrength] = useState(0)
+  const adminCreateSupported = false
 
   useEffect(() => {
     // Check if user is admin
@@ -96,6 +97,11 @@ export default function AdminCreateUserPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
+    if (!adminCreateSupported) {
+      toast.error('Admin user creation is not available in the current backend API')
+      return
+    }
+
     if (!validateForm()) {
       return
     }
@@ -167,6 +173,9 @@ export default function AdminCreateUserPage() {
               <CardDescription className="text-gray-600">
                 Create a new administrator account
               </CardDescription>
+              <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-md px-3 py-2">
+                This action is temporarily disabled because the backend does not expose an admin user creation endpoint.
+              </p>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-5">
@@ -329,9 +338,9 @@ export default function AdminCreateUserPage() {
                 <Button
                   type="submit"
                   className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2"
-                  disabled={isLoading}
+                  disabled={isLoading || !adminCreateSupported}
                 >
-                  {isLoading ? 'Creating Admin User...' : 'Create Admin User'}
+                  {isLoading ? 'Creating Admin User...' : adminCreateSupported ? 'Create Admin User' : 'Creation Unavailable'}
                 </Button>
 
                 {/* Back Button */}

@@ -34,6 +34,8 @@ type UserSummary = {
   roles?: string[]
 }
 
+type UserAction = 'ACTIVATE' | 'SUSPEND' | 'BAN'
+
 export default function AdminDashboardPage() {
   const router = useRouter()
   const { user, isAuthenticated } = useAuthStore()
@@ -42,10 +44,11 @@ export default function AdminDashboardPage() {
   const [vendors, setVendors] = useState<Vendor[]>([])
   const [users, setUsers] = useState<UserSummary[]>([])
   const [loading, setLoading] = useState(true)
+  const [managingUserId, setManagingUserId] = useState<number | null>(null)
 
   useEffect(() => {
     if (!isAuthenticated) {
-      router.push('/adminlogin')
+      router.push('/admin/login')
       return
     }
     if (user && user.role !== 'ADMIN') {
@@ -86,6 +89,41 @@ export default function AdminDashboardPage() {
       toast.success(`Vendor ${status.toLowerCase()}`)
     } catch (error: any) {
       toast.error(error?.message || 'Failed to update vendor status')
+    }
+  }
+
+  const handleManageUser = async (targetUser: UserSummary, action: UserAction) => {
+    let reason: string | undefined
+    let suspensionDurationDays: number | undefined
+
+    if (action === 'SUSPEND' || action === 'BAN') {
+      const input = window.prompt(`Enter a reason for ${action.toLowerCase()}ing user #${targetUser.id}:`)
+      if (!input || !input.trim()) {
+        toast.error('Reason is required for suspend/ban actions')
+        return
+      }
+      reason = input.trim()
+
+      if (action === 'SUSPEND') {
+        suspensionDurationDays = 30
+      }
+    }
+
+    try {
+      setManagingUserId(targetUser.id)
+      const updated = await apiClient.post<UserSummary>('/admin/users/manage', {
+        userId: targetUser.id,
+        action,
+        reason,
+        suspensionDurationDays,
+      })
+
+      setUsers((prev) => prev.map((u) => (u.id === updated.id ? { ...u, ...updated } : u)))
+      toast.success(`User ${action.toLowerCase()} completed`)
+    } catch (error: any) {
+      toast.error(error?.message || 'Failed to manage user')
+    } finally {
+      setManagingUserId(null)
     }
   }
 
@@ -134,14 +172,42 @@ export default function AdminDashboardPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Recent Users</CardTitle>
+          <CardTitle>User Management</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           {users.length === 0 && <p className="text-gray-600">No users found.</p>}
           {users.map((u) => (
-            <div key={u.id} className="rounded-md border p-3">
-              <p className="font-medium">{u.firstName || ''} {u.lastName || ''}</p>
-              <p className="text-sm text-gray-600">{u.email}</p>
+            <div key={u.id} className="rounded-md border p-3 flex items-center justify-between gap-3">
+              <div>
+                <p className="font-medium">{u.firstName || ''} {u.lastName || ''}</p>
+                <p className="text-sm text-gray-600">{u.email}</p>
+                <p className="text-xs text-gray-500 mt-1">
+                  ID: {u.id} | Roles: {(u.roles || []).join(', ') || 'N/A'} | Status: {u.isActive ? 'Active' : 'Inactive'}
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  disabled={managingUserId === u.id || String(u.id) === String(user?.id)}
+                  onClick={() => handleManageUser(u, 'ACTIVATE')}
+                >
+                  Activate
+                </Button>
+                <Button
+                  variant="secondary"
+                  disabled={managingUserId === u.id || String(u.id) === String(user?.id)}
+                  onClick={() => handleManageUser(u, 'SUSPEND')}
+                >
+                  Suspend
+                </Button>
+                <Button
+                  variant="destructive"
+                  disabled={managingUserId === u.id || String(u.id) === String(user?.id)}
+                  onClick={() => handleManageUser(u, 'BAN')}
+                >
+                  Ban
+                </Button>
+              </div>
             </div>
           ))}
         </CardContent>

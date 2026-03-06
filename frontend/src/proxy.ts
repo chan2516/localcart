@@ -24,9 +24,11 @@ export function proxy(request: NextRequest) {
     }
   }
 
-  if (pathname.startsWith('/admin')) {
+  const isAdminProtectedRoute = pathname.startsWith('/admin') && pathname !== '/admin/login'
+
+  if (isAdminProtectedRoute) {
     if (!token) {
-      return NextResponse.redirect(new URL('/adminlogin', request.url))
+      return NextResponse.redirect(new URL('/admin/login', request.url))
     }
     if (role !== 'ADMIN') {
       return NextResponse.redirect(new URL('/', request.url))
