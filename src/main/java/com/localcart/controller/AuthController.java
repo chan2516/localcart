@@ -8,6 +8,7 @@ import com.localcart.dto.auth.ForgotPasswordRequest;
 import com.localcart.dto.auth.ResetPasswordRequest;
 import com.localcart.entity.User;
 import com.localcart.exception.PaymentException;
+import com.localcart.security.JwtUtils;
 import com.localcart.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +43,7 @@ import java.util.Map;
 public class AuthController {
 
     private final UserService userService;
+    private final JwtUtils jwtUtils;
 
     /**
      * POST /api/v1/auth/register
@@ -82,13 +84,8 @@ public class AuthController {
             org.springframework.security.core.userdetails.UserDetails userDetails = 
                     userService.loadUserByUsername(user.getEmail());
             
-            String accessToken = new com.localcart.security.JwtUtils(
-                    new com.localcart.config.JwtConfig()
-            ).generateAccessToken(userDetails);
-            
-            String refreshToken = new com.localcart.security.JwtUtils(
-                    new com.localcart.config.JwtConfig()
-            ).generateRefreshToken(userDetails);
+                String accessToken = jwtUtils.generateAccessToken(userDetails);
+                String refreshToken = jwtUtils.generateRefreshToken(userDetails);
             
             AuthResponse response = AuthResponse.builder()
                     .accessToken(accessToken)
@@ -253,14 +250,15 @@ public class AuthController {
             @RequestHeader("Authorization") String authHeader) {
         try {
             log.info("Profile request");
+
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                throw new PaymentException("Invalid authorization header", "INVALID_AUTH_HEADER");
+            }
             
             // Extract token from Authorization header
             String token = authHeader.substring(7);  // Remove "Bearer "
             
             // Extract username from token
-            com.localcart.security.JwtUtils jwtUtils = new com.localcart.security.JwtUtils(
-                    new com.localcart.config.JwtConfig()
-            );
             String email = jwtUtils.extractUsername(token);
             
             // Get user
@@ -302,11 +300,12 @@ public class AuthController {
             @RequestHeader("Authorization") String authHeader,
             @Valid @RequestBody Map<String, String> request) {
         try {
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                throw new PaymentException("Invalid authorization header", "INVALID_AUTH_HEADER");
+            }
+
             // Extract user from token
             String token = authHeader.substring(7);
-            com.localcart.security.JwtUtils jwtUtils = new com.localcart.security.JwtUtils(
-                    new com.localcart.config.JwtConfig()
-            );
             String email = jwtUtils.extractUsername(token);
             User user = userService.findByEmail(email)
                     .orElseThrow(() -> new PaymentException("User not found", "USER_NOT_FOUND"));

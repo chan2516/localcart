@@ -88,7 +88,14 @@ public class UserService implements UserDetailsService {
 
         // Get CUSTOMER role (default for new users)
         Role customerRole = roleRepository.findByName(RoleType.CUSTOMER)
-                .orElseThrow(() -> new PaymentException("CUSTOMER role not found", "ROLE_NOT_FOUND"));
+            .orElseGet(() -> {
+                log.warn("CUSTOMER role missing; creating default role record");
+                Role role = Role.builder()
+                    .name(RoleType.CUSTOMER)
+                    .description("Regular customer who can browse and purchase products")
+                    .build();
+                return roleRepository.save(role);
+            });
 
         // Create new user
         User user = User.builder()

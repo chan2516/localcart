@@ -54,6 +54,22 @@ public class CartService {
                     return cartRepository.save(newCart);
                 });
     }
+
+    /**
+     * Get cart for read-only flows.
+     * If cart does not exist yet, return an in-memory empty cart without persisting.
+     */
+    public Cart getCartForRead(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new PaymentException("User not found", "USER_NOT_FOUND"));
+
+        return cartRepository.findByUserIdWithItems(userId)
+                .orElseGet(() -> {
+                    Cart cart = new Cart();
+                    cart.setUser(user);
+                    return cart;
+                });
+    }
     
     /**
      * Add product to cart or update quantity if exists
@@ -177,7 +193,7 @@ public class CartService {
     @Transactional(readOnly = true)
     public BigDecimal getCartTotal(Long userId) {
         log.info("Calculating cart total for user: {}", userId);
-        Cart cart = getOrCreateCart(userId);
+        Cart cart = getCartForRead(userId);
         
         return cart.getItems().stream()
                 .map(item -> {
@@ -195,7 +211,7 @@ public class CartService {
     @Transactional(readOnly = true)
     public CartDto getCartDto(Long userId) {
         log.info("Fetching cart DTO for user: {}", userId);
-        Cart cart = getOrCreateCart(userId);
+        Cart cart = getCartForRead(userId);
         
         List<CartItemDto> itemDtos = cart.getItems().stream()
                 .map(this::convertToCartItemDto)
