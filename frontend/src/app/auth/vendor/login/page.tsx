@@ -72,7 +72,7 @@ export default function VendorLoginPage() {
       toast.success('Logged in successfully!')
       router.push('/vendor/dashboard')
     } catch (error: any) {
-      const errorMsg = error?.response?.data?.message || 'Invalid email or password'
+      const errorMsg = error?.message || 'Invalid email or password'
       toast.error(errorMsg)
     }
   }

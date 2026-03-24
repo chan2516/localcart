@@ -22,6 +22,13 @@ export function UserMenu({ user }: UserMenuProps) {
   const { logout } = useAuthStore()
   const router = useRouter()
 
+  const dashboardHref =
+    user.role === 'ADMIN'
+      ? '/admin/dashboard'
+      : user.role === 'VENDOR'
+        ? '/vendor/dashboard'
+        : '/dashboard'
+
   const handleLogout = () => {
     logout()
     router.push('/')
@@ -45,6 +52,9 @@ export function UserMenu({ user }: UserMenuProps) {
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
+          <Link href={dashboardHref}>Dashboard</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
           <Link href="/profile">Profile</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
@@ -52,6 +62,9 @@ export function UserMenu({ user }: UserMenuProps) {
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link href="/addresses">Addresses</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href="/auth/change-password">Change Password</Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout}>

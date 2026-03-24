@@ -61,10 +61,18 @@ export default function LoginPage() {
 
     try {
       await login(formData.email, formData.password)
+      const loggedInUser = useAuthStore.getState().user
       toast.success('Logged in successfully!')
-      router.push('/')
+
+      if (loggedInUser?.role === 'ADMIN') {
+        router.push('/admin/dashboard')
+      } else if (loggedInUser?.role === 'VENDOR') {
+        router.push('/vendor/dashboard')
+      } else {
+        router.push('/dashboard')
+      }
     } catch (error: any) {
-      const errorMsg = error?.response?.data?.message || 'Invalid email or password'
+      const errorMsg = error?.message || 'Invalid email or password'
       toast.error(errorMsg)
     }
   }

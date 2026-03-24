@@ -168,7 +168,12 @@ public class JwtUtils {
      * Get signing key from secret
      */
     private SecretKey getSigningKey() {
-        byte[] keyBytes = jwtConfig.getSecret().getBytes(StandardCharsets.UTF_8);
+        String configuredSecret = jwtConfig.getSecret();
+        String effectiveSecret = (configuredSecret == null || configuredSecret.isBlank())
+                ? "dev-secret-key-change-in-production-with-32-byte-base64"
+                : configuredSecret;
+
+        byte[] keyBytes = effectiveSecret.getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }

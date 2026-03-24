@@ -102,9 +102,9 @@ export default function RegisterPage() {
         formData.phoneNumber
       )
       toast.success('Account created successfully!')
-      router.push('/')
+      router.push('/dashboard')
     } catch (error: any) {
-      const errorMsg = error?.response?.data?.message || 'Registration failed. Please try again.'
+      const errorMsg = error?.message || 'Registration failed. Please try again.'
       toast.error(errorMsg)
     }
   }

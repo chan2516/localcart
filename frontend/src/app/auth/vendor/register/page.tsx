@@ -23,11 +23,12 @@ import {
 
 export default function VendorRegisterPage() {
   const router = useRouter()
-  const { register, registerVendor, isLoading } = useAuthStore()
+  const { register, login, registerVendor, isLoading } = useAuthStore()
   const [step, setStep] = useState(1) // Step 1: User Info, Step 2: Business Info
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [userId, setUserId] = useState<string | null>(null)
+  const [isSubmittingStep1, setIsSubmittingStep1] = useState(false)
+  const [isSubmittingStep2, setIsSubmittingStep2] = useState(false)
 
   const [userFormData, setUserFormData] = useState({
     email: '',
@@ -171,11 +172,17 @@ export default function VendorRegisterPage() {
   const handleStep1Submit = async (e: React.FormEvent) => {
     e.preventDefault()
 
+    if (isSubmittingStep1 || isLoading) {
+      return
+    }
+
     if (!validateUserForm()) {
       return
     }
 
     try {
+      setIsSubmittingStep1(true)
+
       // Register user first
       await register(
         userFormData.email,
@@ -187,24 +194,45 @@ export default function VendorRegisterPage() {
 
       const user = useAuthStore.getState().user
       if (user?.id) {
-        setUserId(user.id)
         setStep(2)
         toast.success('Step 1 complete! Now add your business details.')
       }
     } catch (error: any) {
-      const errorMsg = error?.response?.data?.message || 'Registration failed. Please try again.'
+      const errorMsg = error?.message || 'Registration failed. Please try again.'
+
+      // If account already exists, allow user to continue with vendor onboarding.
+      if (errorMsg.toLowerCase().includes('email already registered')) {
+        try {
+          await login(userFormData.email, userFormData.password)
+          setStep(2)
+          toast.success('Account already exists. Continue with business details.')
+          return
+        } catch {
+          toast.error('Email is already registered. Please log in with your password to continue.')
+          return
+        }
+      }
+
       toast.error(errorMsg)
+    } finally {
+      setIsSubmittingStep1(false)
     }
   }
 
   const handleStep2Submit = async (e: React.FormEvent) => {
     e.preventDefault()
 
+    if (isSubmittingStep2 || isLoading) {
+      return
+    }
+
     if (!validateVendorForm()) {
       return
     }
 
     try {
+      setIsSubmittingStep2(true)
+
       await registerVendor(
         vendorFormData.businessName,
         vendorFormData.description,
@@ -221,9 +249,17 @@ export default function VendorRegisterPage() {
         router.push('/auth/vendor/registration-complete')
       }, 1500)
     } catch (error: any) {
-      const errorMsg =
-        error?.response?.data?.message || 'Failed to register vendor. Please try again.'
+      const errorMsg = error?.message || 'Failed to register vendor. Please try again.'
+
+      if (errorMsg.toLowerCase().includes('already has a vendor account')) {
+        toast.success('Vendor account already exists. Redirecting to dashboard.')
+        router.push('/dashboard')
+        return
+      }
+
       toast.error(errorMsg)
+    } finally {
+      setIsSubmittingStep2(false)
     }
   }
 

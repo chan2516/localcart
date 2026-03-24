@@ -9,6 +9,7 @@ import { useCategories, useProducts, Product } from '@/hooks/use-api'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { AccountPanel } from '@/components/account-panel'
 
 type ProductForm = {
   id?: string | number
@@ -242,6 +243,8 @@ export default function VendorDashboardPage() {
         <h1 className="text-3xl font-bold">Vendor Dashboard</h1>
         <p className="text-gray-600">Manage products, promotions, offers, and coupons.</p>
       </div>
+
+      {user && <AccountPanel user={user} />}
 
       <Card>
         <CardHeader>

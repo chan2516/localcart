@@ -7,6 +7,7 @@ import { useAuthStore } from '@/lib/auth-store'
 import { apiClient } from '@/lib/api-client'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { AccountPanel } from '@/components/account-panel'
 
 type DashboardStats = {
   totalUsers?: number
@@ -137,6 +138,8 @@ export default function AdminDashboardPage() {
         <h1 className="text-3xl font-bold">Admin Dashboard</h1>
         <p className="text-gray-600">Platform-level control center</p>
       </div>
+
+      {user && <AccountPanel user={user} />}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card><CardHeader><CardTitle>Total Users</CardTitle></CardHeader><CardContent>{stats?.totalUsers ?? 0}</CardContent></Card>

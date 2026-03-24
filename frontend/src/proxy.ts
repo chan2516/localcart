@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const authOnlyRoutes = ['/profile', '/orders', '/checkout', '/addresses', '/reviews', '/cart']
+const authOnlyRoutes = ['/profile', '/orders', '/checkout', '/addresses', '/reviews', '/cart', '/dashboard', '/auth/change-password']
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -46,6 +46,8 @@ export const config = {
     '/addresses/:path*',
     '/reviews/:path*',
     '/cart/:path*',
+    '/dashboard/:path*',
+    '/auth/change-password/:path*',
     '/vendor/:path*',
     '/admin/:path*',
   ],

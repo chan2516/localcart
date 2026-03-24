@@ -50,6 +50,7 @@ interface AuthStore {
   // Password reset
   forgotPassword: (email: string) => Promise<void>
   resetPassword: (token: string, newPassword: string) => Promise<void>
+  changePassword: (oldPassword: string, newPassword: string) => Promise<void>
   
   // Vendor methods
   registerVendor: (
@@ -141,6 +142,18 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     }
   },
 
+  changePassword: async (oldPassword, newPassword) => {
+    set({ isLoading: true })
+    try {
+      await apiClient.post('/auth/change-password', {
+        oldPassword,
+        newPassword,
+      })
+    } finally {
+      set({ isLoading: false })
+    }
+  },
+
   registerVendor: async (
     businessName,
     description,
@@ -163,8 +176,18 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         businessRegistrationNumber,
         businessType,
       })
-      
-      set({ user: { ...get().user, role: 'VENDOR', vendorId: response.id } as User })
+
+      const currentUser = get().user
+      const vendorId = response?.id != null ? String(response.id) : undefined
+      const updatedUser = currentUser
+        ? ({ ...currentUser, role: 'VENDOR', vendorId } as User)
+        : null
+
+      if (updatedUser) {
+        persistAuthCookies(localStorage.getItem('accessToken'), 'VENDOR')
+      }
+
+      set({ user: updatedUser, isAuthenticated: !!updatedUser })
     } finally {
       set({ isLoading: false })
     }
@@ -275,6 +298,7 @@ function mapProfileToUser(profile: any): User | null {
     firstName: profile.firstName,
     lastName: profile.lastName,
     role: mapRole(profile.roles),
+    vendorId: profile.vendorId != null ? String(profile.vendorId) : undefined,
   }
 }
 

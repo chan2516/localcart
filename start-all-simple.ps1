@@ -10,12 +10,44 @@ Write-Host "  (Each service in separate window)" -ForegroundColor Cyan
 Write-Host "=========================================" -ForegroundColor Cyan
 Write-Host ""
 
+function Wait-ForContainerHealthy {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$ContainerName,
+        [int]$TimeoutSeconds = 120
+    )
+
+    $elapsed = 0
+    while ($elapsed -lt $TimeoutSeconds) {
+        $running = docker inspect -f "{{.State.Running}}" $ContainerName 2>$null
+        if ($running -ne "true") {
+            Start-Sleep -Seconds 2
+            $elapsed += 2
+            continue
+        }
+
+        $health = docker inspect -f "{{if .State.Health}}{{.State.Health.Status}}{{else}}none{{end}}" $ContainerName 2>$null
+        if ($health -eq "healthy" -or $health -eq "none") {
+            Write-Host "  $ContainerName is ready (health: $health)" -ForegroundColor Green
+            return
+        }
+
+        Start-Sleep -Seconds 2
+        $elapsed += 2
+    }
+
+    throw "Timed out waiting for container '$ContainerName' to become healthy."
+}
+
 # Start Docker services
 Write-Host "Starting Docker services..." -ForegroundColor Yellow
-docker-compose up -d
+docker compose up -d postgres redis adminer n8n prometheus grafana loki promtail
 
-Write-Host "Waiting for services to initialize (15 seconds)..." -ForegroundColor Yellow
-Start-Sleep -Seconds 15
+Write-Host "Waiting for PostgreSQL and Redis to be healthy..." -ForegroundColor Yellow
+Wait-ForContainerHealthy -ContainerName "localcart-postgres" -TimeoutSeconds 120
+Wait-ForContainerHealthy -ContainerName "localcart-redis" -TimeoutSeconds 120
+
+Write-Host "Core infra is ready." -ForegroundColor Green
 
 # Check if Node modules are installed
 if (-not (Test-Path ".\frontend\node_modules")) {
@@ -51,5 +83,5 @@ Write-Host "  Prometheus:  http://localhost:9090" -ForegroundColor White
 Write-Host ""
 Write-Host "To stop all services:" -ForegroundColor Cyan
 Write-Host "   1. Close the Backend and Frontend PowerShell windows" -ForegroundColor White
-Write-Host "   2. Run: docker-compose down" -ForegroundColor White
+Write-Host "   2. Run: docker compose down" -ForegroundColor White
 Write-Host ""
