@@ -45,6 +45,7 @@ export default function VendorRegisterPage() {
     businessEmail: '',
     businessPhone: '',
     businessAddress: '',
+    businessZipCode: '',
     taxId: '',
     businessRegistrationNumber: '',
     businessType: '',
@@ -121,6 +122,12 @@ export default function VendorRegisterPage() {
 
     if (!vendorFormData.businessAddress) {
       newErrors.businessAddress = 'Business address is required'
+    }
+
+    if (!vendorFormData.businessZipCode) {
+      newErrors.businessZipCode = 'Business ZIP/Pincode is required'
+    } else if (vendorFormData.businessZipCode.trim().length < 3) {
+      newErrors.businessZipCode = 'Business ZIP/Pincode must be at least 3 characters'
     }
 
     if (!vendorFormData.taxId) {
@@ -239,6 +246,7 @@ export default function VendorRegisterPage() {
         vendorFormData.businessEmail,
         vendorFormData.businessPhone,
         vendorFormData.businessAddress,
+        vendorFormData.businessZipCode,
         vendorFormData.taxId,
         vendorFormData.businessRegistrationNumber,
         vendorFormData.businessType
@@ -253,7 +261,7 @@ export default function VendorRegisterPage() {
 
       if (errorMsg.toLowerCase().includes('already has a vendor account')) {
         toast.success('Vendor account already exists. Redirecting to dashboard.')
-        router.push('/dashboard')
+        router.push('/vendor/dashboard')
         return
       }
 
@@ -611,6 +619,27 @@ export default function VendorRegisterPage() {
                 </div>
                 {errors.businessAddress && (
                   <p className="text-sm text-red-500">{errors.businessAddress}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="businessZipCode" className="text-sm font-semibold text-gray-700">
+                  Business ZIP / Pincode
+                </label>
+                <div className="relative">
+                  <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <Input
+                    id="businessZipCode"
+                    name="businessZipCode"
+                    placeholder="560001"
+                    value={vendorFormData.businessZipCode}
+                    onChange={handleVendorInputChange}
+                    className={`pl-10 ${errors.businessZipCode ? 'border-red-500' : ''}`}
+                    disabled={isLoading}
+                  />
+                </div>
+                {errors.businessZipCode && (
+                  <p className="text-sm text-red-500">{errors.businessZipCode}</p>
                 )}
               </div>
 

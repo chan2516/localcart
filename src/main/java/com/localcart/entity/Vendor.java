@@ -53,6 +53,10 @@ public class Vendor extends AuditableEntity {
     @Column(name = "business_address")
     private String businessAddress;
 
+    @Size(max = 20)
+    @Column(name = "business_zip_code", length = 20)
+    private String businessZipCode;
+
     @Size(max = 255)
     @Column(name = "website", length = 255)
     private String website;

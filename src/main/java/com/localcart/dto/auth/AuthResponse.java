@@ -27,6 +27,8 @@ public class AuthResponse {
     private String firstName;
     private String lastName;
     private List<String> roles;
+    private Long vendorId;
+    private String vendorStatus;
     
     // Nested structure (for compatibility with existing code)
     private UserInfo user;

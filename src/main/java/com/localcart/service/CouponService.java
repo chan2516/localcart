@@ -5,6 +5,7 @@ import com.localcart.dto.coupon.CreateCouponRequest;
 import com.localcart.entity.Coupon;
 import com.localcart.entity.Product;
 import com.localcart.entity.Vendor;
+import com.localcart.entity.enums.VendorStatus;
 import com.localcart.exception.PaymentException;
 import com.localcart.repository.CouponRepository;
 import com.localcart.repository.ProductRepository;
@@ -35,6 +36,7 @@ public class CouponService {
         
         Vendor vendor = vendorRepository.findById(vendorId)
                 .orElseThrow(() -> new PaymentException("Vendor not found", "VENDOR_NOT_FOUND"));
+        ensureVendorApproved(vendor);
         
         if (couponRepository.existsByCode(request.getCode())) {
             throw new PaymentException("Coupon code already exists", "COUPON_EXISTS");
@@ -111,6 +113,7 @@ public class CouponService {
         if (!coupon.getVendor().getId().equals(vendorId)) {
             throw new PaymentException("Unauthorized", "UNAUTHORIZED");
         }
+        ensureVendorApproved(coupon.getVendor());
         
         coupon.setIsActive(false);
         couponRepository.save(coupon);
@@ -133,5 +136,11 @@ public class CouponService {
                 .validFrom(coupon.getValidFrom() != null ? coupon.getValidFrom().toString() : null)
                 .validUntil(coupon.getValidUntil() != null ? coupon.getValidUntil().toString() : null)
                 .build();
+    }
+
+    private void ensureVendorApproved(Vendor vendor) {
+        if (vendor.getStatus() != VendorStatus.APPROVED) {
+            throw new PaymentException("Vendor account is not approved yet", "VENDOR_NOT_APPROVED");
+        }
     }
 }

@@ -18,7 +18,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -140,6 +139,7 @@ public class ProductController {
      * Query Parameters:
      * - q: search keyword
      * - category: category ID
+    * - zipCode: customer ZIP/pincode to limit nearby vendor products
      * - minPrice: minimum price
      * - maxPrice: maximum price
      * - vendor: vendor ID
@@ -148,27 +148,19 @@ public class ProductController {
     public ResponseEntity<?> searchProducts(
             @RequestParam(required = false) String q,
             @RequestParam(required = false) Long category,
+            @RequestParam(required = false) String zipCode,
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
         try {
-            log.info("Searching products: q={}, category={}, minPrice={}, maxPrice={}", 
-                    q, category, minPrice, maxPrice);
+            log.info("Searching products: q={}, category={}, zipCode={}, minPrice={}, maxPrice={}",
+                q, category, zipCode, minPrice, maxPrice);
             
             Pageable pageable = Pageable.ofSize(size).withPage(page);
-            Page<ProductDto> products;
-            
-            if (category != null) {
-                products = productService.getProductsByCategory(category, pageable)
-                        .map(productService::convertToDto);
-            } else if (q != null && !q.isBlank()) {
-                products = productService.searchProducts(q, pageable)
-                        .map(productService::convertToDto);
-            } else {
-                products = productService.getAllActiveProducts(pageable)
-                        .map(productService::convertToDto);
-            }
+            Page<ProductDto> products = productService
+                .searchProductsByLocation(q, category, zipCode, pageable)
+                .map(productService::convertToDto);
             
             Map<String, Object> response = new HashMap<>();
             response.put("products", products.getContent());

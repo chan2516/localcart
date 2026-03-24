@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
@@ -75,6 +74,7 @@ public class VendorService {
             .businessEmail(request.getBusinessEmail())
             .businessPhone(request.getBusinessPhone())
             .businessAddress(request.getBusinessAddress())
+            .businessZipCode(request.getBusinessZipCode())
             .website(request.getWebsite())
             .taxId(request.getTaxId())
             .businessRegistrationNumber(request.getBusinessRegistrationNumber())
@@ -158,6 +158,7 @@ public class VendorService {
         if (request.getBusinessEmail() != null) vendor.setBusinessEmail(request.getBusinessEmail());
         if (request.getBusinessPhone() != null) vendor.setBusinessPhone(request.getBusinessPhone());
         if (request.getBusinessAddress() != null) vendor.setBusinessAddress(request.getBusinessAddress());
+        if (request.getBusinessZipCode() != null) vendor.setBusinessZipCode(request.getBusinessZipCode());
         if (request.getWebsite() != null) vendor.setWebsite(request.getWebsite());
         if (request.getLogoUrl() != null) vendor.setLogoUrl(request.getLogoUrl());
         if (request.getReturnAddress() != null) vendor.setReturnAddress(request.getReturnAddress());
@@ -285,6 +286,7 @@ public class VendorService {
             .businessEmail(vendor.getBusinessEmail())
             .businessPhone(vendor.getBusinessPhone())
             .businessAddress(vendor.getBusinessAddress())
+            .businessZipCode(vendor.getBusinessZipCode())
             .website(vendor.getWebsite())
             .logoUrl(vendor.getLogoUrl())
             .taxId(vendor.getTaxId())

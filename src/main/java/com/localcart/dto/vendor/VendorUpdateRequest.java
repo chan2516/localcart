@@ -37,6 +37,9 @@ public class VendorUpdateRequest {
     
     @Size(max = 255)
     private String businessAddress;
+
+    @Size(min = 3, max = 20)
+    private String businessZipCode;
     
     @Size(max = 255)
     private String website;

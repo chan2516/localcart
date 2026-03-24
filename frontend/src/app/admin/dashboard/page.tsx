@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/lib/auth-store'
@@ -137,6 +138,11 @@ export default function AdminDashboardPage() {
       <div>
         <h1 className="text-3xl font-bold">Admin Dashboard</h1>
         <p className="text-gray-600">Platform-level control center</p>
+        <div className="mt-3 flex gap-2">
+          <Link href="/admin/verification">
+            <Button variant="outline">Open Verification Dashboard</Button>
+          </Link>
+        </div>
       </div>
 
       {user && <AccountPanel user={user} />}

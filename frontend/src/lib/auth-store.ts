@@ -8,6 +8,7 @@ export interface User {
   lastName?: string
   role: 'CUSTOMER' | 'VENDOR' | 'ADMIN'
   vendorId?: string
+  vendorStatus?: 'PENDING' | 'APPROVED' | 'REJECTED' | 'SUSPENDED'
 }
 
 export interface AuthResponse {
@@ -20,12 +21,15 @@ export interface AuthResponse {
     lastName?: string
     roles?: string[]
     vendorId?: number | string
+    vendorStatus?: string
   }
   userId?: number | string
   email?: string
   firstName?: string
   lastName?: string
   roles?: string[]
+  vendorId?: number | string
+  vendorStatus?: string
 }
 
 interface AuthStore {
@@ -59,6 +63,7 @@ interface AuthStore {
     businessEmail: string,
     businessPhone: string,
     businessAddress: string,
+    businessZipCode: string,
     taxId: string,
     businessRegistrationNumber: string,
     businessType: string
@@ -160,6 +165,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     businessEmail,
     businessPhone,
     businessAddress,
+    businessZipCode,
     taxId,
     businessRegistrationNumber,
     businessType
@@ -172,6 +178,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         businessEmail,
         businessPhone,
         businessAddress,
+        businessZipCode,
         taxId,
         businessRegistrationNumber,
         businessType,
@@ -180,7 +187,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       const currentUser = get().user
       const vendorId = response?.id != null ? String(response.id) : undefined
       const updatedUser = currentUser
-        ? ({ ...currentUser, role: 'VENDOR', vendorId } as User)
+        ? ({ ...currentUser, role: 'VENDOR', vendorId, vendorStatus: response?.status } as User)
         : null
 
       if (updatedUser) {
@@ -273,6 +280,7 @@ function mapAuthResponseToUser(response: AuthResponse): User | null {
       lastName: response.user.lastName,
       role: mapRole(response.user.roles),
       vendorId: response.user.vendorId != null ? String(response.user.vendorId) : undefined,
+      vendorStatus: normalizeVendorStatus(response.user.vendorStatus),
     }
   }
 
@@ -283,6 +291,8 @@ function mapAuthResponseToUser(response: AuthResponse): User | null {
       firstName: response.firstName,
       lastName: response.lastName,
       role: mapRole(response.roles),
+      vendorId: response.vendorId != null ? String(response.vendorId) : undefined,
+      vendorStatus: normalizeVendorStatus(response.vendorStatus),
     }
   }
 
@@ -299,7 +309,19 @@ function mapProfileToUser(profile: any): User | null {
     lastName: profile.lastName,
     role: mapRole(profile.roles),
     vendorId: profile.vendorId != null ? String(profile.vendorId) : undefined,
+    vendorStatus: normalizeVendorStatus(profile.vendorStatus),
   }
+}
+
+function normalizeVendorStatus(value: unknown): User['vendorStatus'] | undefined {
+  if (typeof value !== 'string') return undefined
+
+  const normalized = value.toUpperCase()
+  if (normalized === 'PENDING' || normalized === 'APPROVED' || normalized === 'REJECTED' || normalized === 'SUSPENDED') {
+    return normalized as User['vendorStatus']
+  }
+
+  return undefined
 }
 
 function persistAuthCookies(token: string | null, role?: User['role']) {

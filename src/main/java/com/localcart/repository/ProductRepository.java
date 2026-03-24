@@ -22,22 +22,40 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     
     List<Product> findByCategoryId(Long categoryId);
     
-    @Query("SELECT p FROM Product p WHERE p.isActive = true AND p.isDeleted = false")
+        @Query("SELECT p FROM Product p JOIN p.vendor v WHERE p.isActive = true AND p.isDeleted = false " +
+            "AND v.status = com.localcart.entity.enums.VendorStatus.APPROVED")
     Page<Product> findAllActiveProducts(Pageable pageable);
     
     @Query("SELECT p FROM Product p WHERE p.vendor.id = :vendorId AND p.isDeleted = false")
     Page<Product> findByVendorIdWithPagination(@Param("vendorId") Long vendorId, Pageable pageable);
     
-    @Query("SELECT p FROM Product p WHERE p.category.id = :categoryId AND p.isActive = true AND p.isDeleted = false")
+        @Query("SELECT p FROM Product p JOIN p.vendor v WHERE p.category.id = :categoryId AND p.isActive = true " +
+            "AND p.isDeleted = false AND v.status = com.localcart.entity.enums.VendorStatus.APPROVED")
     Page<Product> findByCategoryIdAndActive(@Param("categoryId") Long categoryId, Pageable pageable);
     
-    @Query("SELECT p FROM Product p WHERE p.isFeatured = true AND p.isActive = true AND p.isDeleted = false")
+        @Query("SELECT p FROM Product p JOIN p.vendor v WHERE p.isFeatured = true AND p.isActive = true " +
+            "AND p.isDeleted = false AND v.status = com.localcart.entity.enums.VendorStatus.APPROVED")
     List<Product> findFeaturedProducts(Pageable pageable);
     
-    @Query("SELECT p FROM Product p WHERE (LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+        @Query("SELECT p FROM Product p JOIN p.vendor v WHERE (LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
            "OR LOWER(p.description) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
-           "AND p.isActive = true AND p.isDeleted = false")
+            "AND p.isActive = true AND p.isDeleted = false " +
+            "AND v.status = com.localcart.entity.enums.VendorStatus.APPROVED")
     Page<Product> searchProducts(@Param("keyword") String keyword, Pageable pageable);
+
+        @Query("SELECT p FROM Product p JOIN p.vendor v " +
+            "WHERE p.isActive = true AND p.isDeleted = false " +
+            "AND v.status = com.localcart.entity.enums.VendorStatus.APPROVED " +
+            "AND (:zipCode IS NULL OR LOWER(v.businessZipCode) = LOWER(:zipCode)) " +
+            "AND (:categoryId IS NULL OR p.category.id = :categoryId) " +
+            "AND (:keyword IS NULL OR :keyword = '' OR " +
+            "LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "LOWER(p.description) LIKE LOWER(CONCAT('%', :keyword, '%')))")
+        Page<Product> searchProductsByLocation(
+             @Param("keyword") String keyword,
+             @Param("categoryId") Long categoryId,
+             @Param("zipCode") String zipCode,
+             Pageable pageable);
     
     @Query("SELECT p FROM Product p WHERE p.stock < :threshold AND p.isActive = true AND p.isDeleted = false")
     List<Product> findByStockLessThan(@Param("threshold") int threshold);

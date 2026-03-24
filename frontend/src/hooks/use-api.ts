@@ -12,6 +12,7 @@ export interface Product {
   stock: number
   categoryId: string | number
   vendorId: string | number
+  vendorName?: string
   isFeatured?: boolean
   isActive?: boolean
   imageUrls?: string[]
@@ -101,11 +102,12 @@ export const useProductBySlug = (slug: string) => {
   })
 }
 
-export const useSearchProducts = (query: string, category?: string, page = 1, limit = 20) => {
+export const useSearchProducts = (query: string, category?: string, zipCode?: string, page = 1, limit = 20) => {
   return useQuery({
-    queryKey: ['products-search', query, category, page, limit],
+    queryKey: ['products-search', query, category, zipCode, page, limit],
     queryFn: async () => {
       const normalizedQuery = query.trim()
+      const normalizedZip = zipCode?.trim()
       const params = new URLSearchParams()
       if (normalizedQuery) params.append('q', normalizedQuery)
 
@@ -114,6 +116,10 @@ export const useSearchProducts = (query: string, category?: string, page = 1, li
         if (Number.isFinite(categoryId) && categoryId > 0) {
           params.append('category', String(categoryId))
         }
+      }
+
+      if (normalizedZip) {
+        params.append('zipCode', normalizedZip)
       }
 
       params.append('page', String(Math.max(0, page - 1)))
@@ -133,7 +139,7 @@ export const useSearchProducts = (query: string, category?: string, page = 1, li
         totalPages: response.totalPages || 0,
       }
     },
-    enabled: !!query.trim() || !!category,
+    enabled: !!query.trim() || !!category || !!zipCode?.trim(),
   })
 }
 

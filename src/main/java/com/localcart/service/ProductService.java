@@ -5,6 +5,7 @@ import com.localcart.dto.product.CreateProductRequest;
 import com.localcart.entity.Product;
 import com.localcart.entity.Category;
 import com.localcart.entity.Vendor;
+import com.localcart.entity.enums.VendorStatus;
 import com.localcart.exception.PaymentException;
 import com.localcart.repository.ProductRepository;
 import com.localcart.repository.CategoryRepository;
@@ -17,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Product Service
@@ -71,6 +71,25 @@ public class ProductService {
         log.info("Searching products: {}", query);
         return productRepository.searchProducts(query, pageable);
     }
+
+    /**
+     * Search products by keyword/category and optional vendor pincode.
+     */
+    @Transactional(readOnly = true)
+    public Page<Product> searchProductsByLocation(String query, Long categoryId, String zipCode, Pageable pageable) {
+        String normalizedQuery = query != null ? query.trim() : null;
+        String normalizedZip = zipCode != null ? zipCode.trim() : null;
+
+        if (normalizedQuery != null && normalizedQuery.isBlank()) {
+            normalizedQuery = null;
+        }
+
+        if (normalizedZip != null && normalizedZip.isBlank()) {
+            normalizedZip = null;
+        }
+
+        return productRepository.searchProductsByLocation(normalizedQuery, categoryId, normalizedZip, pageable);
+    }
     
     /**
      * Get products by category
@@ -99,6 +118,7 @@ public class ProductService {
         // Verify vendor exists
         Vendor vendor = vendorRepository.findById(vendorId)
                 .orElseThrow(() -> new PaymentException("Vendor not found", "VENDOR_NOT_FOUND"));
+        ensureVendorApproved(vendor);
         
         // Verify category exists
         Category category = categoryRepository.findById(request.getCategoryId())
@@ -146,6 +166,7 @@ public class ProductService {
         if (!product.getVendor().getId().equals(vendorId)) {
             throw new PaymentException("Unauthorized to update this product", "UNAUTHORIZED");
         }
+        ensureVendorApproved(product.getVendor());
         
         // Check slug uniqueness if changed
         if (!product.getSlug().equals(request.getSlug()) && productRepository.existsBySlug(request.getSlug())) {
@@ -192,6 +213,7 @@ public class ProductService {
         if (!product.getVendor().getId().equals(vendorId)) {
             throw new PaymentException("Unauthorized to delete this product", "UNAUTHORIZED");
         }
+        ensureVendorApproved(product.getVendor());
         
         // Soft delete
         product.softDelete();
@@ -234,5 +256,11 @@ public class ProductService {
                 .createdAt(product.getCreatedAt() != null ? product.getCreatedAt().toString() : null)
                 .updatedAt(product.getUpdatedAt() != null ? product.getUpdatedAt().toString() : null)
                 .build();
+    }
+
+    private void ensureVendorApproved(Vendor vendor) {
+        if (vendor.getStatus() != VendorStatus.APPROVED) {
+            throw new PaymentException("Vendor account is not approved yet", "VENDOR_NOT_APPROVED");
+        }
     }
 }

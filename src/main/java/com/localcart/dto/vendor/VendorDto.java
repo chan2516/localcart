@@ -33,6 +33,7 @@ public class VendorDto {
     private String businessEmail;
     private String businessPhone;
     private String businessAddress;
+    private String businessZipCode;
     private String website;
     private String logoUrl;
     

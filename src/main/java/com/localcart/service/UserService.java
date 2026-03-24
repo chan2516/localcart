@@ -2,7 +2,6 @@ package com.localcart.service;
 
 import com.localcart.config.PasswordResetProperties;
 import com.localcart.dto.auth.RegisterRequest;
-import com.localcart.service.EmailService;
 import com.localcart.dto.auth.LoginRequest;
 import com.localcart.dto.auth.AuthResponse;
 import com.localcart.entity.User;
@@ -12,7 +11,6 @@ import com.localcart.exception.PaymentException;
 import com.localcart.repository.UserRepository;
 import com.localcart.repository.RoleRepository;
 import com.localcart.security.JwtUtils;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -159,6 +157,8 @@ public class UserService implements UserDetailsService {
                     .roles(user.getRoles().stream()
                             .map(r -> r.getName().toString())
                             .toList())
+                    .vendorId(user.getVendor() != null ? user.getVendor().getId() : null)
+                    .vendorStatus(user.getVendor() != null ? user.getVendor().getStatus().name() : null)
                     .message("Login successful")
                     .build();
 
@@ -207,6 +207,8 @@ public class UserService implements UserDetailsService {
                     .email(user.getEmail())
                     .firstName(user.getFirstName())
                     .lastName(user.getLastName())
+                    .vendorId(user.getVendor() != null ? user.getVendor().getId() : null)
+                    .vendorStatus(user.getVendor() != null ? user.getVendor().getStatus().name() : null)
                     .message("Token refreshed successfully")
                     .build();
 
@@ -342,6 +344,8 @@ public class UserService implements UserDetailsService {
                 .roles(user.getRoles().stream()
                         .map(r -> r.getName().toString())
                         .toList())
+            .vendorId(user.getVendor() != null ? user.getVendor().getId() : null)
+            .vendorStatus(user.getVendor() != null ? user.getVendor().getStatus().name() : null)
                 .message("Authentication successful")
                 .build();
     }

@@ -97,6 +97,8 @@ public class AuthController {
                     .roles(user.getRoles().stream()
                             .map(r -> r.getName().toString())
                             .toList())
+                    .vendorId(user.getVendor() != null ? user.getVendor().getId() : null)
+                    .vendorStatus(user.getVendor() != null ? user.getVendor().getStatus().name() : null)
                     .message("Registration successful, you are now logged in")
                     .build();
             
@@ -277,6 +279,8 @@ public class AuthController {
             profile.put("roles", user.getRoles().stream()
                     .map(r -> r.getName().toString())
                     .toList());
+                profile.put("vendorId", user.getVendor() != null ? user.getVendor().getId() : null);
+                profile.put("vendorStatus", user.getVendor() != null ? user.getVendor().getStatus().name() : null);
             
             return ResponseEntity.ok(profile);
             

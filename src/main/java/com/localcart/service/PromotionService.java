@@ -4,6 +4,7 @@ import com.localcart.dto.promotion.CreatePromotionRequest;
 import com.localcart.dto.promotion.PromotionDto;
 import com.localcart.entity.Promotion;
 import com.localcart.entity.Vendor;
+import com.localcart.entity.enums.VendorStatus;
 import com.localcart.exception.PaymentException;
 import com.localcart.repository.PromotionRepository;
 import com.localcart.repository.VendorRepository;
@@ -26,6 +27,7 @@ public class PromotionService {
     public PromotionDto createPromotion(Long vendorId, CreatePromotionRequest request) {
         Vendor vendor = vendorRepository.findById(vendorId)
                 .orElseThrow(() -> new PaymentException("Vendor not found", "VENDOR_NOT_FOUND"));
+        ensureVendorApproved(vendor);
 
         Promotion promotion = Promotion.builder()
                 .vendor(vendor)
@@ -57,6 +59,7 @@ public class PromotionService {
         if (!promotion.getVendor().getId().equals(vendorId)) {
             throw new PaymentException("Unauthorized", "UNAUTHORIZED");
         }
+        ensureVendorApproved(promotion.getVendor());
 
         promotion.setPromotionType(request.getPromotionType());
         promotion.setTitle(request.getTitle());
@@ -76,8 +79,15 @@ public class PromotionService {
         if (!promotion.getVendor().getId().equals(vendorId)) {
             throw new PaymentException("Unauthorized", "UNAUTHORIZED");
         }
+        ensureVendorApproved(promotion.getVendor());
 
         promotionRepository.delete(promotion);
+    }
+
+    private void ensureVendorApproved(Vendor vendor) {
+        if (vendor.getStatus() != VendorStatus.APPROVED) {
+            throw new PaymentException("Vendor account is not approved yet", "VENDOR_NOT_APPROVED");
+        }
     }
 
     public PromotionDto toDto(Promotion promotion) {

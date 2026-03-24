@@ -40,6 +40,10 @@ public class VendorRegistrationRequest {
     @NotBlank(message = "Business address is required")
     @Size(max = 255)
     private String businessAddress;
+
+    @NotBlank(message = "Business ZIP/Pincode is required")
+    @Size(min = 3, max = 20, message = "Business ZIP/Pincode must be between 3 and 20 characters")
+    private String businessZipCode;
     
     @Size(max = 255)
     private String website;
