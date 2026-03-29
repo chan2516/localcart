@@ -19,6 +19,18 @@ import lombok.Setter;
 @Builder
 public class SiteContactInfo extends AuditableEntity {
 
+    @Column(name = "page_title", length = 120)
+    private String pageTitle;
+
+    @Column(name = "page_subtitle", length = 300)
+    private String pageSubtitle;
+
+    @Column(name = "announcement_title", length = 140)
+    private String announcementTitle;
+
+    @Column(name = "announcement_body", length = 2000)
+    private String announcementBody;
+
     @Column(name = "support_email", nullable = false, length = 100)
     private String supportEmail;
 
@@ -30,4 +42,10 @@ public class SiteContactInfo extends AuditableEntity {
 
     @Column(name = "support_hours", nullable = false, length = 120)
     private String supportHours;
+
+    @Column(name = "faq_title", length = 120)
+    private String faqTitle;
+
+    @Column(name = "faq_body", length = 2000)
+    private String faqBody;
 }

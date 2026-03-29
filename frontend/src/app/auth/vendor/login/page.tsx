@@ -82,8 +82,8 @@ export default function VendorLoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 to-orange-100 py-12 px-4">
-      <Card className="w-full max-w-md shadow-lg">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-zinc-100 via-amber-50 to-orange-100 py-10 px-4">
+      <Card className="w-full max-w-md shadow-xl border-amber-200">
         <CardHeader className="text-center space-y-2">
           <div className="flex justify-center mb-2">
             <Store className="h-10 w-10 text-orange-600" />
@@ -94,8 +94,7 @@ export default function VendorLoginPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Email Field */}
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
               <label htmlFor="email" className="text-sm font-semibold text-gray-700">
                 Email Address
@@ -116,7 +115,6 @@ export default function VendorLoginPage() {
               {errors.email && <p className="text-sm text-red-500">{errors.email}</p>}
             </div>
 
-            {/* Password Field */}
             <div className="space-y-2">
               <label htmlFor="password" className="text-sm font-semibold text-gray-700">
                 Password
@@ -149,7 +147,6 @@ export default function VendorLoginPage() {
               {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
             </div>
 
-            {/* Forgot Password Link */}
             <div className="flex justify-end">
               <Link
                 href="/auth/forgot-password"
@@ -159,7 +156,6 @@ export default function VendorLoginPage() {
               </Link>
             </div>
 
-            {/* Login Button */}
             <Button
               type="submit"
               className="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2"
@@ -168,36 +164,18 @@ export default function VendorLoginPage() {
               {isLoading ? 'Signing in...' : 'Sign In'}
             </Button>
 
-            {/* Register Link */}
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300" />
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Or</span>
-              </div>
+            <div className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+              Use your approved vendor credentials to access store operations.
             </div>
 
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full"
-              onClick={() => router.push('/auth/vendor/register')}
-              disabled={isLoading}
-            >
-              Register as Vendor
-            </Button>
-
-            {/* Back to Customer */}
-            <div className="text-center space-y-2 pt-4 border-t">
+            <div className="text-center space-y-2 pt-2 border-t">
               <p className="text-sm text-gray-600">
-                Are you a customer?{' '}
-                <Link
-                  href="/auth/login"
-                  className="font-semibold text-blue-600 hover:text-blue-700 hover:underline"
-                >
-                  Customer Login
-                </Link>
+                New seller?{' '}
+                <Link href="/auth/vendor/register" className="font-semibold text-amber-700 hover:text-amber-800">Register as Vendor</Link>
+              </p>
+              <p className="text-sm text-gray-600">
+                Customer account?{' '}
+                <Link href="/auth/login" className="font-semibold text-blue-700 hover:text-blue-800">Customer Login</Link>
               </p>
             </div>
           </form>

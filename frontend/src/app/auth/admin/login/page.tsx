@@ -82,8 +82,8 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-red-100 py-12 px-4">
-      <Card className="w-full max-w-md shadow-lg">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-zinc-100 via-red-50 to-red-100 py-10 px-4">
+      <Card className="w-full max-w-md shadow-xl border-red-200">
         <CardHeader className="text-center space-y-2">
           <div className="flex justify-center mb-2">
             <Shield className="h-10 w-10 text-red-600" />
@@ -94,8 +94,7 @@ export default function AdminLoginPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Email Field */}
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
               <label htmlFor="email" className="text-sm font-semibold text-gray-700">
                 Email Address
@@ -116,7 +115,6 @@ export default function AdminLoginPage() {
               {errors.email && <p className="text-sm text-red-500">{errors.email}</p>}
             </div>
 
-            {/* Password Field */}
             <div className="space-y-2">
               <label htmlFor="password" className="text-sm font-semibold text-gray-700">
                 Password
@@ -149,17 +147,6 @@ export default function AdminLoginPage() {
               {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
             </div>
 
-            {/* Forgot Password Link */}
-            <div className="flex justify-end">
-              <Link
-                href="/auth/forgot-password"
-                className="text-sm font-medium text-red-600 hover:text-red-700 hover:underline"
-              >
-                Forgot password?
-              </Link>
-            </div>
-
-            {/* Login Button */}
             <Button
               type="submit"
               className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2"
@@ -168,23 +155,17 @@ export default function AdminLoginPage() {
               {isLoading ? 'Signing in...' : 'Sign In'}
             </Button>
 
-            {/* Admin Info */}
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-sm text-red-800">
-              <p>
-                <strong>Admin Access Only:</strong> This panel is restricted to authorized administrators only.
-              </p>
+            <div className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-800">
+              Authorized users only. Access attempts are monitored.
             </div>
 
-            {/* Back to Customer */}
-            <div className="text-center space-y-2 pt-4 border-t">
-              <p className="text-sm text-gray-600">
-                <Link
-                  href="/auth/login"
-                  className="font-semibold text-blue-600 hover:text-blue-700 hover:underline"
-                >
-                  Customer Login
-                </Link>
-              </p>
+            <div className="text-center pt-2 border-t">
+              <Link
+                href="/auth/login"
+                className="text-sm font-semibold text-slate-700 hover:text-slate-900"
+              >
+                Switch to Customer Login
+              </Link>
             </div>
           </form>
         </CardContent>

@@ -9,6 +9,7 @@ import { apiClient } from '@/lib/api-client'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { AccountPanel } from '@/components/account-panel'
+import { AdminShell } from '@/components/admin-shell'
 
 type DashboardStats = {
   totalUsers?: number
@@ -193,25 +194,21 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10 space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-        <p className="text-gray-600">Platform-level control center</p>
-        <div className="mt-3 flex gap-2">
-          <Link href="/admin/verification">
-            <Button variant="outline">Open Verification Dashboard</Button>
+    <AdminShell title="Admin Dashboard" subtitle="Platform-level control center">
+      <div className="mt-3 flex gap-2 flex-wrap">
+        <Link href="/admin/verification">
+          <Button variant="outline">Open Verification Dashboard</Button>
+        </Link>
+        {isLevelOneAdmin && (
+          <Link href="/admin/development">
+            <Button variant="outline">Open Development Hub</Button>
           </Link>
-          {isLevelOneAdmin && (
-            <Link href="/admin/development">
-              <Button variant="outline">Open Development Hub</Button>
-            </Link>
-          )}
-          {isLevelOneAdmin && (
-            <Link href="/admin/admin-users">
-              <Button variant="outline">Manage Admin Access</Button>
-            </Link>
-          )}
-        </div>
+        )}
+        {isLevelOneAdmin && (
+          <Link href="/admin/admin-users">
+            <Button variant="outline">Manage Admin Access</Button>
+          </Link>
+        )}
       </div>
 
       {user && <AccountPanel user={user} />}
@@ -366,6 +363,6 @@ export default function AdminDashboardPage() {
           )}
         </CardContent>
       </Card>
-    </div>
+    </AdminShell>
   )
 }

@@ -18,6 +18,7 @@ export function Header() {
   const isLevelOneAdmin = isLevelOneAdminRole(user?.role)
   const isVendor = user?.role === 'VENDOR'
   const showMarketplaceNav = !isAdmin && !isVendor && !isAdminRoute
+  const showHeaderNav = !isAdmin
 
   const navItems = isAdmin
     ? [
@@ -31,10 +32,12 @@ export function Header() {
       ? [
           { href: '/', label: 'Home' },
           { href: '/vendor/dashboard', label: 'Vendor Dashboard' },
+          { href: '/contact', label: 'Contact Us' },
         ]
       : [
           { href: '/', label: 'Home' },
           { href: '/products', label: 'Products' },
+          { href: '/contact', label: 'Contact Us' },
         ]
 
   useEffect(() => {
@@ -55,8 +58,7 @@ export function Header() {
         : 'bg-white/95 border-slate-300 text-slate-900 shadow-sm'
     )}>
       <div className="max-w-7xl mx-auto px-4 py-4">
-        {/* Top bar - Logo and search */}
-        <div className="flex items-center justify-between gap-4 mb-4 flex-wrap md:flex-nowrap">
+        <div className={cn('flex items-center justify-between gap-4 flex-wrap md:flex-nowrap', showHeaderNav && 'mb-4')}>
           <Link href="/" className={cn('text-2xl font-bold tracking-tight', isAdmin ? 'text-white' : 'text-slate-900')}>
             LocalCart
           </Link>
@@ -107,26 +109,27 @@ export function Header() {
           </div>
         </div>
 
-        {/* Navigation */}
-        <nav className="flex gap-2 overflow-x-auto pb-1">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  'text-sm font-semibold px-3 py-1.5 rounded-md transition-colors whitespace-nowrap',
-                  isActive
-                    ? (isAdmin ? 'bg-white text-slate-900' : 'bg-slate-900 text-white')
-                    : (isAdmin ? 'text-slate-200 hover:bg-slate-800' : 'text-slate-700 hover:bg-slate-100')
-                )}
-              >
-                {item.label}
-              </Link>
-            )
-          })}
-        </nav>
+        {showHeaderNav && (
+          <nav className="flex gap-2 overflow-x-auto pb-1">
+            {navItems.map((item) => {
+              const isActive = pathname === item.href
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    'text-sm font-semibold px-3 py-1.5 rounded-md transition-colors whitespace-nowrap',
+                    isActive
+                      ? (isAdmin ? 'bg-white text-slate-900' : 'bg-slate-900 text-white')
+                      : (isAdmin ? 'text-slate-200 hover:bg-slate-800' : 'text-slate-700 hover:bg-slate-100')
+                  )}
+                >
+                  {item.label}
+                </Link>
+              )
+            })}
+          </nav>
+        )}
       </div>
     </header>
   )

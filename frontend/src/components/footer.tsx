@@ -89,6 +89,7 @@ export function Footer() {
                 </>
               ) : (
                 <>
+                  <li><Link href="/contact" className="hover:text-white">Contact Us Page</Link></li>
                   <li><a href={`mailto:${contactInfo.supportEmail}`} className="hover:text-white">{contactInfo.supportEmail}</a></li>
                   <li><span>{contactInfo.supportPhone}</span></li>
                   <li><span>{contactInfo.supportHours}</span></li>

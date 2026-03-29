@@ -7,6 +7,7 @@ import { toast } from 'sonner'
 import { isAnyAdminRole, isLevelOneAdminRole, useAuthStore } from '@/lib/auth-store'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { AdminShell } from '@/components/admin-shell'
 
 const devLinks = [
   { name: 'Backend Health', url: 'http://localhost:8080/actuator/health', note: 'Application + DB + Redis status' },
@@ -98,12 +99,8 @@ export default function AdminDevelopmentPage() {
   }, [isAuthenticated, user, router])
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10 space-y-8">
-      <div className="flex items-start justify-between gap-4 flex-wrap">
-        <div>
-          <h1 className="text-3xl font-bold">Admin Development Hub</h1>
-          <p className="text-gray-600 mt-1">Developer utilities, observability links, and API request templates.</p>
-        </div>
+    <AdminShell title="Admin Development Hub" subtitle="Developer utilities, observability links, and API request templates.">
+      <div className="flex items-start gap-3 flex-wrap">
         <Link href="/admin/dashboard">
           <Button variant="outline">Back To Dashboard</Button>
         </Link>
@@ -159,6 +156,6 @@ export default function AdminDevelopmentPage() {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </AdminShell>
   )
 }

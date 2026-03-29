@@ -8,6 +8,7 @@ import { isAnyAdminRole, useAuthStore } from '@/lib/auth-store'
 import { apiClient } from '@/lib/api-client'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { AdminShell } from '@/components/admin-shell'
 
 type VendorStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'SUSPENDED'
 
@@ -99,12 +100,8 @@ export default function AdminVerificationPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10 space-y-6">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <h1 className="text-3xl font-bold">Admin Verification Dashboard</h1>
-          <p className="text-gray-600">Review and verify vendor applications and compliance status.</p>
-        </div>
+    <AdminShell title="Admin Verification Dashboard" subtitle="Review and verify vendor applications and compliance status.">
+      <div className="flex gap-2">
         <Link href="/admin/dashboard">
           <Button variant="outline">Back to Admin Dashboard</Button>
         </Link>
@@ -153,6 +150,6 @@ export default function AdminVerificationPage() {
           ))}
         </CardContent>
       </Card>
-    </div>
+    </AdminShell>
   )
 }

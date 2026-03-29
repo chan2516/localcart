@@ -84,8 +84,8 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4">
-      <Card className="w-full max-w-md shadow-lg">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100 py-10 px-4">
+      <Card className="w-full max-w-md shadow-xl border-blue-200">
         <CardHeader className="text-center space-y-2">
           <CardTitle className="text-3xl font-bold text-gray-900">Welcome Back</CardTitle>
           <CardDescription className="text-gray-600">
@@ -93,8 +93,7 @@ export default function LoginPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Email Field */}
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
               <label htmlFor="email" className="text-sm font-semibold text-gray-700">
                 Email Address
@@ -115,7 +114,6 @@ export default function LoginPage() {
               {errors.email && <p className="text-sm text-red-500">{errors.email}</p>}
             </div>
 
-            {/* Password Field */}
             <div className="space-y-2">
               <label htmlFor="password" className="text-sm font-semibold text-gray-700">
                 Password
@@ -148,7 +146,6 @@ export default function LoginPage() {
               {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
             </div>
 
-            {/* Forgot Password Link */}
             <div className="flex justify-end">
               <Link
                 href="/auth/forgot-password"
@@ -158,7 +155,6 @@ export default function LoginPage() {
               </Link>
             </div>
 
-            {/* Login Button */}
             <Button
               type="submit"
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2"
@@ -167,45 +163,18 @@ export default function LoginPage() {
               {isLoading ? 'Signing in...' : 'Sign In'}
             </Button>
 
-            {/* Register Link */}
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300" />
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Or</span>
-              </div>
+            <div className="rounded-md border border-blue-200 bg-blue-50 px-3 py-2 text-xs text-blue-800">
+              Use your customer account email and password to continue.
             </div>
 
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full"
-              onClick={() => router.push('/auth/register')}
-              disabled={isLoading}
-            >
-              Create New Account
-            </Button>
-
-            {/* Vendor & Admin Links */}
-            <div className="text-center space-y-2 pt-4 border-t">
+            <div className="text-center space-y-2 pt-2 border-t">
               <p className="text-sm text-gray-600">
-                Want to sell?{' '}
-                <Link
-                  href="/auth/vendor/login"
-                  className="font-semibold text-blue-600 hover:text-blue-700 hover:underline"
-                >
-                  Vendor Login
-                </Link>
+                New to LocalCart?{' '}
+                <Link href="/auth/register" className="font-semibold text-blue-700 hover:text-blue-800">Create Account</Link>
               </p>
               <p className="text-sm text-gray-600">
-                Admin access?{' '}
-                <Link
-                  href="/admin/login"
-                  className="font-semibold text-red-600 hover:text-red-700 hover:underline"
-                >
-                  Admin Login
-                </Link>
+                Selling on LocalCart?{' '}
+                <Link href="/auth/vendor/login" className="font-semibold text-amber-700 hover:text-amber-800">Vendor Login</Link>
               </p>
             </div>
           </form>

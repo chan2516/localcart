@@ -8,6 +8,22 @@ import lombok.Data;
 @Data
 public class ContactInfoRequest {
 
+    @NotBlank(message = "Page title is required")
+    @Size(max = 120)
+    private String pageTitle;
+
+    @NotBlank(message = "Page subtitle is required")
+    @Size(max = 300)
+    private String pageSubtitle;
+
+    @NotBlank(message = "Announcement title is required")
+    @Size(max = 140)
+    private String announcementTitle;
+
+    @NotBlank(message = "Announcement content is required")
+    @Size(max = 2000)
+    private String announcementBody;
+
     @NotBlank(message = "Support email is required")
     @Email(message = "Invalid support email")
     @Size(max = 100)
@@ -24,4 +40,12 @@ public class ContactInfoRequest {
     @NotBlank(message = "Support hours are required")
     @Size(max = 120)
     private String supportHours;
+
+    @NotBlank(message = "FAQ title is required")
+    @Size(max = 120)
+    private String faqTitle;
+
+    @NotBlank(message = "FAQ body is required")
+    @Size(max = 2000)
+    private String faqBody;
 }

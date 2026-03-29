@@ -155,10 +155,10 @@ public class AdminService {
         }
 
         Role l2Role = roleRepository.findByName(RoleType.ADMIN_L2)
-                .orElseGet(() -> roleRepository.save(Role.builder()
-                        .name(RoleType.ADMIN_L2)
-                        .description("Second-level administrator with dashboard management access")
-                        .build()));
+            .orElseThrow(() -> new PaymentException(
+                "ADMIN_L2 role is not configured. Please apply the latest database migrations.",
+                "ROLE_NOT_FOUND"
+            ));
 
         User user = User.builder()
                 .email(request.getEmail().trim())
@@ -206,6 +206,9 @@ public class AdminService {
     public ContactInfoDto getContactInfo() {
         SiteContactInfo info = siteContactInfoRepository.findTopByOrderByIdAsc()
                 .orElseGet(this::createDefaultContactInfo);
+        if (applyMissingContactDefaults(info)) {
+            info = siteContactInfoRepository.save(info);
+        }
         return mapToContactInfo(info);
     }
 
@@ -215,10 +218,16 @@ public class AdminService {
         SiteContactInfo info = siteContactInfoRepository.findTopByOrderByIdAsc()
                 .orElseGet(this::createDefaultContactInfo);
 
+        info.setPageTitle(request.getPageTitle().trim());
+        info.setPageSubtitle(request.getPageSubtitle().trim());
+        info.setAnnouncementTitle(request.getAnnouncementTitle().trim());
+        info.setAnnouncementBody(request.getAnnouncementBody().trim());
         info.setSupportEmail(request.getSupportEmail().trim());
         info.setSupportPhone(request.getSupportPhone().trim());
         info.setSupportAddress(request.getSupportAddress().trim());
         info.setSupportHours(request.getSupportHours().trim());
+        info.setFaqTitle(request.getFaqTitle().trim());
+        info.setFaqBody(request.getFaqBody().trim());
 
         SiteContactInfo saved = siteContactInfoRepository.save(info);
         log.info("Level-1 admin {} updated contact info", actingAdminId);
@@ -405,21 +414,68 @@ public class AdminService {
 
     private ContactInfoDto mapToContactInfo(SiteContactInfo info) {
         return ContactInfoDto.builder()
+                .pageTitle(info.getPageTitle())
+                .pageSubtitle(info.getPageSubtitle())
+                .announcementTitle(info.getAnnouncementTitle())
+                .announcementBody(info.getAnnouncementBody())
                 .supportEmail(info.getSupportEmail())
                 .supportPhone(info.getSupportPhone())
                 .supportAddress(info.getSupportAddress())
                 .supportHours(info.getSupportHours())
+                .faqTitle(info.getFaqTitle())
+                .faqBody(info.getFaqBody())
                 .build();
     }
 
     private SiteContactInfo createDefaultContactInfo() {
         SiteContactInfo defaultInfo = SiteContactInfo.builder()
+            .pageTitle("Contact LocalCart")
+            .pageSubtitle("We are here to help customers and vendors with fast, friendly support.")
+            .announcementTitle("Need quick assistance?")
+            .announcementBody("Share your issue with account details, order number, or vendor name so our support team can resolve it quickly. For admin escalations, include screenshots and a short timeline of events.")
                 .supportEmail("support@localcart.com")
                 .supportPhone("+1-800-LOCALCART")
                 .supportAddress("LocalCart Support Center")
                 .supportHours("Mon-Sat, 9:00 AM - 6:00 PM")
+            .faqTitle("Before you contact us")
+            .faqBody("Most order updates are available in your dashboard under Orders. Vendors can track approvals and policy updates in Vendor Dashboard. If your issue remains unresolved, contact support and mention your registered email for faster verification.")
                 .build();
         return siteContactInfoRepository.save(defaultInfo);
+    }
+
+    private boolean applyMissingContactDefaults(SiteContactInfo info) {
+        boolean changed = false;
+
+        if (isBlank(info.getPageTitle())) {
+            info.setPageTitle("Contact LocalCart");
+            changed = true;
+        }
+        if (isBlank(info.getPageSubtitle())) {
+            info.setPageSubtitle("We are here to help customers and vendors with fast, friendly support.");
+            changed = true;
+        }
+        if (isBlank(info.getAnnouncementTitle())) {
+            info.setAnnouncementTitle("Need quick assistance?");
+            changed = true;
+        }
+        if (isBlank(info.getAnnouncementBody())) {
+            info.setAnnouncementBody("Share your issue with account details, order number, or vendor name so our support team can resolve it quickly. For admin escalations, include screenshots and a short timeline of events.");
+            changed = true;
+        }
+        if (isBlank(info.getFaqTitle())) {
+            info.setFaqTitle("Before you contact us");
+            changed = true;
+        }
+        if (isBlank(info.getFaqBody())) {
+            info.setFaqBody("Most order updates are available in your dashboard under Orders. Vendors can track approvals and policy updates in Vendor Dashboard. If your issue remains unresolved, contact support and mention your registered email for faster verification.");
+            changed = true;
+        }
+
+        return changed;
+    }
+
+    private boolean isBlank(String value) {
+        return value == null || value.isBlank();
     }
 
     private void ensureAdminRole(Long adminUserId) {
