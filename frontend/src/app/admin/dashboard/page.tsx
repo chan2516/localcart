@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import { useAuthStore } from '@/lib/auth-store'
+import { isAnyAdminRole, isLevelOneAdminRole, useAuthStore } from '@/lib/auth-store'
 import { apiClient } from '@/lib/api-client'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -24,6 +24,8 @@ type Vendor = {
   businessName: string
   businessEmail?: string
   status?: string
+  isDeleted?: boolean
+  rejectionReason?: string
   createdAt?: string
 }
 
@@ -33,27 +35,34 @@ type UserSummary = {
   firstName?: string
   lastName?: string
   isActive?: boolean
+  isDeleted?: boolean
+  suspensionReason?: string
   roles?: string[]
 }
 
 type UserAction = 'ACTIVATE' | 'SUSPEND' | 'BAN'
+type VendorAction = 'APPROVED' | 'SUSPENDED' | 'BANNED' | 'RESTORED'
 
 export default function AdminDashboardPage() {
   const router = useRouter()
   const { user, isAuthenticated } = useAuthStore()
+  const isLevelOneAdmin = isLevelOneAdminRole(user?.role)
 
   const [stats, setStats] = useState<DashboardStats | null>(null)
+  const [pendingVendors, setPendingVendors] = useState<Vendor[]>([])
   const [vendors, setVendors] = useState<Vendor[]>([])
   const [users, setUsers] = useState<UserSummary[]>([])
   const [loading, setLoading] = useState(true)
   const [managingUserId, setManagingUserId] = useState<number | null>(null)
+  const [managingVendorId, setManagingVendorId] = useState<number | null>(null)
+  const [managementTab, setManagementTab] = useState<'users' | 'vendors'>('users')
 
   useEffect(() => {
     if (!isAuthenticated) {
       router.push('/admin/login')
       return
     }
-    if (user && user.role !== 'ADMIN') {
+    if (user && !isAnyAdminRole(user.role)) {
       toast.error('Admin access is required')
       router.push('/')
       return
@@ -61,14 +70,16 @@ export default function AdminDashboardPage() {
 
     const fetchData = async () => {
       try {
-        const [statsResponse, vendorsResponse, usersResponse] = await Promise.all([
+        const [statsResponse, pendingVendorsResponse, allVendorsResponse, usersResponse] = await Promise.all([
           apiClient.get<DashboardStats>('/admin/dashboard'),
           apiClient.get<{ content?: Vendor[]; vendors?: Vendor[] }>('/admin/vendors/pending?page=0&size=10'),
+          apiClient.get<{ content?: Vendor[]; vendors?: Vendor[] }>('/admin/vendors?page=0&size=20'),
           apiClient.get<{ content?: UserSummary[] }>('/admin/users?page=0&size=10'),
         ])
 
         setStats(statsResponse)
-        setVendors(vendorsResponse.content || vendorsResponse.vendors || [])
+        setPendingVendors(pendingVendorsResponse.content || pendingVendorsResponse.vendors || [])
+        setVendors(allVendorsResponse.content || allVendorsResponse.vendors || [])
         setUsers(usersResponse.content || [])
       } catch (error: any) {
         toast.error(error?.message || 'Failed to load admin dashboard')
@@ -87,10 +98,58 @@ export default function AdminDashboardPage() {
         status,
         reason: status === 'REJECTED' ? 'Rejected by admin from dashboard' : undefined,
       })
-      setVendors((prev) => prev.filter((vendor) => vendor.id !== vendorId))
+      setPendingVendors((prev) => prev.filter((vendor) => vendor.id !== vendorId))
+      setVendors((prev) => prev.map((vendor) => (vendor.id === vendorId ? { ...vendor, status } : vendor)))
       toast.success(`Vendor ${status.toLowerCase()}`)
     } catch (error: any) {
       toast.error(error?.message || 'Failed to update vendor status')
+    }
+  }
+
+  const handleManageVendor = async (vendor: Vendor, action: VendorAction) => {
+    let reason: string | undefined
+    if (action === 'SUSPENDED' || action === 'BANNED') {
+      const typedReason = window.prompt(
+        `Enter reason for ${action === 'SUSPENDED' ? 'suspending' : 'banning'} vendor #${vendor.id}:`
+      )
+      if (!typedReason || !typedReason.trim()) {
+        toast.error('Reason is required')
+        return
+      }
+      reason = typedReason.trim()
+    }
+
+    try {
+      setManagingVendorId(vendor.id)
+      let updated: Vendor
+
+      if (action === 'APPROVED') {
+        updated = await apiClient.post('/admin/vendors/approve', {
+          vendorId: vendor.id,
+          status: 'APPROVED',
+          reason: 'Approved by admin',
+        })
+      } else if (action === 'SUSPENDED') {
+        updated = await apiClient.post(`/admin/vendors/${vendor.id}/suspend`, {
+          reason,
+        })
+      } else if (action === 'BANNED') {
+        updated = await apiClient.post(`/admin/vendors/${vendor.id}/ban`, {
+          reason,
+        })
+      } else {
+        updated = await apiClient.post(`/admin/vendors/${vendor.id}/restore`)
+      }
+
+      setVendors((prev) => prev.map((v) => (v.id === updated.id ? { ...v, ...updated } : v)))
+      if (updated.status && updated.status !== 'PENDING') {
+        setPendingVendors((prev) => prev.filter((v) => v.id !== vendor.id))
+      }
+      toast.success('Vendor updated successfully')
+    } catch (error: any) {
+      toast.error(error?.message || 'Failed to manage vendor')
+    } finally {
+      setManagingVendorId(null)
     }
   }
 
@@ -142,6 +201,16 @@ export default function AdminDashboardPage() {
           <Link href="/admin/verification">
             <Button variant="outline">Open Verification Dashboard</Button>
           </Link>
+          {isLevelOneAdmin && (
+            <Link href="/admin/development">
+              <Button variant="outline">Open Development Hub</Button>
+            </Link>
+          )}
+          {isLevelOneAdmin && (
+            <Link href="/admin/admin-users">
+              <Button variant="outline">Manage Admin Access</Button>
+            </Link>
+          )}
         </div>
       </div>
 
@@ -150,75 +219,151 @@ export default function AdminDashboardPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card><CardHeader><CardTitle>Total Users</CardTitle></CardHeader><CardContent>{stats?.totalUsers ?? 0}</CardContent></Card>
         <Card><CardHeader><CardTitle>Total Vendors</CardTitle></CardHeader><CardContent>{stats?.totalVendors ?? 0}</CardContent></Card>
-        <Card><CardHeader><CardTitle>Pending Vendors</CardTitle></CardHeader><CardContent>{stats?.pendingVendorApplications ?? vendors.length}</CardContent></Card>
+        <Card><CardHeader><CardTitle>Pending Vendors</CardTitle></CardHeader><CardContent>{stats?.pendingVendorApplications ?? pendingVendors.length}</CardContent></Card>
         <Card><CardHeader><CardTitle>Total Products</CardTitle></CardHeader><CardContent>{stats?.totalProducts ?? 0}</CardContent></Card>
         <Card><CardHeader><CardTitle>Total Orders</CardTitle></CardHeader><CardContent>{stats?.totalOrders ?? 0}</CardContent></Card>
         <Card><CardHeader><CardTitle>Total Revenue</CardTitle></CardHeader><CardContent>{stats?.totalRevenue ?? 0}</CardContent></Card>
       </div>
 
       <Card>
-        <CardHeader>
-          <CardTitle>Pending Vendor Applications</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {vendors.length === 0 && <p className="text-gray-600">No pending vendors.</p>}
-          {vendors.map((vendor) => (
-            <div key={vendor.id} className="rounded-md border p-3 flex items-center justify-between gap-3">
-              <div>
-                <p className="font-semibold">{vendor.businessName}</p>
-                <p className="text-sm text-gray-600">{vendor.businessEmail || 'No email provided'}</p>
-              </div>
-              <div className="flex gap-2">
-                <Button onClick={() => handleVendorDecision(vendor.id, 'APPROVED')}>Approve</Button>
-                <Button variant="destructive" onClick={() => handleVendorDecision(vendor.id, 'REJECTED')}>
-                  Reject
-                </Button>
-              </div>
+        <CardHeader className="space-y-4">
+          <CardTitle>Management Console</CardTitle>
+          <div className="w-full border-b">
+            <div className="flex items-center gap-2 overflow-x-auto pb-2">
+              <button
+                type="button"
+                className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+                  managementTab === 'users'
+                    ? 'bg-slate-900 text-white'
+                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                }`}
+                onClick={() => setManagementTab('users')}
+              >
+                User Management ({users.length})
+              </button>
+              <button
+                type="button"
+                className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+                  managementTab === 'vendors'
+                    ? 'bg-slate-900 text-white'
+                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                }`}
+                onClick={() => setManagementTab('vendors')}
+              >
+                Vendor Management ({vendors.length})
+              </button>
             </div>
-          ))}
-        </CardContent>
-      </Card>
+          </div>
+        </CardHeader>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>User Management</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          {users.length === 0 && <p className="text-gray-600">No users found.</p>}
-          {users.map((u) => (
-            <div key={u.id} className="rounded-md border p-3 flex items-center justify-between gap-3">
-              <div>
-                <p className="font-medium">{u.firstName || ''} {u.lastName || ''}</p>
-                <p className="text-sm text-gray-600">{u.email}</p>
-                <p className="text-xs text-gray-500 mt-1">
-                  ID: {u.id} | Roles: {(u.roles || []).join(', ') || 'N/A'} | Status: {u.isActive ? 'Active' : 'Inactive'}
-                </p>
+        <CardContent className="space-y-3 max-h-[780px] overflow-auto pr-1">
+          {managementTab === 'users' ? (
+            <>
+              {users.length === 0 && <p className="text-gray-600">No users found.</p>}
+              {users.map((u) => (
+                <div key={u.id} className="rounded-md border p-3 flex items-center justify-between gap-3">
+                  <div>
+                    <p className="font-medium">{u.firstName || ''} {u.lastName || ''}</p>
+                    <p className="text-sm text-gray-600">{u.email}</p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      ID: {u.id} | Roles: {(u.roles || []).join(', ') || 'N/A'} | Status: {u.isDeleted ? 'Banned' : (u.isActive ? 'Active' : 'Suspended')}
+                    </p>
+                    {u.suspensionReason ? <p className="text-xs text-red-600 mt-1">Reason: {u.suspensionReason}</p> : null}
+                  </div>
+                  <div className="flex gap-2 flex-wrap justify-end">
+                    <Button
+                      variant="outline"
+                      disabled={managingUserId === u.id || String(u.id) === String(user?.id)}
+                      onClick={() => handleManageUser(u, 'ACTIVATE')}
+                    >
+                      Activate
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      disabled={managingUserId === u.id || String(u.id) === String(user?.id)}
+                      onClick={() => handleManageUser(u, 'SUSPEND')}
+                    >
+                      Suspend
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      disabled={managingUserId === u.id || String(u.id) === String(user?.id)}
+                      onClick={() => handleManageUser(u, 'BAN')}
+                    >
+                      Ban
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </>
+          ) : (
+            <>
+              <div className="rounded-md border p-3 bg-amber-50">
+                <p className="font-medium">Pending Applications ({pendingVendors.length})</p>
+                {pendingVendors.length === 0 ? (
+                  <p className="text-sm text-gray-600 mt-1">No pending vendors.</p>
+                ) : (
+                  <div className="mt-2 space-y-2">
+                    {pendingVendors.map((vendor) => (
+                      <div key={vendor.id} className="rounded-md border p-2 bg-white flex items-center justify-between gap-2">
+                        <div>
+                          <p className="font-semibold text-sm">{vendor.businessName}</p>
+                          <p className="text-xs text-gray-600">{vendor.businessEmail || 'No email provided'}</p>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button size="sm" onClick={() => handleVendorDecision(vendor.id, 'APPROVED')}>Approve</Button>
+                          <Button size="sm" variant="destructive" onClick={() => handleVendorDecision(vendor.id, 'REJECTED')}>Reject</Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  disabled={managingUserId === u.id || String(u.id) === String(user?.id)}
-                  onClick={() => handleManageUser(u, 'ACTIVATE')}
-                >
-                  Activate
-                </Button>
-                <Button
-                  variant="secondary"
-                  disabled={managingUserId === u.id || String(u.id) === String(user?.id)}
-                  onClick={() => handleManageUser(u, 'SUSPEND')}
-                >
-                  Suspend
-                </Button>
-                <Button
-                  variant="destructive"
-                  disabled={managingUserId === u.id || String(u.id) === String(user?.id)}
-                  onClick={() => handleManageUser(u, 'BAN')}
-                >
-                  Ban
-                </Button>
-              </div>
-            </div>
-          ))}
+
+              {vendors.length === 0 && <p className="text-gray-600">No vendors found.</p>}
+              {vendors.map((vendor) => (
+                <div key={vendor.id} className="rounded-md border p-3 flex items-center justify-between gap-3">
+                  <div>
+                    <p className="font-medium">{vendor.businessName}</p>
+                    <p className="text-sm text-gray-600">{vendor.businessEmail || 'No email provided'}</p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      ID: {vendor.id} | Status: {vendor.isDeleted ? 'Banned' : vendor.status || 'UNKNOWN'}
+                    </p>
+                    {vendor.rejectionReason ? <p className="text-xs text-red-600 mt-1">Reason: {vendor.rejectionReason}</p> : null}
+                  </div>
+                  <div className="flex gap-2 flex-wrap justify-end">
+                    <Button
+                      variant="outline"
+                      disabled={managingVendorId === vendor.id}
+                      onClick={() => handleManageVendor(vendor, 'APPROVED')}
+                    >
+                      Approve
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      disabled={managingVendorId === vendor.id}
+                      onClick={() => handleManageVendor(vendor, 'SUSPENDED')}
+                    >
+                      Suspend
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      disabled={managingVendorId === vendor.id}
+                      onClick={() => handleManageVendor(vendor, 'BANNED')}
+                    >
+                      Ban
+                    </Button>
+                    <Button
+                      disabled={managingVendorId === vendor.id}
+                      onClick={() => handleManageVendor(vendor, 'RESTORED')}
+                    >
+                      Restore
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </>
+          )}
         </CardContent>
       </Card>
     </div>

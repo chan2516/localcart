@@ -42,7 +42,7 @@ public class GlobalExceptionHandler {
 
         return switch (errorCode) {
             case "AUTH_FAILED", "TOKEN_EXPIRED", "INVALID_AUTH_HEADER" -> HttpStatus.UNAUTHORIZED;
-            case "UNAUTHORIZED" -> HttpStatus.FORBIDDEN;
+            case "UNAUTHORIZED", "BANNED_USER" -> HttpStatus.FORBIDDEN;
             case "USER_NOT_FOUND", "VENDOR_NOT_FOUND", "ROLE_NOT_FOUND", "PRODUCT_NOT_FOUND", "CART_ITEM_NOT_FOUND" -> HttpStatus.NOT_FOUND;
             case "EMAIL_EXISTS", "VENDOR_ALREADY_EXISTS", "BUSINESS_NAME_EXISTS" -> HttpStatus.CONFLICT;
             case "REG_ERROR", "LOGIN_ERROR", "PROFILE_ERROR", "PASSWORD_ERROR", "REFRESH_FAILED" -> HttpStatus.INTERNAL_SERVER_ERROR;

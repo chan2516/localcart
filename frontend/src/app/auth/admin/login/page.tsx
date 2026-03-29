@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { useAuthStore } from '@/lib/auth-store'
+import { isAnyAdminRole, useAuthStore } from '@/lib/auth-store'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -12,7 +12,7 @@ import { Mail, Lock, Eye, EyeOff, Shield } from 'lucide-react'
 
 export default function AdminLoginPage() {
   const router = useRouter()
-  const { login, isLoading } = useAuthStore()
+  const { login, getProfile, isLoading } = useAuthStore()
   const [showPassword, setShowPassword] = useState(false)
   const [formData, setFormData] = useState({
     email: '',
@@ -62,8 +62,12 @@ export default function AdminLoginPage() {
       await login(formData.email, formData.password)
 
       // Check if user has ADMIN role
-      const user = useAuthStore.getState().user
-      if (user?.role !== 'ADMIN') {
+      let user = useAuthStore.getState().user
+      if (!user) {
+        await getProfile()
+        user = useAuthStore.getState().user
+      }
+      if (!isAnyAdminRole(user?.role)) {
         toast.error('This account does not have admin access')
         useAuthStore.getState().logout()
         return

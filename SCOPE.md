@@ -100,3 +100,32 @@ Local Cart is a multi-vendor marketplace where local vendors list products and c
 - Final choice of payment provider
 - Initial target market and product category
 - Shipping model (vendor-managed or platform-assisted)
+
+
+
+Stop and remove old containers
+docker compose down --remove-orphans
+
+Rebuild all images without cache
+docker compose build --no-cache
+
+Start everything again
+docker compose up -d
+
+Watch startup logs
+docker compose logs -f --tail=200
+
+Check running services
+docker compose ps
+
+Your previous command failed because it missed the build context.
+If you want a direct image build (not compose), use:
+docker build -t localcart-backend -f Dockerfile .
+
+For frontend only:
+docker build -t localcart-frontend -f frontend/Dockerfile frontend
+
+For this repo, compose is the best option because it rebuilds from docker-compose.yml, using Dockerfile and Dockerfile together with Postgres/Redis.
+
+If you want, I can run the exact rebuild commands for you now and check which service fails first.
+

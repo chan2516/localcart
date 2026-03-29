@@ -27,6 +27,7 @@ public class UserSummaryDto {
     
     // Account Info
     private Boolean isActive;
+    private Boolean isDeleted;
     private Boolean isEmailVerified;
     private LocalDateTime lastLoginAt;
     private Set<String> roles;

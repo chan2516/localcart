@@ -6,6 +6,8 @@ export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
   const token = request.cookies.get('lc_access_token')?.value
   const role = request.cookies.get('lc_role')?.value
+  const isAdminRole = role === 'ADMIN' || role === 'ADMIN_L1' || role === 'ADMIN_L2'
+  const isLevelOneAdminRole = role === 'ADMIN' || role === 'ADMIN_L1'
 
   const isAuthOnlyRoute = authOnlyRoutes.some((route) =>
     pathname === route || pathname.startsWith(`${route}/`)
@@ -30,9 +32,18 @@ export function proxy(request: NextRequest) {
     if (!token) {
       return NextResponse.redirect(new URL('/admin/login', request.url))
     }
-    if (role !== 'ADMIN') {
+    if (!isAdminRole) {
       return NextResponse.redirect(new URL('/', request.url))
     }
+    const isLevelOneOnlyRoute = pathname.startsWith('/admin/development') || pathname.startsWith('/admin/admin-users')
+    if (isLevelOneOnlyRoute && !isLevelOneAdminRole) {
+      return NextResponse.redirect(new URL('/admin/dashboard', request.url))
+    }
+  }
+
+  const isShoppingRoute = pathname.startsWith('/cart') || pathname.startsWith('/orders') || pathname.startsWith('/checkout')
+  if (isShoppingRoute && isAdminRole) {
+    return NextResponse.redirect(new URL('/admin/dashboard', request.url))
   }
 
   return NextResponse.next()

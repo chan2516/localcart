@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
@@ -227,6 +228,65 @@ public class VendorService {
         return convertToDto(vendor);
     }
 
+    @Transactional
+    public VendorDto banVendor(Long vendorId, Long adminUserId, String reason) {
+        Vendor vendor = vendorRepository.findById(vendorId)
+            .orElseThrow(() -> new PaymentException("Vendor not found", "VENDOR_NOT_FOUND"));
+
+        User admin = userRepository.findById(adminUserId)
+            .orElseThrow(() -> new PaymentException("Admin user not found", "USER_NOT_FOUND"));
+
+        String banReason = (reason == null || reason.isBlank())
+                ? "You are banned. Please connect helpdesk for verification."
+                : reason;
+
+        vendor.setStatus(VendorStatus.SUSPENDED);
+        vendor.setIsDeleted(true);
+        vendor.setDeletedAt(LocalDateTime.now());
+        vendor.setRejectionReason(banReason);
+
+        User user = vendor.getUser();
+        user.setIsActive(false);
+        user.setIsDeleted(true);
+        user.setDeletedAt(LocalDateTime.now());
+        user.setSuspensionReason(banReason);
+        user.setAccountLockedUntil(null);
+
+        vendor = vendorRepository.save(vendor);
+        userRepository.save(user);
+
+        log.info("Vendor banned. Vendor ID: {}, Admin ID: {}", vendorId, admin.getId());
+        return convertToDto(vendor);
+    }
+
+    @Transactional
+    public VendorDto restoreVendor(Long vendorId, Long adminUserId) {
+        Vendor vendor = vendorRepository.findById(vendorId)
+            .orElseThrow(() -> new PaymentException("Vendor not found", "VENDOR_NOT_FOUND"));
+
+        User admin = userRepository.findById(adminUserId)
+            .orElseThrow(() -> new PaymentException("Admin user not found", "USER_NOT_FOUND"));
+
+        vendor.setIsDeleted(false);
+        vendor.setDeletedAt(null);
+        if (vendor.getStatus() == VendorStatus.SUSPENDED) {
+            vendor.setStatus(VendorStatus.APPROVED);
+        }
+
+        User user = vendor.getUser();
+        user.setIsDeleted(false);
+        user.setDeletedAt(null);
+        user.setIsActive(true);
+        user.setSuspensionReason(null);
+        user.setAccountLockedUntil(null);
+
+        vendor = vendorRepository.save(vendor);
+        userRepository.save(user);
+
+        log.info("Vendor restored. Vendor ID: {}, Admin ID: {}", vendorId, admin.getId());
+        return convertToDto(vendor);
+    }
+
     /**
      * Get all vendors (with pagination and filtering)
      */
@@ -294,6 +354,7 @@ public class VendorService {
             .businessLicense(vendor.getBusinessLicense())
             .businessType(vendor.getBusinessType())
             .status(vendor.getStatus())
+            .isDeleted(vendor.getIsDeleted())
             .approvedAt(vendor.getApprovedAt())
             .approvedByName(vendor.getApprovedBy() != null ? 
                 vendor.getApprovedBy().getFirstName() + " " + vendor.getApprovedBy().getLastName() : null)

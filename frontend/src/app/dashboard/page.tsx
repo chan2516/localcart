@@ -3,17 +3,26 @@
 import { useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useAuthStore } from '@/lib/auth-store'
+import { isAnyAdminRole, useAuthStore } from '@/lib/auth-store'
 import { useProducts } from '@/hooks/use-api'
+import { apiClient } from '@/lib/api-client'
 import { ProductCard } from '@/components/product-card'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { AccountPanel } from '@/components/account-panel'
+import { useState } from 'react'
+
+type UserInsights = {
+  orders: number
+  cartItems: number
+  savedAddresses: number
+}
 
 export default function DashboardPage() {
   const router = useRouter()
   const { user, isAuthenticated } = useAuthStore()
   const { data: productsData, isLoading: productsLoading } = useProducts(1, 8)
+  const [insights, setInsights] = useState<UserInsights>({ orders: 0, cartItems: 0, savedAddresses: 0 })
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -25,10 +34,36 @@ export default function DashboardPage() {
       return
     }
 
-    if (user?.role === 'ADMIN') {
+    if (isAnyAdminRole(user?.role)) {
       router.replace('/admin/dashboard')
     }
   }, [isAuthenticated, router, user])
+
+  useEffect(() => {
+    if (!isAuthenticated || !user || user.role !== 'CUSTOMER') {
+      return
+    }
+
+    const loadInsights = async () => {
+      try {
+        const [ordersRes, cartRes, addressesRes] = await Promise.all([
+          apiClient.get<{ totalItems?: number }>('/orders?page=0&size=1'),
+          apiClient.get<{ items?: unknown[] }>('/cart'),
+          apiClient.get<{ totalCount?: number }>('/addresses'),
+        ])
+
+        setInsights({
+          orders: ordersRes.totalItems || 0,
+          cartItems: Array.isArray(cartRes.items) ? cartRes.items.length : 0,
+          savedAddresses: addressesRes.totalCount || 0,
+        })
+      } catch {
+        setInsights({ orders: 0, cartItems: 0, savedAddresses: 0 })
+      }
+    }
+
+    loadInsights()
+  }, [isAuthenticated, user])
 
   if (!user) {
     return null
@@ -91,6 +126,23 @@ export default function DashboardPage() {
             </Link>
           </CardContent>
         </Card>
+      )}
+
+      {!isVendor && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Card>
+            <CardHeader><CardTitle>Total Orders</CardTitle></CardHeader>
+            <CardContent>{insights.orders}</CardContent>
+          </Card>
+          <Card>
+            <CardHeader><CardTitle>Items In Cart</CardTitle></CardHeader>
+            <CardContent>{insights.cartItems}</CardContent>
+          </Card>
+          <Card>
+            <CardHeader><CardTitle>Saved Addresses</CardTitle></CardHeader>
+            <CardContent>{insights.savedAddresses}</CardContent>
+          </Card>
+        </div>
       )}
 
       <Card>

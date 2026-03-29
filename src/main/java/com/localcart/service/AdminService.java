@@ -1,18 +1,27 @@
 package com.localcart.service;
 
 import com.localcart.dto.admin.DashboardStatsDto;
+import com.localcart.dto.admin.AdminAccountDto;
+import com.localcart.dto.admin.AdminCreateRequest;
+import com.localcart.dto.admin.ContactInfoDto;
+import com.localcart.dto.admin.ContactInfoRequest;
 import com.localcart.dto.admin.PlatformMetricsDto;
 import com.localcart.dto.admin.UserManagementRequest;
 import com.localcart.dto.admin.UserSummaryDto;
+import com.localcart.entity.Role;
+import com.localcart.entity.SiteContactInfo;
 import com.localcart.entity.User;
 import com.localcart.entity.enums.OrderStatus;
 import com.localcart.entity.enums.PaymentStatus;
+import com.localcart.entity.enums.RoleType;
 import com.localcart.entity.enums.VendorStatus;
 import com.localcart.exception.PaymentException;
 import com.localcart.repository.OrderRepository;
 import com.localcart.repository.PaymentRepository;
 import com.localcart.repository.ProductRepository;
+import com.localcart.repository.RoleRepository;
 import com.localcart.repository.ReviewRepository;
+import com.localcart.repository.SiteContactInfoRepository;
 import com.localcart.repository.UserRepository;
 import com.localcart.repository.VendorRepository;
 import java.math.BigDecimal;
@@ -22,11 +31,13 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +53,11 @@ public class AdminService {
     private final OrderRepository orderRepository;
     private final PaymentRepository paymentRepository;
     private final ReviewRepository reviewRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final SiteContactInfoRepository siteContactInfoRepository;
+
+    private static final List<RoleType> ADMIN_ROLES = List.of(RoleType.ADMIN, RoleType.ADMIN_L1, RoleType.ADMIN_L2);
 
     @Transactional(readOnly = true)
     public Page<UserSummaryDto> getAllUsers(Boolean active, Pageable pageable) {
@@ -59,6 +75,8 @@ public class AdminService {
     }
 
     public UserSummaryDto manageUser(UserManagementRequest request, Long adminUserId) {
+        ensureAdminRole(adminUserId);
+
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new PaymentException("User not found", "USER_NOT_FOUND"));
 
@@ -72,22 +90,49 @@ public class AdminService {
         switch (request.getAction()) {
             case ACTIVATE -> {
                 user.setIsActive(true);
+                user.setIsDeleted(false);
+                user.setDeletedAt(null);
                 user.setSuspensionReason(null);
                 user.setAccountLockedUntil(null);
+                if (user.getVendor() != null) {
+                    user.getVendor().setIsDeleted(false);
+                    user.getVendor().setDeletedAt(null);
+                    if (user.getVendor().getStatus() == VendorStatus.SUSPENDED) {
+                        user.getVendor().setStatus(VendorStatus.APPROVED);
+                    }
+                }
             }
             case SUSPEND -> {
                 user.setIsActive(false);
+                user.setIsDeleted(false);
+                user.setDeletedAt(null);
                 user.setSuspensionReason(request.getReason());
                 if (request.getSuspensionDurationDays() != null && request.getSuspensionDurationDays() > 0) {
                     user.setAccountLockedUntil(LocalDateTime.now().plusDays(request.getSuspensionDurationDays()));
                 } else {
                     user.setAccountLockedUntil(null);
                 }
+                if (user.getVendor() != null) {
+                    user.getVendor().setStatus(VendorStatus.SUSPENDED);
+                    user.getVendor().setRejectionReason(request.getReason());
+                }
             }
             case BAN -> {
                 user.setIsActive(false);
-                user.setSuspensionReason(request.getReason());
+                user.setIsDeleted(true);
+                user.setDeletedAt(LocalDateTime.now());
+                user.setSuspensionReason(
+                        request.getReason() != null && !request.getReason().isBlank()
+                                ? request.getReason()
+                                : "You are banned. Please connect helpdesk for verification."
+                );
                 user.setAccountLockedUntil(null);
+                if (user.getVendor() != null) {
+                    user.getVendor().setStatus(VendorStatus.SUSPENDED);
+                    user.getVendor().setIsDeleted(true);
+                    user.getVendor().setDeletedAt(LocalDateTime.now());
+                    user.getVendor().setRejectionReason(user.getSuspensionReason());
+                }
             }
         }
 
@@ -95,6 +140,89 @@ public class AdminService {
         log.info("Admin {} performed {} for user {}", adminUserId, request.getAction(), user.getId());
 
         return convertToSummary(user);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<AdminAccountDto> getAllAdminAccounts(Pageable pageable) {
+        return userRepository.findByRoleNames(ADMIN_ROLES, pageable).map(this::convertToAdminAccountDto);
+    }
+
+    public AdminAccountDto createSecondLevelAdmin(AdminCreateRequest request, Long creatorAdminId) {
+        ensureLevelOneAdmin(creatorAdminId);
+
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new PaymentException("Email already registered", "EMAIL_EXISTS");
+        }
+
+        Role l2Role = roleRepository.findByName(RoleType.ADMIN_L2)
+                .orElseGet(() -> roleRepository.save(Role.builder()
+                        .name(RoleType.ADMIN_L2)
+                        .description("Second-level administrator with dashboard management access")
+                        .build()));
+
+        User user = User.builder()
+                .email(request.getEmail().trim())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .firstName(request.getFirstName().trim())
+                .lastName(request.getLastName().trim())
+                .isActive(true)
+                .isEmailVerified(true)
+                .roles(Set.of(l2Role))
+                .build();
+
+        User saved = userRepository.save(user);
+        log.info("Level-1 admin {} created level-2 admin {}", creatorAdminId, saved.getId());
+
+        return convertToAdminAccountDto(saved);
+    }
+
+    public AdminAccountDto setAdminAccountStatus(Long targetAdminId, boolean active, Long actingAdminId) {
+        ensureLevelOneAdmin(actingAdminId);
+
+        if (targetAdminId.equals(actingAdminId)) {
+            throw new PaymentException("You cannot modify your own admin account state", "INVALID_OPERATION");
+        }
+
+        User adminUser = userRepository.findByIdAndRoleNames(targetAdminId, ADMIN_ROLES)
+                .orElseThrow(() -> new PaymentException("Admin user not found", "USER_NOT_FOUND"));
+
+        boolean targetIsLevelOne = hasRole(adminUser, RoleType.ADMIN) || hasRole(adminUser, RoleType.ADMIN_L1);
+        if (targetIsLevelOne) {
+            throw new PaymentException("Level-1 admins cannot be modified by this operation", "INVALID_OPERATION");
+        }
+
+        adminUser.setIsActive(active);
+        if (!active) {
+            adminUser.setSuspensionReason("Restricted by level-1 admin");
+        } else if ("Restricted by level-1 admin".equals(adminUser.getSuspensionReason())) {
+            adminUser.setSuspensionReason(null);
+        }
+
+        User updated = userRepository.save(adminUser);
+        log.info("Level-1 admin {} set admin {} active={}", actingAdminId, targetAdminId, active);
+        return convertToAdminAccountDto(updated);
+    }
+
+    public ContactInfoDto getContactInfo() {
+        SiteContactInfo info = siteContactInfoRepository.findTopByOrderByIdAsc()
+                .orElseGet(this::createDefaultContactInfo);
+        return mapToContactInfo(info);
+    }
+
+    public ContactInfoDto updateContactInfo(ContactInfoRequest request, Long actingAdminId) {
+        ensureLevelOneAdmin(actingAdminId);
+
+        SiteContactInfo info = siteContactInfoRepository.findTopByOrderByIdAsc()
+                .orElseGet(this::createDefaultContactInfo);
+
+        info.setSupportEmail(request.getSupportEmail().trim());
+        info.setSupportPhone(request.getSupportPhone().trim());
+        info.setSupportAddress(request.getSupportAddress().trim());
+        info.setSupportHours(request.getSupportHours().trim());
+
+        SiteContactInfo saved = siteContactInfoRepository.save(info);
+        log.info("Level-1 admin {} updated contact info", actingAdminId);
+        return mapToContactInfo(saved);
     }
 
     @Transactional(readOnly = true)
@@ -241,6 +369,7 @@ public class AdminService {
                 .lastName(user.getLastName())
                 .phoneNumber(user.getPhoneNumber())
                 .isActive(user.getIsActive())
+                .isDeleted(user.getIsDeleted())
                 .isEmailVerified(user.getIsEmailVerified())
                 .lastLoginAt(user.getLastLoginAt())
                 .roles(roles)
@@ -255,6 +384,67 @@ public class AdminService {
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
                 .build();
+    }
+
+    private AdminAccountDto convertToAdminAccountDto(User user) {
+        String level = hasRole(user, RoleType.ADMIN_L2)
+                ? "LEVEL_2"
+                : "LEVEL_1";
+
+        return AdminAccountDto.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .isActive(user.getIsActive())
+                .level(level)
+                .createdAt(user.getCreatedAt())
+                .updatedAt(user.getUpdatedAt())
+                .build();
+    }
+
+    private ContactInfoDto mapToContactInfo(SiteContactInfo info) {
+        return ContactInfoDto.builder()
+                .supportEmail(info.getSupportEmail())
+                .supportPhone(info.getSupportPhone())
+                .supportAddress(info.getSupportAddress())
+                .supportHours(info.getSupportHours())
+                .build();
+    }
+
+    private SiteContactInfo createDefaultContactInfo() {
+        SiteContactInfo defaultInfo = SiteContactInfo.builder()
+                .supportEmail("support@localcart.com")
+                .supportPhone("+1-800-LOCALCART")
+                .supportAddress("LocalCart Support Center")
+                .supportHours("Mon-Sat, 9:00 AM - 6:00 PM")
+                .build();
+        return siteContactInfoRepository.save(defaultInfo);
+    }
+
+    private void ensureAdminRole(Long adminUserId) {
+        User admin = userRepository.findByIdAndRoleNames(adminUserId, ADMIN_ROLES)
+                .orElseThrow(() -> new PaymentException("Admin role is required", "UNAUTHORIZED"));
+        if (!Boolean.TRUE.equals(admin.getIsActive())) {
+            throw new PaymentException("Admin account is inactive", "UNAUTHORIZED");
+        }
+    }
+
+    private void ensureLevelOneAdmin(Long adminUserId) {
+        User admin = userRepository.findByIdAndRoleNames(adminUserId, ADMIN_ROLES)
+                .orElseThrow(() -> new PaymentException("Admin role is required", "UNAUTHORIZED"));
+
+        boolean levelOne = hasRole(admin, RoleType.ADMIN) || hasRole(admin, RoleType.ADMIN_L1);
+        if (!levelOne) {
+            throw new PaymentException("Level-1 admin permission is required", "UNAUTHORIZED");
+        }
+        if (!Boolean.TRUE.equals(admin.getIsActive())) {
+            throw new PaymentException("Admin account is inactive", "UNAUTHORIZED");
+        }
+    }
+
+    private boolean hasRole(User user, RoleType roleType) {
+        return user.getRoles().stream().anyMatch(role -> role.getName() == roleType);
     }
 
     private double percentChange(double current, double previous) {

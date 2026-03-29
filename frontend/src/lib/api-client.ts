@@ -40,7 +40,18 @@ class ApiClient {
           if (typeof window !== 'undefined') {
             localStorage.removeItem('accessToken')
             localStorage.removeItem('refreshToken')
-            window.location.href = '/auth/login'
+
+            const pathname = window.location.pathname || '/'
+            const adminScope = pathname.startsWith('/admin') || pathname.startsWith('/auth/admin')
+            const vendorScope = pathname.startsWith('/vendor') || pathname.startsWith('/auth/vendor')
+
+            if (adminScope) {
+              window.location.href = '/admin/login'
+            } else if (vendorScope) {
+              window.location.href = '/auth/vendor/login'
+            } else {
+              window.location.href = '/auth/login'
+            }
           }
         }
         return Promise.reject(error)

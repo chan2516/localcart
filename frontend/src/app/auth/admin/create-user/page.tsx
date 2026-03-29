@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { useAuthStore } from '@/lib/auth-store'
+import { isLevelOneAdminRole, useAuthStore } from '@/lib/auth-store'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -24,11 +24,11 @@ export default function AdminCreateUserPage() {
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [passwordStrength, setPasswordStrength] = useState(0)
-  const adminCreateSupported = false
+  const adminCreateSupported = true
 
   useEffect(() => {
     // Check if user is admin
-    if (!user || user.role !== 'ADMIN') {
+    if (!isLevelOneAdminRole(user?.role)) {
       toast.error('Admin access required')
       router.push('/auth/admin/login')
     }
@@ -97,11 +97,6 @@ export default function AdminCreateUserPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!adminCreateSupported) {
-      toast.error('Admin user creation is not available in the current backend API')
-      return
-    }
-
     if (!validateForm()) {
       return
     }
@@ -147,7 +142,7 @@ export default function AdminCreateUserPage() {
     return 'Strong'
   }
 
-  if (!user || user.role !== 'ADMIN') {
+  if (!isLevelOneAdminRole(user?.role)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-red-100 py-12 px-4">
         <Card className="w-full max-w-md shadow-lg">
@@ -173,8 +168,8 @@ export default function AdminCreateUserPage() {
               <CardDescription className="text-gray-600">
                 Create a new administrator account
               </CardDescription>
-              <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-md px-3 py-2">
-                This action is temporarily disabled because the backend does not expose an admin user creation endpoint.
+              <p className="text-xs text-blue-700 bg-blue-50 border border-blue-200 rounded-md px-3 py-2">
+                Created admins are second-level admins with dashboard user/vendor management access.
               </p>
             </CardHeader>
             <CardContent>

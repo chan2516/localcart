@@ -15,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -127,6 +129,14 @@ public class UserService implements UserDetailsService {
         log.info("Authenticating user: {}", request.getEmail());
 
         try {
+            User existingUser = userRepository.findByEmail(request.getEmail()).orElse(null);
+            if (existingUser != null && Boolean.TRUE.equals(existingUser.getIsDeleted())) {
+            throw new PaymentException(
+                "You are banned. Please connect helpdesk for verification.",
+                "BANNED_USER"
+            );
+            }
+
             // Authenticate user (throws BadCredentialsException if invalid)
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -162,6 +172,12 @@ public class UserService implements UserDetailsService {
                     .message("Login successful")
                     .build();
 
+        } catch (LockedException | DisabledException e) {
+            log.warn("Blocked account login attempt for user: {}", request.getEmail());
+            throw new PaymentException(
+                    "You are banned. Please connect helpdesk for verification.",
+                    "BANNED_USER"
+            );
         } catch (org.springframework.security.core.AuthenticationException e) {
             log.warn("Authentication failed for user: {}", request.getEmail());
             throw new PaymentException("Invalid email or password", "AUTH_FAILED");
@@ -194,6 +210,13 @@ public class UserService implements UserDetailsService {
             User user = userRepository.findByEmail(username)
                     .orElseThrow(() -> new PaymentException("User not found", "USER_NOT_FOUND"));
 
+                if (Boolean.TRUE.equals(user.getIsDeleted())) {
+                throw new PaymentException(
+                    "You are banned. Please connect helpdesk for verification.",
+                    "BANNED_USER"
+                );
+                }
+
             // Generate new access token
             UserDetails userDetails = loadUserByUsername(username);
             String newAccessToken = jwtUtils.generateAccessToken(userDetails);
@@ -207,6 +230,9 @@ public class UserService implements UserDetailsService {
                     .email(user.getEmail())
                     .firstName(user.getFirstName())
                     .lastName(user.getLastName())
+                    .roles(user.getRoles().stream()
+                        .map(r -> r.getName().toString())
+                        .toList())
                     .vendorId(user.getVendor() != null ? user.getVendor().getId() : null)
                     .vendorStatus(user.getVendor() != null ? user.getVendor().getStatus().name() : null)
                     .message("Token refreshed successfully")
@@ -325,6 +351,10 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new org.springframework.security.core.userdetails.UsernameNotFoundException(
                         "User not found with email: " + username
                 ));
+
+        if (Boolean.TRUE.equals(user.getIsDeleted())) {
+            throw new LockedException("Account is banned");
+        }
 
         return new com.localcart.security.CustomUserDetails(user);
     }

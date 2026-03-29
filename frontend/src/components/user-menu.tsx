@@ -1,6 +1,6 @@
 'use client'
 
-import { User } from '@/lib/auth-store'
+import { isAnyAdminRole, isLevelOneAdminRole, User } from '@/lib/auth-store'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,8 +22,11 @@ export function UserMenu({ user }: UserMenuProps) {
   const { logout } = useAuthStore()
   const router = useRouter()
 
+  const isAdmin = isAnyAdminRole(user.role)
+  const isLevelOneAdmin = isLevelOneAdminRole(user.role)
+
   const dashboardHref =
-    user.role === 'ADMIN'
+    isAdmin
       ? '/admin/dashboard'
       : user.role === 'VENDOR'
         ? '/vendor/dashboard'
@@ -54,15 +57,26 @@ export function UserMenu({ user }: UserMenuProps) {
         <DropdownMenuItem asChild>
           <Link href={dashboardHref}>Dashboard</Link>
         </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href="/profile">Profile</Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href="/orders">Orders</Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href="/addresses">Addresses</Link>
-        </DropdownMenuItem>
+        {!isAdmin && (
+          <DropdownMenuItem asChild>
+            <Link href="/profile">Profile</Link>
+          </DropdownMenuItem>
+        )}
+        {!isAdmin && (
+          <DropdownMenuItem asChild>
+            <Link href="/orders">Orders</Link>
+          </DropdownMenuItem>
+        )}
+        {!isAdmin && (
+          <DropdownMenuItem asChild>
+            <Link href="/addresses">Addresses</Link>
+          </DropdownMenuItem>
+        )}
+        {isLevelOneAdmin && (
+          <DropdownMenuItem asChild>
+            <Link href="/admin/development">Development</Link>
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem asChild>
           <Link href="/auth/change-password">Change Password</Link>
         </DropdownMenuItem>

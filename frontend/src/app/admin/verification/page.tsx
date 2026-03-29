@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import { useAuthStore } from '@/lib/auth-store'
+import { isAnyAdminRole, useAuthStore } from '@/lib/auth-store'
 import { apiClient } from '@/lib/api-client'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -37,7 +37,7 @@ export default function AdminVerificationPage() {
       return
     }
 
-    if (user && user.role !== 'ADMIN') {
+    if (user && !isAnyAdminRole(user.role)) {
       toast.error('Admin access is required')
       router.push('/')
       return

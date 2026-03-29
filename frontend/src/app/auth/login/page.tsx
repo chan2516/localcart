@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { useAuthStore } from '@/lib/auth-store'
+import { isAnyAdminRole, useAuthStore } from '@/lib/auth-store'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -12,7 +12,7 @@ import { Mail, Lock, Eye, EyeOff } from 'lucide-react'
 
 export default function LoginPage() {
   const router = useRouter()
-  const { login, isLoading } = useAuthStore()
+  const { login, getProfile, isLoading } = useAuthStore()
   const [showPassword, setShowPassword] = useState(false)
   const [formData, setFormData] = useState({
     email: '',
@@ -61,10 +61,16 @@ export default function LoginPage() {
 
     try {
       await login(formData.email, formData.password)
-      const loggedInUser = useAuthStore.getState().user
+      let loggedInUser = useAuthStore.getState().user
+
+      // If role/user is not yet hydrated from the login response, fetch profile before redirecting.
+      if (!loggedInUser) {
+        await getProfile()
+        loggedInUser = useAuthStore.getState().user
+      }
       toast.success('Logged in successfully!')
 
-      if (loggedInUser?.role === 'ADMIN') {
+      if (isAnyAdminRole(loggedInUser?.role)) {
         router.push('/admin/dashboard')
       } else if (loggedInUser?.role === 'VENDOR') {
         router.push('/vendor/dashboard')
@@ -190,6 +196,15 @@ export default function LoginPage() {
                   className="font-semibold text-blue-600 hover:text-blue-700 hover:underline"
                 >
                   Vendor Login
+                </Link>
+              </p>
+              <p className="text-sm text-gray-600">
+                Admin access?{' '}
+                <Link
+                  href="/admin/login"
+                  className="font-semibold text-red-600 hover:text-red-700 hover:underline"
+                >
+                  Admin Login
                 </Link>
               </p>
             </div>

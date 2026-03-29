@@ -1,6 +1,10 @@
 package com.localcart.controller;
 
 import com.localcart.dto.admin.DashboardStatsDto;
+import com.localcart.dto.admin.AdminAccountDto;
+import com.localcart.dto.admin.AdminCreateRequest;
+import com.localcart.dto.admin.ContactInfoDto;
+import com.localcart.dto.admin.ContactInfoRequest;
 import com.localcart.dto.admin.PlatformMetricsDto;
 import com.localcart.dto.admin.UserManagementRequest;
 import com.localcart.dto.admin.UserSummaryDto;
@@ -37,7 +41,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/admin")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAnyRole('ADMIN','ADMIN_L1','ADMIN_L2')")
 public class AdminController {
 
     private final VendorService vendorService;
@@ -191,6 +195,32 @@ public class AdminController {
         return ResponseEntity.ok(vendor);
     }
 
+    @PostMapping("/vendors/{id}/ban")
+    public ResponseEntity<VendorDto> banVendor(
+            @PathVariable Long id,
+            @RequestBody(required = false) VendorApprovalRequest request,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        String reason = (request == null || request.getReason() == null || request.getReason().isBlank())
+                ? "You are banned. Please connect helpdesk for verification."
+                : request.getReason();
+
+        log.info("Admin banning vendor - ID: {}, reason: {}", id, reason);
+
+        VendorDto vendor = vendorService.banVendor(id, userDetails.getUserId(), reason);
+        return ResponseEntity.ok(vendor);
+    }
+
+    @PostMapping("/vendors/{id}/restore")
+    public ResponseEntity<VendorDto> restoreVendor(
+            @PathVariable Long id,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        log.info("Admin restoring vendor - ID: {}", id);
+        VendorDto vendor = vendorService.restoreVendor(id, userDetails.getUserId());
+        return ResponseEntity.ok(vendor);
+    }
+
     // ===========================
     // USER MANAGEMENT
     // ===========================
@@ -263,6 +293,58 @@ public class AdminController {
         return ResponseEntity.ok(user);
     }
 
+    @GetMapping("/admins")
+    @PreAuthorize("hasAnyRole('ADMIN','ADMIN_L1')")
+    public ResponseEntity<Page<AdminAccountDto>> getAllAdmins(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        return ResponseEntity.ok(adminService.getAllAdminAccounts(pageable));
+    }
+
+    @PostMapping("/admins")
+    @PreAuthorize("hasAnyRole('ADMIN','ADMIN_L1')")
+    public ResponseEntity<AdminAccountDto> createSecondLevelAdmin(
+            @Valid @RequestBody AdminCreateRequest request,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        AdminAccountDto created = adminService.createSecondLevelAdmin(request, userDetails.getUserId());
+        return ResponseEntity.ok(created);
+    }
+
+    @PostMapping("/admins/{id}/activate")
+    @PreAuthorize("hasAnyRole('ADMIN','ADMIN_L1')")
+    public ResponseEntity<AdminAccountDto> activateAdmin(
+            @PathVariable Long id,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        return ResponseEntity.ok(adminService.setAdminAccountStatus(id, true, userDetails.getUserId()));
+    }
+
+    @PostMapping("/admins/{id}/suspend")
+    @PreAuthorize("hasAnyRole('ADMIN','ADMIN_L1')")
+    public ResponseEntity<AdminAccountDto> suspendAdmin(
+            @PathVariable Long id,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        return ResponseEntity.ok(adminService.setAdminAccountStatus(id, false, userDetails.getUserId()));
+    }
+
+    @GetMapping("/contact-info")
+    public ResponseEntity<ContactInfoDto> getContactInfo() {
+        return ResponseEntity.ok(adminService.getContactInfo());
+    }
+
+    @PutMapping("/contact-info")
+    @PreAuthorize("hasAnyRole('ADMIN','ADMIN_L1')")
+    public ResponseEntity<ContactInfoDto> updateContactInfo(
+            @Valid @RequestBody ContactInfoRequest request,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        return ResponseEntity.ok(adminService.updateContactInfo(request, userDetails.getUserId()));
+    }
+
     // ===========================
     // DASHBOARD & ANALYTICS
     // ===========================
@@ -296,6 +378,7 @@ public class AdminController {
      * TODO: Implement AdminService with metrics calculation
      */
     @GetMapping("/metrics")
+    @PreAuthorize("hasAnyRole('ADMIN','ADMIN_L1')")
     public ResponseEntity<PlatformMetricsDto> getPlatformMetrics(
             @RequestParam(defaultValue = "MONTH") String period) {
         
@@ -318,6 +401,7 @@ public class AdminController {
      * TODO: Implement product moderation
      */
     @GetMapping("/products/pending")
+    @PreAuthorize("hasAnyRole('ADMIN','ADMIN_L1')")
     public ResponseEntity<String> getPendingProducts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
@@ -337,6 +421,7 @@ public class AdminController {
      * TODO: Implement product approval workflow
      */
     @PostMapping("/products/{id}/approve")
+    @PreAuthorize("hasAnyRole('ADMIN','ADMIN_L1')")
     public ResponseEntity<String> approveProduct(
             @PathVariable Long id,
             @RequestParam boolean approved,
@@ -357,6 +442,7 @@ public class AdminController {
      * TODO: Implement review moderation
      */
     @GetMapping("/reviews/flagged")
+    @PreAuthorize("hasAnyRole('ADMIN','ADMIN_L1')")
     public ResponseEntity<String> getFlaggedReviews(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {

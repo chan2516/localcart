@@ -6,10 +6,12 @@ export interface User {
   email: string
   firstName?: string
   lastName?: string
-  role: 'CUSTOMER' | 'VENDOR' | 'ADMIN'
+  role: UserRole
   vendorId?: string
   vendorStatus?: 'PENDING' | 'APPROVED' | 'REJECTED' | 'SUSPENDED'
 }
+
+export type UserRole = 'CUSTOMER' | 'VENDOR' | 'ADMIN' | 'ADMIN_L1' | 'ADMIN_L2'
 
 export interface AuthResponse {
   accessToken: string
@@ -203,9 +205,12 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   createAdminUser: async (email, password, firstName, lastName) => {
     set({ isLoading: true })
     try {
-      void [email, password, firstName, lastName]
-      // Backend currently exposes user management actions, not user creation.
-      throw new Error('Admin user creation endpoint is not available in the current backend API')
+      await apiClient.post('/admin/admins', {
+        email,
+        password,
+        firstName,
+        lastName,
+      })
     } finally {
       set({ isLoading: false })
     }
@@ -227,16 +232,26 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     if (!refreshToken) return
 
     try {
+      const currentUser = get().user
       const response = await apiClient.post<AuthResponse>('/auth/refresh', {
         refreshToken,
       })
 
       localStorage.setItem('accessToken', response.accessToken)
-      const mappedUser = mapAuthResponseToUser(response)
-      persistAuthCookies(response.accessToken, mappedUser?.role)
+      let mappedUser = mapAuthResponseToUser(response)
+      if (mappedUser && (!response.roles || response.roles.length === 0) && currentUser?.role) {
+        mappedUser = { ...mappedUser, role: currentUser.role }
+      }
+
+      if (!mappedUser && currentUser) {
+        mappedUser = currentUser
+      }
+
+      persistAuthCookies(response.accessToken, mappedUser?.role || currentUser?.role)
       set({
         accessToken: response.accessToken,
         user: mappedUser,
+        isAuthenticated: !!mappedUser,
       })
     } catch {
       get().logout()
@@ -248,7 +263,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
 
     const token = localStorage.getItem('accessToken')
     if (token) {
-      set({ accessToken: token })
+      set({ accessToken: token, isAuthenticated: true })
     }
   },
 
@@ -266,7 +281,9 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
 
 function mapRole(roles: string[] | undefined): User['role'] {
   if (!roles || roles.length === 0) return 'CUSTOMER'
-  if (roles.some((role) => role.includes('ADMIN'))) return 'ADMIN'
+  if (roles.some((role) => role.includes('ADMIN_L2'))) return 'ADMIN_L2'
+  if (roles.some((role) => role.includes('ADMIN_L1'))) return 'ADMIN_L1'
+  if (roles.some((role) => role.includes('ADMIN'))) return 'ADMIN_L1'
   if (roles.some((role) => role.includes('VENDOR'))) return 'VENDOR'
   return 'CUSTOMER'
 }
@@ -337,4 +354,12 @@ function clearAuthCookies() {
   if (typeof document === 'undefined') return
   document.cookie = 'lc_access_token=; Path=/; Max-Age=0; SameSite=Lax'
   document.cookie = 'lc_role=; Path=/; Max-Age=0; SameSite=Lax'
+}
+
+export function isAnyAdminRole(role?: UserRole | null): boolean {
+  return role === 'ADMIN' || role === 'ADMIN_L1' || role === 'ADMIN_L2'
+}
+
+export function isLevelOneAdminRole(role?: UserRole | null): boolean {
+  return role === 'ADMIN' || role === 'ADMIN_L1'
 }

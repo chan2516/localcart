@@ -54,6 +54,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 
                 // 3. Load user details
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+                if (!userDetails.isEnabled() || !userDetails.isAccountNonLocked()) {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.setContentType("application/json");
+                    response.getWriter().write(
+                            "{\"message\":\"You are banned. Please connect helpdesk for verification.\",\"code\":\"BANNED_USER\"}"
+                    );
+                    return;
+                }
                 
                 // 4. Create authentication object
                 UsernamePasswordAuthenticationToken authentication = 
@@ -80,6 +89,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             log.error("Invalid JWT: {}", e.getMessage());
         } catch (io.jsonwebtoken.SignatureException e) {
             log.error("JWT signature validation failed: {}", e.getMessage());
+        } catch (org.springframework.security.authentication.LockedException e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write(
+                    "{\"message\":\"You are banned. Please connect helpdesk for verification.\",\"code\":\"BANNED_USER\"}"
+            );
+            return;
         } catch (IllegalArgumentException e) {
             log.error("JWT claims string is empty: {}", e.getMessage());
         } catch (Exception e) {

@@ -12,7 +12,7 @@ import { Mail, Lock, Eye, EyeOff, Store } from 'lucide-react'
 
 export default function VendorLoginPage() {
   const router = useRouter()
-  const { login, isLoading } = useAuthStore()
+  const { login, getProfile, isLoading } = useAuthStore()
   const [showPassword, setShowPassword] = useState(false)
   const [formData, setFormData] = useState({
     email: '',
@@ -62,7 +62,11 @@ export default function VendorLoginPage() {
       await login(formData.email, formData.password)
       
       // Check if user has VENDOR role
-      const user = useAuthStore.getState().user
+      let user = useAuthStore.getState().user
+      if (!user) {
+        await getProfile()
+        user = useAuthStore.getState().user
+      }
       if (user?.role !== 'VENDOR') {
         toast.error('This account does not have vendor access')
         useAuthStore.getState().logout()

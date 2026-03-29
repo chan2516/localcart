@@ -37,7 +37,7 @@ import java.util.Map;
 @RequestMapping("/api/v1/cart")
 @RequiredArgsConstructor
 @Validated
-@PreAuthorize("isAuthenticated()")
+@PreAuthorize("hasRole('CUSTOMER')")
 public class CartController {
     
     private final CartService cartService;

@@ -45,6 +45,7 @@ public class VendorDto {
     
     // Status
     private VendorStatus status;
+    private Boolean isDeleted;
     private LocalDate approvedAt;
     private String approvedByName;
     private String rejectionReason;

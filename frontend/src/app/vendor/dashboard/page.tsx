@@ -23,28 +23,22 @@ type ProductForm = {
   categoryId: string
 }
 
-type Promotion = {
-  id: number
-  promotionType: 'CAMPAIGN' | 'OFFER' | 'COUPON'
-  title: string
-  description?: string
-  code?: string
-  valueText?: string
-}
-
-type Coupon = {
-  id: number
-  code: string
-  couponType: 'PERCENTAGE' | 'FIXED_AMOUNT'
-  discountValue: number
-  isActive: boolean
-}
-
 type VendorProfile = {
   id: number
   status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'SUSPENDED'
+  isDeleted?: boolean
   rejectionReason?: string
   businessName?: string
+}
+
+type VendorInsights = {
+  totalSales?: number
+  totalOrders?: number
+  pendingPayout?: number
+  totalProducts?: number
+  activeProducts?: number
+  averageRating?: number
+  totalReviews?: number
 }
 
 const initialProductForm: ProductForm = {
@@ -66,19 +60,8 @@ export default function VendorDashboardPage() {
   const [savingProduct, setSavingProduct] = useState(false)
   const [editingProductId, setEditingProductId] = useState<string | number | null>(null)
   const [productForm, setProductForm] = useState<ProductForm>(initialProductForm)
-
-  const [promotions, setPromotions] = useState<Promotion[]>([])
-  const [promotionType, setPromotionType] = useState<'CAMPAIGN' | 'OFFER' | 'COUPON'>('CAMPAIGN')
-  const [promotionTitle, setPromotionTitle] = useState('')
-  const [promotionDescription, setPromotionDescription] = useState('')
-  const [promotionCode, setPromotionCode] = useState('')
-  const [promotionValue, setPromotionValue] = useState('')
-
-  const [coupons, setCoupons] = useState<Coupon[]>([])
-  const [couponCode, setCouponCode] = useState('')
-  const [couponType, setCouponType] = useState<'PERCENTAGE' | 'FIXED_AMOUNT'>('PERCENTAGE')
-  const [couponValue, setCouponValue] = useState('')
   const [vendorProfile, setVendorProfile] = useState<VendorProfile | null>(null)
+  const [vendorInsights, setVendorInsights] = useState<VendorInsights | null>(null)
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -94,14 +77,12 @@ export default function VendorDashboardPage() {
 
     const loadVendorData = async () => {
       try {
-        const [vendorRes, promotionsRes, couponsRes] = await Promise.all([
+        const [vendorRes, dashboardRes] = await Promise.all([
           apiClient.get<VendorProfile>('/vendors/me'),
-          apiClient.get<Promotion[]>('/promotions/me'),
-          apiClient.get<Coupon[]>('/coupons/me'),
+          apiClient.get<VendorInsights>('/vendors/me/dashboard'),
         ])
         setVendorProfile(vendorRes)
-        setPromotions(promotionsRes || [])
-        setCoupons(couponsRes || [])
+        setVendorInsights(dashboardRes)
       } catch (error: any) {
         toast.error(error?.message || 'Failed to load vendor data')
       }
@@ -116,7 +97,7 @@ export default function VendorDashboardPage() {
     return allProducts.filter((product) => String(product.vendorId) === String(user.vendorId))
   }, [productsData, user?.vendorId])
 
-  const canManageCatalog = (vendorProfile?.status || user?.vendorStatus) === 'APPROVED'
+  const canManageCatalog = (vendorProfile?.status || user?.vendorStatus) === 'APPROVED' && !vendorProfile?.isDeleted
 
   const resetProductForm = () => {
     setProductForm(initialProductForm)
@@ -194,97 +175,11 @@ export default function VendorDashboardPage() {
     }
   }
 
-  const createPromotion = async () => {
-    if (!canManageCatalog) {
-      toast.error('Your vendor account is not approved yet')
-      return
-    }
-
-    if (!promotionTitle || !promotionValue) {
-      toast.error('Promotion title and value are required')
-      return
-    }
-
-    try {
-      const created = await apiClient.post<Promotion>('/promotions', {
-        promotionType,
-        title: promotionTitle,
-        description: promotionDescription,
-        code: promotionCode || undefined,
-        valueText: promotionValue,
-      })
-      setPromotions((prev) => [created, ...prev])
-      setPromotionTitle('')
-      setPromotionDescription('')
-      setPromotionCode('')
-      setPromotionValue('')
-      toast.success('Promotion created')
-    } catch (error: any) {
-      toast.error(error?.message || 'Failed to create promotion')
-    }
-  }
-
-  const removePromotion = async (id: number) => {
-    if (!canManageCatalog) {
-      toast.error('Your vendor account is not approved yet')
-      return
-    }
-
-    try {
-      await apiClient.delete(`/promotions/${id}`)
-      setPromotions((prev) => prev.filter((item) => item.id !== id))
-      toast.success('Promotion deleted')
-    } catch (error: any) {
-      toast.error(error?.message || 'Failed to delete promotion')
-    }
-  }
-
-  const createCoupon = async () => {
-    if (!canManageCatalog) {
-      toast.error('Your vendor account is not approved yet')
-      return
-    }
-
-    if (!couponCode || !couponValue) {
-      toast.error('Coupon code and value are required')
-      return
-    }
-
-    try {
-      const created = await apiClient.post<Coupon>('/coupons', {
-        code: couponCode,
-        couponType,
-        discountValue: Number(couponValue),
-      })
-      setCoupons((prev) => [created, ...prev])
-      setCouponCode('')
-      setCouponValue('')
-      toast.success('Coupon created')
-    } catch (error: any) {
-      toast.error(error?.message || 'Failed to create coupon')
-    }
-  }
-
-  const deactivateCoupon = async (id: number) => {
-    if (!canManageCatalog) {
-      toast.error('Your vendor account is not approved yet')
-      return
-    }
-
-    try {
-      await apiClient.delete(`/coupons/${id}`)
-      setCoupons((prev) => prev.map((coupon) => (coupon.id === id ? { ...coupon, isActive: false } : coupon)))
-      toast.success('Coupon deactivated')
-    } catch (error: any) {
-      toast.error(error?.message || 'Failed to deactivate coupon')
-    }
-  }
-
   return (
     <div className="max-w-7xl mx-auto px-4 py-10 space-y-8">
       <div>
         <h1 className="text-3xl font-bold">Vendor Dashboard</h1>
-        <p className="text-gray-600">Manage products, promotions, offers, and coupons.</p>
+        <p className="text-gray-600">Manage your products and track your business insights.</p>
         <div className="mt-3">
           <Link href="/vendor/verification">
             <Button variant="outline">View Verification Status</Button>
@@ -304,7 +199,7 @@ export default function VendorDashboardPage() {
               Vendor status: <span className="font-semibold">{vendorProfile?.status || user?.vendorStatus || 'PENDING'}</span>
             </p>
             <p className="mt-1">
-              Catalog actions are locked until admin verification is complete.
+              Product management is locked until admin verification is complete.
             </p>
             {vendorProfile?.rejectionReason ? (
               <p className="mt-1">Reason: {vendorProfile.rejectionReason}</p>
@@ -312,6 +207,15 @@ export default function VendorDashboardPage() {
           </CardContent>
         </Card>
       )}
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card><CardHeader><CardTitle>Total Sales</CardTitle></CardHeader><CardContent>${Number(vendorInsights?.totalSales || 0).toFixed(2)}</CardContent></Card>
+        <Card><CardHeader><CardTitle>Total Orders</CardTitle></CardHeader><CardContent>{vendorInsights?.totalOrders ?? 0}</CardContent></Card>
+        <Card><CardHeader><CardTitle>Pending Payout</CardTitle></CardHeader><CardContent>${Number(vendorInsights?.pendingPayout || 0).toFixed(2)}</CardContent></Card>
+        <Card><CardHeader><CardTitle>Total Products</CardTitle></CardHeader><CardContent>{vendorInsights?.totalProducts ?? myProducts.length}</CardContent></Card>
+        <Card><CardHeader><CardTitle>Active Products</CardTitle></CardHeader><CardContent>{vendorInsights?.activeProducts ?? myProducts.length}</CardContent></Card>
+        <Card><CardHeader><CardTitle>Average Rating</CardTitle></CardHeader><CardContent>{Number(vendorInsights?.averageRating || 0).toFixed(1)} ({vendorInsights?.totalReviews ?? 0} reviews)</CardContent></Card>
+      </div>
 
       <Card>
         <CardHeader>
@@ -358,62 +262,6 @@ export default function VendorDashboardPage() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader><CardTitle>Campaigns & Offers</CardTitle></CardHeader>
-        <CardContent className="space-y-3">
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
-            <select className="h-10 rounded-md border px-3" value={promotionType} onChange={(e) => setPromotionType(e.target.value as 'CAMPAIGN' | 'OFFER' | 'COUPON')}>
-              <option value="CAMPAIGN">Campaign</option>
-              <option value="OFFER">Offer</option>
-              <option value="COUPON">Coupon Promotion</option>
-            </select>
-            <Input placeholder="Title" value={promotionTitle} onChange={(e) => setPromotionTitle(e.target.value)} />
-            <Input placeholder="Description" value={promotionDescription} onChange={(e) => setPromotionDescription(e.target.value)} />
-            <Input placeholder="Code (optional)" value={promotionCode} onChange={(e) => setPromotionCode(e.target.value)} />
-            <Input placeholder="Value text (e.g. 20% OFF)" value={promotionValue} onChange={(e) => setPromotionValue(e.target.value)} />
-          </div>
-          <Button onClick={createPromotion} disabled={!canManageCatalog}>Create Promotion</Button>
-          <div className="space-y-2">
-            {promotions.length === 0 && <p className="text-gray-600">No promotions yet.</p>}
-            {promotions.map((promotion) => (
-              <div key={promotion.id} className="rounded-md border p-3 flex justify-between items-center">
-                <div>
-                  <p className="font-medium">{promotion.title} ({promotion.promotionType})</p>
-                  <p className="text-sm text-gray-600">{promotion.valueText} {promotion.code ? `| Code: ${promotion.code}` : ''}</p>
-                </div>
-                <Button variant="destructive" onClick={() => removePromotion(promotion.id)} disabled={!canManageCatalog}>Delete</Button>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader><CardTitle>Coupons</CardTitle></CardHeader>
-        <CardContent className="space-y-3">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <Input placeholder="Coupon code" value={couponCode} onChange={(e) => setCouponCode(e.target.value.toUpperCase())} />
-            <select className="h-10 rounded-md border px-3" value={couponType} onChange={(e) => setCouponType(e.target.value as 'PERCENTAGE' | 'FIXED_AMOUNT')}>
-              <option value="PERCENTAGE">Percentage</option>
-              <option value="FIXED_AMOUNT">Fixed amount</option>
-            </select>
-            <Input placeholder="Discount value" type="number" min="0" value={couponValue} onChange={(e) => setCouponValue(e.target.value)} />
-          </div>
-          <Button onClick={createCoupon} disabled={!canManageCatalog}>Create Coupon</Button>
-          <div className="space-y-2">
-            {coupons.length === 0 && <p className="text-gray-600">No coupons yet.</p>}
-            {coupons.map((coupon) => (
-              <div key={coupon.id} className="rounded-md border p-3 flex justify-between items-center">
-                <div>
-                  <p className="font-medium">{coupon.code} ({coupon.couponType})</p>
-                  <p className="text-sm text-gray-600">Value: {coupon.discountValue} | {coupon.isActive ? 'Active' : 'Inactive'}</p>
-                </div>
-                {coupon.isActive && <Button variant="destructive" onClick={() => deactivateCoupon(coupon.id)} disabled={!canManageCatalog}>Deactivate</Button>}
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
     </div>
   )
 }

@@ -35,7 +35,7 @@ import java.util.Map;
 @RequestMapping("/api/v1/orders")
 @RequiredArgsConstructor
 @Validated
-@PreAuthorize("isAuthenticated()")
+@PreAuthorize("hasRole('CUSTOMER')")
 public class OrderController {
     
     private final OrderService orderService;

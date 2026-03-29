@@ -21,13 +21,15 @@ public class CustomUserDetails implements UserDetails {
     private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
     private final boolean active;
+    private final boolean banned;
     private final Long vendorId; // Null if user is not a vendor
     
     public CustomUserDetails(User user) {
         this.userId = user.getId();
         this.email = user.getEmail();
         this.password = user.getPassword();
-        this.active = user.getIsActive();
+        this.banned = Boolean.TRUE.equals(user.getIsDeleted());
+        this.active = Boolean.TRUE.equals(user.getIsActive()) && !this.banned;
         this.vendorId = user.getVendor() != null ? user.getVendor().getId() : null;
         this.authorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
@@ -56,7 +58,7 @@ public class CustomUserDetails implements UserDetails {
     
     @Override
     public boolean isAccountNonLocked() {
-        return active;
+        return !banned;
     }
     
     @Override
@@ -68,7 +70,7 @@ public class CustomUserDetails implements UserDetails {
     public boolean isEnabled() {
         return active;
     }
-    
+
     /**
      * Check if user has vendor role
      */

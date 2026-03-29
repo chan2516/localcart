@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Optional;
 
 @Repository
@@ -22,6 +23,22 @@ public interface UserRepository extends JpaRepository<User, Long> {
     
     @Query("SELECT u FROM User u WHERE u.isActive = true")
     java.util.List<User> findAllActiveUsers();
+
+        @Query("""
+            SELECT DISTINCT u
+            FROM User u
+            JOIN u.roles r
+            WHERE r.name IN :roleNames
+            """)
+        Page<User> findByRoleNames(Collection<com.localcart.entity.enums.RoleType> roleNames, Pageable pageable);
+
+        @Query("""
+            SELECT DISTINCT u
+            FROM User u
+            JOIN u.roles r
+            WHERE u.id = :userId AND r.name IN :roleNames
+            """)
+        Optional<User> findByIdAndRoleNames(Long userId, Collection<com.localcart.entity.enums.RoleType> roleNames);
 
     Page<User> findByIsActive(Boolean isActive, Pageable pageable);
 

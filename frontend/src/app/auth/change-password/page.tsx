@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import { useAuthStore } from '@/lib/auth-store'
+import { isAnyAdminRole, useAuthStore } from '@/lib/auth-store'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -44,7 +44,7 @@ export default function ChangePasswordPage() {
       await changePassword(oldPassword, newPassword)
       toast.success('Password changed successfully')
 
-      if (user?.role === 'ADMIN') {
+      if (isAnyAdminRole(user?.role)) {
         router.push('/admin/dashboard')
       } else if (user?.role === 'VENDOR') {
         router.push('/vendor/dashboard')
