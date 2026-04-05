@@ -4,6 +4,9 @@ import { ProductCard } from '@/components/product-card'
 import { useProducts, useCategories, useSearchProducts } from '@/hooks/use-api'
 import { Input } from '@/components/ui/input'
 import { useEffect, useMemo, useState } from 'react'
+import { useAuthStore } from '@/lib/auth-store'
+import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 import { Skeleton } from '@/components/ui/skeleton'
 import { apiClient } from '@/lib/api-client'
 import {
@@ -21,11 +24,21 @@ type Address = {
 }
 
 export default function ProductsPage() {
+  const router = useRouter()
+  const { user } = useAuthStore()
   const [page, setPage] = useState(1)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [zipCode, setZipCode] = useState('')
   const [savedZipCodes, setSavedZipCodes] = useState<string[]>([])
+
+  // Redirect vendors away from shopping
+  useEffect(() => {
+    if (user?.role === 'VENDOR') {
+      toast.error('Vendors cannot shop. Please use your vendor dashboard.')
+      router.push('/vendor/dashboard')
+    }
+  }, [user, router])
 
   useEffect(() => {
     const loadUserZipCodes = async () => {

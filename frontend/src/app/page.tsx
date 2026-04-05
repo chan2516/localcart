@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { apiClient } from '@/lib/api-client'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { ShoppingCart, Store, Shield, TrendingUp, Package, Star } from 'lucide-react'
+import { ShoppingCart, Store, Shield, TrendingUp, Package, Star, BarChart3, PieChart, Clock, Users } from 'lucide-react'
 import { toast } from 'sonner'
 
 interface Product {
@@ -21,9 +21,46 @@ interface Product {
   vendorName?: string
 }
 
+interface ChartData {
+  name: string
+  value: number
+}
+
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
+  const [stats] = useState({
+    totalVendors: 247,
+    totalOrders: 5843,
+    activeUsers: 12500,
+    avgDeliveryTime: '2-4 hours',
+  })
+
+  const [salesData] = useState<ChartData[]>([
+    { name: 'Jan', value: 2400 },
+    { name: 'Feb', value: 3200 },
+    { name: 'Mar', value: 2800 },
+    { name: 'Apr', value: 4100 },
+    { name: 'May', value: 3900 },
+    { name: 'Jun', value: 5200 },
+  ])
+
+  const [revenueData] = useState<ChartData[]>([
+    { name: 'Jan', value: 12000 },
+    { name: 'Feb', value: 16000 },
+    { name: 'Mar', value: 14000 },
+    { name: 'Apr', value: 20500 },
+    { name: 'May', value: 19500 },
+    { name: 'Jun', value: 26000 },
+  ])
+
+  const [categoryData] = useState<ChartData[]>([
+    { name: 'Groceries', value: 35 },
+    { name: 'Electronics', value: 25 },
+    { name: 'Clothing', value: 20 },
+    { name: 'Home & Garden', value: 15 },
+    { name: 'Other', value: 5 },
+  ])
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -60,7 +97,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 text-center">
           <h1 className="text-5xl font-bold mb-4">Welcome to LocalCart</h1>
           <p className="text-xl mb-8 text-blue-100">
-            Shop from local vendors with fast delivery and great deals
+            Your trusted marketplace for local vendors with fast delivery and competitive prices
           </p>
           <div className="flex gap-4 justify-center">
             <Link href="/products">
@@ -69,48 +106,237 @@ export default function Home() {
                 Start Shopping
               </Button>
             </Link>
-            <Link href="/auth/vendor/register">
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
-                <Store className="mr-2 h-5 w-5" />
-                Become a Vendor
-              </Button>
-            </Link>
           </div>
         </div>
       </section>
 
-      {/* Features */}
+      {/* Platform Stats */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card>
-              <CardHeader>
-                <Store className="h-10 w-10 text-blue-600 mb-2" />
-                <CardTitle>Local Vendors</CardTitle>
-                <CardDescription>
-                  Support local businesses in your community
-                </CardDescription>
+          <h2 className="text-3xl font-bold mb-12 text-center text-gray-900">Platform Overview</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Card className="border-l-4 border-l-blue-600">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-semibold text-gray-600 flex items-center gap-2">
+                  <Store className="h-4 w-4 text-blue-600" />
+                  Active Vendors
+                </CardTitle>
               </CardHeader>
+              <CardContent>
+                <p className="text-4xl font-bold text-gray-900">{stats.totalVendors}</p>
+                <p className="text-sm text-gray-500 mt-2">Local businesses trusted by customers</p>
+              </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <TrendingUp className="h-10 w-10 text-green-600 mb-2" />
-                <CardTitle>Best Prices</CardTitle>
-                <CardDescription>
-                  Competitive pricing with regular discounts
-                </CardDescription>
+            <Card className="border-l-4 border-l-green-600">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-semibold text-gray-600 flex items-center gap-2">
+                  <ShoppingCart className="h-4 w-4 text-green-600" />
+                  Total Orders
+                </CardTitle>
               </CardHeader>
+              <CardContent>
+                <p className="text-4xl font-bold text-gray-900">{stats.totalOrders.toLocaleString()}</p>
+                <p className="text-sm text-gray-500 mt-2">Successfully delivered orders</p>
+              </CardContent>
             </Card>
 
+            <Card className="border-l-4 border-l-purple-600">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-semibold text-gray-600 flex items-center gap-2">
+                  <Users className="h-4 w-4 text-purple-600" />
+                  Active Users
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-4xl font-bold text-gray-900">{stats.activeUsers.toLocaleString()}</p>
+                <p className="text-sm text-gray-500 mt-2">Monthly active customers</p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-l-4 border-l-orange-600">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-semibold text-gray-600 flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-orange-600" />
+                  Avg Delivery
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-2xl font-bold text-gray-900">{stats.avgDeliveryTime}</p>
+                <p className="text-sm text-gray-500 mt-2">Fast & reliable delivery</p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Sales Chart */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="text-3xl font-bold mb-8 text-gray-900">Sales Performance</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Sales Orders Chart */}
             <Card>
               <CardHeader>
-                <Shield className="h-10 w-10 text-purple-600 mb-2" />
-                <CardTitle>Secure Shopping</CardTitle>
-                <CardDescription>
-                  Safe and secure payment methods
-                </CardDescription>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5 text-blue-600" />
+                  Monthly Orders
+                </CardTitle>
+                <CardDescription>Order volume trends over 6 months</CardDescription>
               </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  {salesData.map((data) => {
+                    const maxValue = Math.max(...salesData.map(d => d.value))
+                    const percentage = (data.value / maxValue) * 100
+                    return (
+                      <div key={data.name}>
+                        <div className="flex justify-between mb-2">
+                          <span className="font-semibold text-sm text-gray-900">{data.name}</span>
+                          <span className="text-sm text-gray-600">{data.value} orders</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2.5">
+                          <div
+                            className="bg-blue-600 h-2.5 rounded-full transition-all duration-500"
+                            style={{ width: `${percentage}%` }}
+                          />
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Revenue Chart */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <BarChart3 className="h-5 w-5 text-green-600" />
+                  Monthly Revenue
+                </CardTitle>
+                <CardDescription>Revenue generated over 6 months</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  {revenueData.map((data) => {
+                    const maxValue = Math.max(...revenueData.map(d => d.value))
+                    const percentage = (data.value / maxValue) * 100
+                    return (
+                      <div key={data.name}>
+                        <div className="flex justify-between mb-2">
+                          <span className="font-semibold text-sm text-gray-900">{data.name}</span>
+                          <span className="text-sm text-gray-600">${(data.value / 1000).toFixed(1)}k</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2.5">
+                          <div
+                            className="bg-green-600 h-2.5 rounded-full transition-all duration-500"
+                            style={{ width: `${percentage}%` }}
+                          />
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Category Distribution */}
+      <section className="py-16">
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="text-3xl font-bold mb-8 text-gray-900">Product Categories</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <PieChart className="h-5 w-5 text-purple-600" />
+                  Category Distribution
+                </CardTitle>
+                <CardDescription>Breakdown of products by category</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {categoryData.map((category) => (
+                    <div key={category.name}>
+                      <div className="flex justify-between mb-2">
+                        <span className="font-semibold text-gray-900">{category.name}</span>
+                        <span className="text-gray-600 font-semibold">{category.value}%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-3">
+                        <div
+                          className={`h-3 rounded-full transition-all duration-500 ${
+                            category.name === 'Groceries'
+                              ? 'bg-orange-500'
+                              : category.name === 'Electronics'
+                              ? 'bg-blue-500'
+                              : category.name === 'Clothing'
+                              ? 'bg-pink-500'
+                              : category.name === 'Home & Garden'
+                              ? 'bg-green-500'
+                              : 'bg-gray-500'
+                          }`}
+                          style={{ width: `${category.value}%` }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Why Choose LocalCart */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Shield className="h-5 w-5 text-green-600" />
+                  Why Choose LocalCart
+                </CardTitle>
+                <CardDescription>What makes us different</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex gap-3">
+                  <div className="flex-shrink-0">
+                    <Store className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900">Support Local</h4>
+                    <p className="text-sm text-gray-600">Every purchase supports local vendors and community businesses</p>
+                  </div>
+                </div>
+
+                <div className="flex gap-3">
+                  <div className="flex-shrink-0">
+                    <TrendingUp className="h-6 w-6 text-green-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900">Best Prices</h4>
+                    <p className="text-sm text-gray-600">Competitive pricing with regular discounts and exclusive deals</p>
+                  </div>
+                </div>
+
+                <div className="flex gap-3">
+                  <div className="flex-shrink-0">
+                    <Clock className="h-6 w-6 text-orange-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900">Fast Delivery</h4>
+                    <p className="text-sm text-gray-600">Get your orders delivered within 2-4 hours in your area</p>
+                  </div>
+                </div>
+
+                <div className="flex gap-3">
+                  <div className="flex-shrink-0">
+                    <Shield className="h-6 w-6 text-purple-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900">Secure Shopping</h4>
+                    <p className="text-sm text-gray-600">Safe payment methods and buyer protection guarantee</p>
+                  </div>
+                </div>
+              </CardContent>
             </Card>
           </div>
         </div>
@@ -149,9 +375,6 @@ export default function Home() {
                 <p className="text-gray-600 mb-4">
                   We're setting up our marketplace. Check back soon!
                 </p>
-                <Link href="/auth/vendor/register">
-                  <Button>Become a Vendor</Button>
-                </Link>
               </CardContent>
             </Card>
           ) : (
@@ -220,22 +443,6 @@ export default function Home() {
               ))}
             </div>
           )}
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-r from-orange-500 to-red-600 text-white">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <Store className="h-16 w-16 mx-auto mb-4" />
-          <h2 className="text-4xl font-bold mb-4">Ready to Start Selling?</h2>
-          <p className="text-xl mb-8 text-orange-100">
-            Join our growing community of local vendors
-          </p>
-          <Link href="/auth/vendor/register">
-            <Button size="lg" className="bg-white text-orange-600 hover:bg-gray-100">
-              Register as Vendor
-            </Button>
-          </Link>
         </div>
       </section>
     </div>

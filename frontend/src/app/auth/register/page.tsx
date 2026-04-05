@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { toast } from 'sonner'
-import { Mail, Lock, User, Phone, Eye, EyeOff, CheckCircle, AlertCircle } from 'lucide-react'
+import { Mail, Lock, User, Phone, Eye, EyeOff, CheckCircle, AlertCircle, MapPin } from 'lucide-react'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -22,6 +22,7 @@ export default function RegisterPage() {
     firstName: '',
     lastName: '',
     phoneNumber: '',
+    pincode: '',
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [passwordStrength, setPasswordStrength] = useState(0)
@@ -70,7 +71,11 @@ export default function RegisterPage() {
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
+    const { name } = e.target
+    const value =
+      name === 'phoneNumber'
+        ? e.target.value.replace(/\D/g, '').slice(0, 10)
+        : e.target.value
     setFormData((prev) => ({ ...prev, [name]: value }))
 
     if (name === 'password') {
@@ -99,7 +104,8 @@ export default function RegisterPage() {
         formData.password,
         formData.firstName,
         formData.lastName,
-        formData.phoneNumber
+        formData.phoneNumber,
+        formData.pincode
       )
       toast.success('Account created successfully!')
       router.push('/dashboard')
@@ -205,13 +211,35 @@ export default function RegisterPage() {
                   id="phoneNumber"
                   name="phoneNumber"
                   type="tel"
-                  placeholder="+1 (555) 000-0000"
+                  placeholder="10-digit phone number"
                   value={formData.phoneNumber}
+                  onChange={handleInputChange}
+                  className="pl-10"
+                  maxLength={10}
+                  disabled={isLoading}
+                />
+              </div>
+            </div>
+
+            {/* Pincode/ZIP */}
+            <div className="space-y-2">
+              <label htmlFor="pincode" className="text-sm font-semibold text-gray-700">
+                Pincode/ZIP (For Location-Based Search)
+              </label>
+              <div className="relative">
+                <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Input
+                  id="pincode"
+                  name="pincode"
+                  type="text"
+                  placeholder="e.g., 560001"
+                  value={formData.pincode}
                   onChange={handleInputChange}
                   className="pl-10"
                   disabled={isLoading}
                 />
               </div>
+              <p className="text-xs text-gray-500">This helps you find shops closest to your location</p>
             </div>
 
             {/* Password Field */}

@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosHeaders, AxiosInstance } from 'axios'
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api/v1'
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8080/api/v1'
 
 interface ApiError {
   message: string
@@ -16,6 +16,7 @@ class ApiClient {
   constructor() {
     this.client = axios.create({
       baseURL: API_URL,
+      timeout: 20000,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -180,9 +181,19 @@ class ApiClient {
 
   private handleError(error: unknown): ApiError {
     if (axios.isAxiosError(error)) {
+      if (error.code === 'ECONNABORTED') {
+        return {
+          message: 'Request timed out. Please check if backend is reachable at 127.0.0.1:8080.',
+          status: 504,
+        }
+      }
+
       const status = error.response?.status || 500
       const message = error.response?.data?.message || error.message || 'An error occurred'
-      const errors = error.response?.data?.errors || {}
+      const errors =
+        error.response?.data?.errors ||
+        error.response?.data?.fieldErrors ||
+        {}
 
       return {
         message,

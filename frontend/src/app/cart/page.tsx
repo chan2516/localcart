@@ -6,17 +6,27 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
+import { useAuthStore } from '@/lib/auth-store'
 import { Trash2 } from 'lucide-react'
 
 export default function CartPage() {
   const router = useRouter()
+  const { user } = useAuthStore()
   const { data: cart, isLoading } = useCart()
   const removeFromCart = useRemoveFromCart()
   const updateCartItem = useUpdateCartItem()
   const [isCheckingOut, setIsCheckingOut] = useState(false)
+
+  // Redirect vendors away from shopping
+  useEffect(() => {
+    if (user?.role === 'VENDOR') {
+      toast.error('Vendors cannot shop. Please use your vendor dashboard.')
+      router.push('/vendor/dashboard')
+    }
+  }, [user, router])
 
   const handleUpdateQuantity = async (itemId: string | number, quantity: number) => {
     if (quantity < 1) return

@@ -15,7 +15,8 @@ import java.util.Set;
 @Entity
 @Table(name = "users", indexes = {
     @Index(name = "idx_user_email", columnList = "email"),
-    @Index(name = "idx_user_active", columnList = "is_active")
+    @Index(name = "idx_user_active", columnList = "is_active"),
+    @Index(name = "idx_user_pincode", columnList = "pincode")
 })
 @Getter
 @Setter
@@ -48,6 +49,10 @@ public class User extends AuditableEntity {
     @Size(max = 20)
     @Column(name = "phone_number", length = 20)
     private String phoneNumber;
+
+    @Size(max = 20)
+    @Column(name = "pincode", length = 20)
+    private String pincode; // User's location pincode for location-based search
 
     @Column(name = "is_active")
     @Builder.Default

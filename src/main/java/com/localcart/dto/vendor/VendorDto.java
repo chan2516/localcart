@@ -34,14 +34,22 @@ public class VendorDto {
     private String businessPhone;
     private String businessAddress;
     private String businessZipCode;
+    private String shopPincode; // Location-based search pincode
     private String website;
     private String logoUrl;
     
     // Registration Details
     private String taxId;
+    private String gstinNumber;
+    private String fassaiNumber;
+    private String shopCertificateNumber;
     private String businessRegistrationNumber;
     private String businessLicense;
     private String businessType;
+    
+    // Vendor Photos & Signature
+    private String vendorPhotoUrl;
+    private String vendorSignatureUrl;
     
     // Status
     private VendorStatus status;

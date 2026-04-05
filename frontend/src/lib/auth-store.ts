@@ -47,7 +47,7 @@ interface AuthStore {
 
   // Auth methods
   login: (email: string, password: string) => Promise<void>
-  register: (email: string, password: string, firstName: string, lastName: string, phoneNumber?: string) => Promise<void>
+  register: (email: string, password: string, firstName: string, lastName: string, phoneNumber?: string, pincode?: string) => Promise<void>
   logout: () => void
   refreshToken: () => Promise<void>
   loadUserFromStorage: () => void
@@ -66,9 +66,18 @@ interface AuthStore {
     businessPhone: string,
     businessAddress: string,
     businessZipCode: string,
-    taxId: string,
-    businessRegistrationNumber: string,
-    businessType: string
+    shopPincode: string,
+    gstinNumber: string,
+    fassaiNumber: string,
+    shopCertificateNumber: string,
+    gstinCertificateUrl?: string,
+    fassaiCertificateUrl?: string,
+    shopOwnershipCertificateUrl?: string,
+    vendorPhotoUrl?: string,
+    vendorSignatureUrl?: string,
+    taxId?: string,
+    businessRegistrationNumber?: string,
+    businessType?: string
   ) => Promise<void>
   
   // Admin methods
@@ -106,7 +115,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     }
   },
 
-  register: async (email, password, firstName, lastName, phoneNumber = '') => {
+  register: async (email, password, firstName, lastName, phoneNumber = '', pincode = '') => {
     set({ isLoading: true })
     try {
       const response = await apiClient.post<AuthResponse>('/auth/register', {
@@ -115,6 +124,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         firstName,
         lastName,
         ...(phoneNumber.trim() ? { phoneNumber: phoneNumber.trim() } : {}),
+        ...(pincode.trim() ? { pincode: pincode.trim() } : {}),
       })
 
       localStorage.setItem('accessToken', response.accessToken)
@@ -168,9 +178,18 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     businessPhone,
     businessAddress,
     businessZipCode,
-    taxId,
-    businessRegistrationNumber,
-    businessType
+    shopPincode,
+    gstinNumber,
+    fassaiNumber,
+    shopCertificateNumber,
+    gstinCertificateUrl = '',
+    fassaiCertificateUrl = '',
+    shopOwnershipCertificateUrl = '',
+    vendorPhotoUrl = '',
+    vendorSignatureUrl = '',
+    taxId = '',
+    businessRegistrationNumber = '',
+    businessType = ''
   ) => {
     set({ isLoading: true })
     try {
@@ -181,9 +200,18 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         businessPhone,
         businessAddress,
         businessZipCode,
+        shopPincode,
+        gstinNumber,
+        fassaiNumber,
+        shopCertificateNumber,
         taxId,
         businessRegistrationNumber,
         businessType,
+        ...(gstinCertificateUrl.trim() ? { gstinCertificateUrl } : {}),
+        ...(fassaiCertificateUrl.trim() ? { fassaiCertificateUrl } : {}),
+        ...(shopOwnershipCertificateUrl.trim() ? { shopOwnershipCertificateUrl } : {}),
+        ...(vendorPhotoUrl.trim() ? { vendorPhotoUrl } : {}),
+        ...(vendorSignatureUrl.trim() ? { vendorSignatureUrl } : {}),
       })
 
       const currentUser = get().user

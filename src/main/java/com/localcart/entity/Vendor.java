@@ -17,7 +17,8 @@ import java.util.List;
 @Entity
 @Table(name = "vendors", indexes = {
     @Index(name = "idx_vendor_status", columnList = "status"),
-    @Index(name = "idx_vendor_approved_date", columnList = "approved_at")
+    @Index(name = "idx_vendor_approved_date", columnList = "approved_at"),
+    @Index(name = "idx_vendor_shop_pincode", columnList = "shop_pincode")
 })
 @Getter
 @Setter
@@ -57,6 +58,11 @@ public class Vendor extends AuditableEntity {
     @Column(name = "business_zip_code", length = 20)
     private String businessZipCode;
 
+    @NotBlank
+    @Size(max = 20)
+    @Column(name = "shop_pincode", length = 20, nullable = false)
+    private String shopPincode; // Location-based search primary field
+
     @Size(max = 255)
     @Column(name = "website", length = 255)
     private String website;
@@ -71,6 +77,18 @@ public class Vendor extends AuditableEntity {
     private String taxId;
 
     @Size(max = 100)
+    @Column(name = "gstin_number", length = 100)
+    private String gstinNumber;
+
+    @Size(max = 100)
+    @Column(name = "fassai_number", length = 100)
+    private String fassaiNumber;
+
+    @Size(max = 100)
+    @Column(name = "shop_certificate_number", length = 100)
+    private String shopCertificateNumber;
+
+    @Size(max = 100)
     @Column(name = "business_registration_number", length = 100)
     private String businessRegistrationNumber;
 
@@ -81,6 +99,15 @@ public class Vendor extends AuditableEntity {
     @Size(max = 50)
     @Column(name = "business_type", length = 50)
     private String businessType; // LLC, Corporation, Sole Proprietor, etc.
+
+    // Vendor Photos & Signature
+    @Size(max = 500)
+    @Column(name = "vendor_photo_url", length = 500)
+    private String vendorPhotoUrl;
+
+    @Size(max = 500)
+    @Column(name = "vendor_signature_url", length = 500)
+    private String vendorSignatureUrl;
 
     @Size(max = 500)
     @Column(name = "kyc_document_url", length = 500)
@@ -181,4 +208,8 @@ public class Vendor extends AuditableEntity {
     @OneToMany(mappedBy = "vendor", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<Product> products = new ArrayList<>();
+
+    @OneToMany(mappedBy = "vendor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<VendorDocument> documents = new ArrayList<>();
 }

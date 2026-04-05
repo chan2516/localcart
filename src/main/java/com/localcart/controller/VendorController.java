@@ -4,6 +4,8 @@ import com.localcart.dto.vendor.*;
 import com.localcart.entity.enums.VendorStatus;
 import com.localcart.security.CustomUserDetails;
 import com.localcart.service.VendorService;
+import com.localcart.service.VendorDocumentService;
+import com.localcart.service.LocationSearchService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +35,8 @@ import org.springframework.web.bind.annotation.*;
 public class VendorController {
 
     private final VendorService vendorService;
+    private final VendorDocumentService vendorDocumentService;
+    private final LocationSearchService locationSearchService;
 
     /**
      * Register as a vendor (authenticated users)
@@ -193,6 +197,175 @@ public class VendorController {
         Page<VendorDto> vendors = vendorService.getAllVendors(VendorStatus.APPROVED, pageable);
         
         return ResponseEntity.ok(vendors);
+    }
+
+    // ==================== LOCATION-BASED SEARCH ENDPOINTS ====================
+
+    /**
+     * Search shops by pincode (location-based)
+     * 
+     * GET /api/v1/vendors/location/search?pincode=560001
+     * 
+     * Returns vendors sorted by proximity (nearest first)
+     */
+    @GetMapping("/location/search")
+    public ResponseEntity<java.util.List<VendorDto>> searchByPincode(
+            @RequestParam String pincode) {
+        
+        log.info("Searching vendors by pincode: {}", pincode);
+        
+        java.util.List<VendorDto> vendors = locationSearchService.searchVendorsByPincodeWithProximity(pincode);
+        
+        return ResponseEntity.ok(vendors);
+    }
+
+    /**
+     * Search shops and products by pincode and keyword
+     * 
+     * GET /api/v1/vendors/location/search-advanced?pincode=560001&keyword=groceries
+     */
+    @GetMapping("/location/search-advanced")
+    public ResponseEntity<java.util.List<VendorDto>> searchByPincodeAndKeyword(
+            @RequestParam String pincode,
+            @RequestParam String keyword) {
+        
+        log.info("Searching vendors by pincode: {} and keyword: {}", pincode, keyword);
+        
+        java.util.List<VendorDto> vendors = locationSearchService.searchVendorsByPincodeAndKeyword(pincode, keyword);
+        
+        return ResponseEntity.ok(vendors);
+    }
+
+    /**
+     * Get nearby shops
+     * 
+     * GET /api/v1/vendors/location/nearby?pincode=560001
+     */
+    @GetMapping("/location/nearby")
+    public ResponseEntity<java.util.List<VendorDto>> getNearbyShops(@RequestParam String pincode) {
+        
+        log.info("Fetching nearby shops for pincode: {}", pincode);
+        
+        java.util.List<VendorDto> shops = locationSearchService.getNearbyShops(pincode);
+        
+        return ResponseEntity.ok(shops);
+    }
+
+    // ==================== VENDOR DOCUMENT ENDPOINTS ====================
+
+    /**
+     * Upload vendor document
+     * 
+     * POST /api/v1/vendors/me/documents
+     * 
+     * Request Body: VendorDocumentUploadRequest
+     * Response: 201 Created with VendorDocumentDto
+     */
+    @PostMapping("/me/documents")
+    @PreAuthorize("hasRole('VENDOR')")
+    public ResponseEntity<VendorDocumentDto> uploadDocument(
+            @Valid @RequestBody VendorDocumentUploadRequest request,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        
+        log.info("Document upload request from vendor user: {}", userDetails.getUserId());
+        
+        VendorDto myVendor = vendorService.getVendorByUserId(userDetails.getUserId());
+        VendorDocumentDto document = vendorDocumentService.uploadDocument(myVendor.getId(), request);
+        
+        return ResponseEntity.status(HttpStatus.CREATED).body(document);
+    }
+
+    /**
+     * Get all documents for my vendor
+     * 
+     * GET /api/v1/vendors/me/documents
+     * 
+     * Response: 200 OK with List<VendorDocumentDto>
+     */
+    @GetMapping("/me/documents")
+    @PreAuthorize("hasRole('VENDOR')")
+    public ResponseEntity<java.util.List<VendorDocumentDto>> getMyDocuments(
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        
+        log.info("Fetching documents for vendor: {}", userDetails.getUserId());
+        
+        VendorDto myVendor = vendorService.getVendorByUserId(userDetails.getUserId());
+        java.util.List<VendorDocumentDto> documents = vendorDocumentService.getVendorDocuments(myVendor.getId());
+        
+        return ResponseEntity.ok(documents);
+    }
+
+    /**
+     * Get specific document
+     * 
+     * GET /api/v1/vendors/me/documents/{documentId}
+     */
+    @GetMapping("/me/documents/{documentId}")
+    @PreAuthorize("hasRole('VENDOR')")
+    public ResponseEntity<VendorDocumentDto> getDocument(
+            @PathVariable Long documentId,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        
+        log.info("Fetching document: {} for vendor: {}", documentId, userDetails.getUserId());
+        
+        VendorDocumentDto document = vendorDocumentService.getDocument(documentId);
+        
+        // Verify ownership
+        VendorDto myVendor = vendorService.getVendorByUserId(userDetails.getUserId());
+        java.util.List<VendorDocumentDto> myDocuments = vendorDocumentService.getVendorDocuments(myVendor.getId());
+        boolean hasAccess = myDocuments.stream().anyMatch(d -> d.getId().equals(documentId));
+        
+        if (!hasAccess) {
+            log.warn("Unauthorized access attempt to document: {} by user: {}", documentId, userDetails.getUserId());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        
+        return ResponseEntity.ok(document);
+    }
+
+    /**
+     * Delete document (only PENDING documents can be deleted)
+     * 
+     * DELETE /api/v1/vendors/me/documents/{documentId}
+     */
+    @DeleteMapping("/me/documents/{documentId}")
+    @PreAuthorize("hasRole('VENDOR')")
+    public ResponseEntity<Void> deleteDocument(
+            @PathVariable Long documentId,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        
+        log.info("Delete document request: {} from vendor: {}", documentId, userDetails.getUserId());
+        
+        VendorDto myVendor = vendorService.getVendorByUserId(userDetails.getUserId());
+        vendorDocumentService.deleteDocument(documentId, myVendor.getId());
+        
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Check if vendor can add items (must have all required documents verified and be APPROVED)
+     * 
+     * GET /api/v1/vendors/me/can-add-items
+     */
+    @GetMapping("/me/can-add-items")
+    @PreAuthorize("hasRole('VENDOR')")
+    public ResponseEntity<java.util.Map<String, Object>> canAddItems(
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        
+        log.info("Checking if vendor can add items: {}", userDetails.getUserId());
+        
+        VendorDto myVendor = vendorService.getVendorByUserId(userDetails.getUserId());
+        boolean canAdd = vendorService.canAddItems(myVendor.getId());
+        boolean allDocumentsVerified = vendorDocumentService.hasAllDocumentsVerified(myVendor.getId());
+        long unverifiedCount = vendorDocumentService.getUnverifiedDocumentCount(myVendor.getId());
+        
+        return ResponseEntity.ok(java.util.Map.of(
+            "canAddItems", canAdd && allDocumentsVerified,
+            "vendorApproved", canAdd,
+            "allDocumentsVerified", allDocumentsVerified,
+            "unverifiedDocumentCount", unverifiedCount,
+            "vendorStatus", myVendor.getStatus()
+        ));
     }
 
     /**

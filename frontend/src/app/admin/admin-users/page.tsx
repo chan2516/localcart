@@ -177,115 +177,201 @@ export default function AdminUsersPage() {
       title="Admin Access Management"
       subtitle="Create and control second-level admins, and manage Contact Us details."
     >
-      <div className="flex items-start justify-between gap-4 flex-wrap">
+      <div className="flex items-start justify-between gap-4 flex-wrap mb-6">
         <div className="flex gap-2">
           <Link href="/admin/dashboard">
-            <Button variant="outline">Back To Dashboard</Button>
+            <Button variant="outline" size="sm">Back To Dashboard</Button>
           </Link>
           <Link href="/admin/development">
-            <Button variant="outline">Development Hub</Button>
+            <Button variant="outline" size="sm">Development Hub</Button>
           </Link>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Create Second-Level Admin</CardTitle>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <Card className="lg:col-span-1">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg">Create Second-Level Admin</CardTitle>
+            <p className="text-xs text-slate-500 mt-1">Add a new admin account to manage platform</p>
           </CardHeader>
           <CardContent>
-            <form onSubmit={createAdmin} className="space-y-3">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <form onSubmit={createAdmin} className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Full Name</label>
+                <div className="grid grid-cols-2 gap-2">
+                  <Input
+                    placeholder="First name"
+                    value={form.firstName}
+                    onChange={(e) => setForm((prev) => ({ ...prev, firstName: e.target.value }))}
+                    className="text-sm"
+                  />
+                  <Input
+                    placeholder="Last name"
+                    value={form.lastName}
+                    onChange={(e) => setForm((prev) => ({ ...prev, lastName: e.target.value }))}
+                    className="text-sm"
+                  />
+                </div>
+              </div>
+              
+              <div className="space-y-2">
+                <label className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Email Address</label>
                 <Input
-                  placeholder="First name"
-                  value={form.firstName}
-                  onChange={(e) => setForm((prev) => ({ ...prev, firstName: e.target.value }))}
-                />
-                <Input
-                  placeholder="Last name"
-                  value={form.lastName}
-                  onChange={(e) => setForm((prev) => ({ ...prev, lastName: e.target.value }))}
+                  type="email"
+                  placeholder="admin@localcart.com"
+                  value={form.email}
+                  onChange={(e) => setForm((prev) => ({ ...prev, email: e.target.value }))}
+                  className="text-sm"
                 />
               </div>
-              <Input
-                type="email"
-                placeholder="admin.l2@localcart.com"
-                value={form.email}
-                onChange={(e) => setForm((prev) => ({ ...prev, email: e.target.value }))}
-              />
-              <Input
-                type="password"
-                placeholder="Strong password"
-                value={form.password}
-                onChange={(e) => setForm((prev) => ({ ...prev, password: e.target.value }))}
-              />
-              <Button type="submit" disabled={submitting}>
+              
+              <div className="space-y-2">
+                <label className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Password</label>
+                <Input
+                  type="password"
+                  placeholder="Minimum 8 characters"
+                  value={form.password}
+                  onChange={(e) => setForm((prev) => ({ ...prev, password: e.target.value }))}
+                  className="text-sm"
+                />
+                <p className="text-xs text-slate-500">Must be at least 8 characters long</p>
+              </div>
+              
+              <Button type="submit" disabled={submitting} className="w-full">
                 {submitting ? 'Creating...' : 'Create Admin'}
               </Button>
             </form>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Contact Us Configuration</CardTitle>
+        <Card className="lg:col-span-2">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg">Contact Us Configuration</CardTitle>
+            <p className="text-xs text-slate-500 mt-1">Configure your support page and contact details</p>
           </CardHeader>
           <CardContent>
-            <form onSubmit={saveContactInfo} className="space-y-3">
-              <Input
-                placeholder="Page title"
-                value={contactInfo.pageTitle}
-                onChange={(e) => setContactInfo((prev) => ({ ...prev, pageTitle: e.target.value }))}
-              />
-              <Input
-                placeholder="Page subtitle"
-                value={contactInfo.pageSubtitle}
-                onChange={(e) => setContactInfo((prev) => ({ ...prev, pageSubtitle: e.target.value }))}
-              />
-              <Input
-                placeholder="Announcement title"
-                value={contactInfo.announcementTitle}
-                onChange={(e) => setContactInfo((prev) => ({ ...prev, announcementTitle: e.target.value }))}
-              />
-              <textarea
-                className="min-h-[120px] w-full rounded-md border px-3 py-2 text-sm"
-                placeholder="Announcement body"
-                value={contactInfo.announcementBody}
-                onChange={(e) => setContactInfo((prev) => ({ ...prev, announcementBody: e.target.value }))}
-              />
-              <Input
-                type="email"
-                placeholder="Support email"
-                value={contactInfo.supportEmail}
-                onChange={(e) => setContactInfo((prev) => ({ ...prev, supportEmail: e.target.value }))}
-              />
-              <Input
-                placeholder="Support phone"
-                value={contactInfo.supportPhone}
-                onChange={(e) => setContactInfo((prev) => ({ ...prev, supportPhone: e.target.value }))}
-              />
-              <Input
-                placeholder="Support address"
-                value={contactInfo.supportAddress}
-                onChange={(e) => setContactInfo((prev) => ({ ...prev, supportAddress: e.target.value }))}
-              />
-              <Input
-                placeholder="Support hours"
-                value={contactInfo.supportHours}
-                onChange={(e) => setContactInfo((prev) => ({ ...prev, supportHours: e.target.value }))}
-              />
-              <Input
-                placeholder="FAQ title"
-                value={contactInfo.faqTitle}
-                onChange={(e) => setContactInfo((prev) => ({ ...prev, faqTitle: e.target.value }))}
-              />
-              <textarea
-                className="min-h-[120px] w-full rounded-md border px-3 py-2 text-sm"
-                placeholder="FAQ content (one point per line)"
-                value={contactInfo.faqBody}
-                onChange={(e) => setContactInfo((prev) => ({ ...prev, faqBody: e.target.value }))}
-              />
-              <Button type="submit" disabled={savingContact}>
+            <form onSubmit={saveContactInfo} className="space-y-6">
+              {/* Page Header Section */}
+              <div className="border-b pb-4">
+                <h3 className="text-sm font-semibold text-slate-900 mb-3">Page Header</h3>
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Page Title</label>
+                    <Input
+                      placeholder="Contact LocalCart"
+                      value={contactInfo.pageTitle}
+                      onChange={(e) => setContactInfo((prev) => ({ ...prev, pageTitle: e.target.value }))}
+                      className="text-sm mt-1"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Page Subtitle</label>
+                    <Input
+                      placeholder="Support description"
+                      value={contactInfo.pageSubtitle}
+                      onChange={(e) => setContactInfo((prev) => ({ ...prev, pageSubtitle: e.target.value }))}
+                      className="text-sm mt-1"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Announcement Section */}
+              <div className="border-b pb-4">
+                <h3 className="text-sm font-semibold text-slate-900 mb-3">Featured Announcement</h3>
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Title</label>
+                    <Input
+                      placeholder="e.g., Need quick assistance?"
+                      value={contactInfo.announcementTitle}
+                      onChange={(e) => setContactInfo((prev) => ({ ...prev, announcementTitle: e.target.value }))}
+                      className="text-sm mt-1"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Message</label>
+                    <textarea
+                      className="min-h-[100px] w-full rounded-md border px-3 py-2 text-sm font-normal"
+                      placeholder="Support message body..."
+                      value={contactInfo.announcementBody}
+                      onChange={(e) => setContactInfo((prev) => ({ ...prev, announcementBody: e.target.value }))}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Contact Details Section */}
+              <div className="border-b pb-4">
+                <h3 className="text-sm font-semibold text-slate-900 mb-3">Contact Details</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Email</label>
+                    <Input
+                      type="email"
+                      placeholder="support@localcart.com"
+                      value={contactInfo.supportEmail}
+                      onChange={(e) => setContactInfo((prev) => ({ ...prev, supportEmail: e.target.value }))}
+                      className="text-sm mt-1"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Phone</label>
+                    <Input
+                      placeholder="+1-800-LOCALCART"
+                      value={contactInfo.supportPhone}
+                      onChange={(e) => setContactInfo((prev) => ({ ...prev, supportPhone: e.target.value }))}
+                      className="text-sm mt-1"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Address</label>
+                    <Input
+                      placeholder="Support address"
+                      value={contactInfo.supportAddress}
+                      onChange={(e) => setContactInfo((prev) => ({ ...prev, supportAddress: e.target.value }))}
+                      className="text-sm mt-1"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-semibold text-slate-700 uppercase tracking-wide">Hours</label>
+                    <Input
+                      placeholder="Mon-Sat, 9:00 AM - 6:00 PM"
+                      value={contactInfo.supportHours}
+                      onChange={(e) => setContactInfo((prev) => ({ ...prev, supportHours: e.target.value }))}
+                      className="text-sm mt-1"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* FAQ Section */}
+              <div className="pb-4">
+                <h3 className="text-sm font-semibold text-slate-900 mb-3">Frequently Asked Questions</h3>
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-xs font-semibold text-slate-700 uppercase tracking-wide">FAQ Title</label>
+                    <Input
+                      placeholder="e.g., Before you contact us"
+                      value={contactInfo.faqTitle}
+                      onChange={(e) => setContactInfo((prev) => ({ ...prev, faqTitle: e.target.value }))}
+                      className="text-sm mt-1"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-semibold text-slate-700 uppercase tracking-wide">FAQ Content</label>
+                    <textarea
+                      className="min-h-[100px] w-full rounded-md border px-3 py-2 text-sm font-normal"
+                      placeholder="One question/point per line..."
+                      value={contactInfo.faqBody}
+                      onChange={(e) => setContactInfo((prev) => ({ ...prev, faqBody: e.target.value }))}
+                    />
+                    <p className="text-xs text-slate-500 mt-1">Each line will appear as a separate bullet point</p>
+                  </div>
+                </div>
+              </div>
+
+              <Button type="submit" disabled={savingContact} className="w-full">
                 {savingContact ? 'Saving...' : 'Save Contact Info'}
               </Button>
             </form>
@@ -293,99 +379,129 @@ export default function AdminUsersPage() {
         </Card>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Live Contact Us Preview</CardTitle>
+      <Card className="mt-6">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-lg">Live Contact Us Preview</CardTitle>
+          <p className="text-xs text-slate-500 mt-1">See how your contact page will look to visitors</p>
         </CardHeader>
         <CardContent>
-          <div className="rounded-xl border bg-gradient-to-br from-slate-50 to-white p-6 space-y-6">
+          <div className="rounded-xl border bg-gradient-to-br from-slate-50 to-white p-8 space-y-8">
             <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tight text-slate-900">{contactInfo.pageTitle || 'Contact LocalCart'}</h2>
-              <p className="text-slate-600">{contactInfo.pageSubtitle || 'Support and help details for customers and vendors.'}</p>
+              <h1 className="text-4xl font-bold tracking-tight text-slate-900">{contactInfo.pageTitle || 'Contact LocalCart'}</h1>
+              <p className="text-lg text-slate-600">{contactInfo.pageSubtitle || 'Support and help details for customers and vendors.'}</p>
             </div>
 
-            <div className="rounded-lg border bg-white p-4">
-              <p className="text-sm uppercase tracking-wide text-slate-500">Featured Update</p>
-              <h3 className="mt-1 text-xl font-semibold text-slate-900">{contactInfo.announcementTitle || 'Need quick assistance?'}</h3>
-              <p className="mt-2 whitespace-pre-line text-slate-700">{contactInfo.announcementBody}</p>
+            <div className="rounded-lg bg-slate-100 border-l-4 border-slate-900 p-5">
+              <p className="text-xs uppercase tracking-widest font-semibold text-slate-700">Featured Update</p>
+              <h3 className="mt-2 text-2xl font-bold text-slate-900">{contactInfo.announcementTitle || 'Need quick assistance?'}</h3>
+              <p className="mt-3 whitespace-pre-line text-slate-700 leading-relaxed">{contactInfo.announcementBody}</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="rounded-lg border bg-white p-4">
-                <p className="text-sm text-slate-500">Email</p>
-                <p className="font-semibold text-slate-900">{contactInfo.supportEmail}</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="rounded-lg border bg-white p-4 hover:shadow-sm transition-shadow">
+                <p className="text-xs text-slate-500 font-semibold uppercase">Email</p>
+                <p className="font-semibold text-slate-900 text-sm mt-2">{contactInfo.supportEmail}</p>
               </div>
-              <div className="rounded-lg border bg-white p-4">
-                <p className="text-sm text-slate-500">Phone</p>
-                <p className="font-semibold text-slate-900">{contactInfo.supportPhone}</p>
+              <div className="rounded-lg border bg-white p-4 hover:shadow-sm transition-shadow">
+                <p className="text-xs text-slate-500 font-semibold uppercase">Phone</p>
+                <p className="font-semibold text-slate-900 text-sm mt-2">{contactInfo.supportPhone}</p>
               </div>
-              <div className="rounded-lg border bg-white p-4">
-                <p className="text-sm text-slate-500">Address</p>
-                <p className="font-semibold text-slate-900">{contactInfo.supportAddress}</p>
+              <div className="rounded-lg border bg-white p-4 hover:shadow-sm transition-shadow">
+                <p className="text-xs text-slate-500 font-semibold uppercase">Address</p>
+                <p className="font-semibold text-slate-900 text-sm mt-2">{contactInfo.supportAddress}</p>
               </div>
-              <div className="rounded-lg border bg-white p-4">
-                <p className="text-sm text-slate-500">Support Hours</p>
-                <p className="font-semibold text-slate-900">{contactInfo.supportHours}</p>
+              <div className="rounded-lg border bg-white p-4 hover:shadow-sm transition-shadow">
+                <p className="text-xs text-slate-500 font-semibold uppercase">Hours</p>
+                <p className="font-semibold text-slate-900 text-sm mt-2">{contactInfo.supportHours}</p>
               </div>
             </div>
 
-            <div className="rounded-lg border bg-white p-4">
-              <h3 className="text-xl font-semibold text-slate-900">{contactInfo.faqTitle}</h3>
+            <div className="rounded-lg border bg-white p-6">
+              <h3 className="text-2xl font-bold text-slate-900">{contactInfo.faqTitle}</h3>
               {previewFaqItems.length > 0 ? (
-                <ul className="mt-2 space-y-2 text-slate-700">
+                <ul className="mt-4 space-y-3 text-slate-700">
                   {previewFaqItems.map((item, index) => (
-                    <li key={`${item}-${index}`} className="flex gap-2">
-                      <span className="font-semibold text-slate-500">•</span>
-                      <span>{item}</span>
+                    <li key={`${item}-${index}`} className="flex gap-3">
+                      <span className="font-bold text-slate-400 flex-shrink-0">✓</span>
+                      <span className="leading-relaxed">{item}</span>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className="mt-2 text-slate-700">{contactInfo.faqBody}</p>
+                <p className="mt-4 text-slate-700">{contactInfo.faqBody}</p>
               )}
             </div>
           </div>
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Existing Admin Accounts</CardTitle>
+      <Card className="mt-6">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-lg">Existing Admin Accounts</CardTitle>
+          <p className="text-xs text-slate-500 mt-1">Manage permissions and status for second-level admin accounts</p>
         </CardHeader>
-        <CardContent className="space-y-2">
-          {admins.length === 0 && <p className="text-gray-600">No admin accounts found.</p>}
-          {admins.map((admin) => {
-            const isCurrentUser = String(admin.id) === String(user?.id)
-            const isLevelOne = admin.level === 'LEVEL_1'
+        <CardContent>
+          {admins.length === 0 ? (
+            <div className="text-center py-8">
+              <p className="text-slate-600">No admin accounts yet. Create one above to get started.</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {admins.map((admin) => {
+                const isCurrentUser = String(admin.id) === String(user?.id)
+                const isLevelOne = admin.level === 'LEVEL_1'
 
-            return (
-              <div key={admin.id} className="rounded-md border p-3 flex items-center justify-between gap-3">
-                <div>
-                  <p className="font-medium">{admin.firstName} {admin.lastName}</p>
-                  <p className="text-sm text-gray-600">{admin.email}</p>
-                  <p className="text-xs text-gray-500 mt-1">
-                    ID: {admin.id} | Level: {admin.level.replace('_', ' ')} | Status: {admin.isActive ? 'Active' : 'Suspended'}
-                  </p>
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    disabled={isCurrentUser || isLevelOne || admin.isActive}
-                    onClick={() => updateAdminStatus(admin.id, true)}
+                return (
+                  <div
+                    key={admin.id}
+                    className="rounded-lg border p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-slate-50 hover:bg-white transition-colors"
                   >
-                    Activate
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    disabled={isCurrentUser || isLevelOne || !admin.isActive}
-                    onClick={() => updateAdminStatus(admin.id, false)}
-                  >
-                    Suspend
-                  </Button>
-                </div>
-              </div>
-            )
-          })}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <p className="font-semibold text-slate-900 text-sm">
+                          {admin.firstName} {admin.lastName}
+                        </p>
+                        <span
+                          className={`text-xs px-2 py-1 rounded font-semibold ${
+                            admin.isActive
+                              ? 'bg-green-100 text-green-800'
+                              : 'bg-red-100 text-red-800'
+                          }`}
+                        >
+                          {admin.isActive ? 'Active' : 'Suspended'}
+                        </span>
+                        <span className="text-xs px-2 py-1 rounded bg-slate-200 text-slate-800 font-semibold">
+                          {admin.level.replace('_', ' ')}
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-600 mt-2">{admin.email}</p>
+                      <p className="text-xs text-slate-500 mt-1">ID: {admin.id}</p>
+                    </div>
+                    <div className="flex gap-2 sm:flex-col lg:flex-row">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={isCurrentUser || isLevelOne || admin.isActive}
+                        onClick={() => updateAdminStatus(admin.id, true)}
+                        className="text-xs"
+                      >
+                        Activate
+                      </Button>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        disabled={isCurrentUser || isLevelOne || !admin.isActive}
+                        onClick={() => updateAdminStatus(admin.id, false)}
+                        className="text-xs"
+                      >
+                        Suspend
+                      </Button>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
         </CardContent>
       </Card>
       </AdminShell>

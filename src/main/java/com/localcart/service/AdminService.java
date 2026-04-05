@@ -509,4 +509,24 @@ public class AdminService {
         }
         return ((current - previous) / previous) * 100.0;
     }
+
+    /**
+     * Get vendor verification dashboard stats
+     */
+    @Transactional(readOnly = true)
+    public java.util.Map<String, Object> getVendorVerificationDashboard() {
+        Long pendingVendors = vendorRepository.countByStatus(VendorStatus.PENDING);
+        Long approvedVendors = vendorRepository.countByStatus(VendorStatus.APPROVED);
+        Long rejectedVendors = vendorRepository.countByStatus(VendorStatus.REJECTED);
+        Long suspendedVendors = vendorRepository.countByStatus(VendorStatus.SUSPENDED);
+
+        return java.util.Map.of(
+            "pendingVendors", pendingVendors,
+            "approvedVendors", approvedVendors,
+            "rejectedVendors", rejectedVendors,
+            "suspendedVendors", suspendedVendors,
+            "totalVendors", pendingVendors + approvedVendors + rejectedVendors + suspendedVendors
+        );
+    }
 }
+

@@ -21,7 +21,7 @@ type Address = {
 
 export default function CheckoutPage() {
   const router = useRouter()
-  const { isAuthenticated } = useAuthStore()
+  const { isAuthenticated, user } = useAuthStore()
   const { data: cart } = useCart()
   const checkout = useCheckout()
 
@@ -33,6 +33,13 @@ export default function CheckoutPage() {
   useEffect(() => {
     if (!isAuthenticated) {
       router.push('/auth/login')
+      return
+    }
+
+    // Redirect vendors away from shopping
+    if (user?.role === 'VENDOR') {
+      toast.error('Vendors cannot shop. Please use your vendor dashboard.')
+      router.push('/vendor/dashboard')
       return
     }
 

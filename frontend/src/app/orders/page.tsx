@@ -5,13 +5,14 @@ import { useAuthStore } from '@/lib/auth-store'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import Link from 'next/link'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export default function OrdersPage() {
-  const { isAuthenticated } = useAuthStore()
+  const { isAuthenticated, user } = useAuthStore()
   const router = useRouter()
   const { data: ordersData, isLoading } = useOrders()
 
@@ -20,6 +21,14 @@ export default function OrdersPage() {
       router.push('/auth/login')
     }
   }, [isAuthenticated, router])
+
+  // Redirect vendors - they have their own vendor dashboard
+  useEffect(() => {
+    if (user?.role === 'VENDOR') {
+      toast.error('Vendors cannot view customer orders. Please use your vendor dashboard.')
+      router.push('/vendor/dashboard')
+    }
+  }, [user, router])
 
   if (isLoading) {
     return (

@@ -44,6 +44,10 @@ public class VendorRegistrationRequest {
     @NotBlank(message = "Business ZIP/Pincode is required")
     @Size(min = 3, max = 20, message = "Business ZIP/Pincode must be between 3 and 20 characters")
     private String businessZipCode;
+
+    @NotBlank(message = "Shop Pincode is required")
+    @Size(min = 3, max = 20, message = "Shop Pincode must be between 3 and 20 characters")
+    private String shopPincode; // Location-based search pincode
     
     @Size(max = 255)
     private String website;
@@ -52,6 +56,15 @@ public class VendorRegistrationRequest {
     @NotBlank(message = "Tax ID is required")
     @Size(max = 50)
     private String taxId;
+
+    @Size(max = 100)
+    private String gstinNumber; // GSTIN Number
+
+    @Size(max = 100)
+    private String fassaiNumber; // FASSAI Number
+
+    @Size(max = 100)
+    private String shopCertificateNumber; // Shop Certificate Number
     
     @NotBlank(message = "Business registration number is required")
     @Size(max = 100)

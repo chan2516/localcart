@@ -16,7 +16,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Set environment variable for API
-ENV NEXT_PUBLIC_API_URL=http://localhost:8080/api/v1
+ENV NEXT_PUBLIC_API_URL=http://127.0.0.1:8080/api/v1
 
 # Build the application
 RUN npm run build

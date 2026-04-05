@@ -76,8 +76,12 @@ public class VendorService {
             .businessPhone(request.getBusinessPhone())
             .businessAddress(request.getBusinessAddress())
             .businessZipCode(request.getBusinessZipCode())
+            .shopPincode(request.getShopPincode()) // Location-based search pincode
             .website(request.getWebsite())
             .taxId(request.getTaxId())
+            .gstinNumber(request.getGstinNumber())
+            .fassaiNumber(request.getFassaiNumber())
+            .shopCertificateNumber(request.getShopCertificateNumber())
             .businessRegistrationNumber(request.getBusinessRegistrationNumber())
             .businessLicense(request.getBusinessLicense())
             .businessType(request.getBusinessType())
@@ -347,12 +351,18 @@ public class VendorService {
             .businessPhone(vendor.getBusinessPhone())
             .businessAddress(vendor.getBusinessAddress())
             .businessZipCode(vendor.getBusinessZipCode())
+            .shopPincode(vendor.getShopPincode())
             .website(vendor.getWebsite())
             .logoUrl(vendor.getLogoUrl())
             .taxId(vendor.getTaxId())
+            .gstinNumber(vendor.getGstinNumber())
+            .fassaiNumber(vendor.getFassaiNumber())
+            .shopCertificateNumber(vendor.getShopCertificateNumber())
             .businessRegistrationNumber(vendor.getBusinessRegistrationNumber())
             .businessLicense(vendor.getBusinessLicense())
             .businessType(vendor.getBusinessType())
+            .vendorPhotoUrl(vendor.getVendorPhotoUrl())
+            .vendorSignatureUrl(vendor.getVendorSignatureUrl())
             .status(vendor.getStatus())
             .isDeleted(vendor.getIsDeleted())
             .approvedAt(vendor.getApprovedAt())
@@ -375,4 +385,36 @@ public class VendorService {
             .updatedAt(vendor.getUpdatedAt())
             .build();
     }
+
+    /**
+     * Check if vendor can add items (must be APPROVED)
+     */
+    public boolean canAddItems(Long vendorId) {
+        Vendor vendor = vendorRepository.findById(vendorId)
+            .orElseThrow(() -> new PaymentException("Vendor not found", "VENDOR_NOT_FOUND"));
+        return vendor.getStatus() == VendorStatus.APPROVED;
+    }
+
+    /**
+     * Search vendors by pincode
+     */
+    @Transactional(readOnly = true)
+    public java.util.List<VendorDto> searchByPincode(String pincode) {
+        java.util.List<Vendor> vendors = vendorRepository.findApprovedVendorsByPincode(pincode);
+        return vendors.stream()
+            .map(this::convertToDto)
+            .toList();
+    }
+
+    /**
+     * Search vendors by pincode and keyword
+     */
+    @Transactional(readOnly = true)
+    public java.util.List<VendorDto> searchByPincodeAndKeyword(String pincode, String keyword) {
+        java.util.List<Vendor> vendors = vendorRepository.searchByPincodeAndKeyword(pincode, keyword);
+        return vendors.stream()
+            .map(this::convertToDto)
+            .toList();
+    }
 }
+

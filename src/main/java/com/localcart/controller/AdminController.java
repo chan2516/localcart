@@ -9,11 +9,14 @@ import com.localcart.dto.admin.PlatformMetricsDto;
 import com.localcart.dto.admin.UserManagementRequest;
 import com.localcart.dto.admin.UserSummaryDto;
 import com.localcart.dto.admin.VendorApprovalRequest;
+import com.localcart.dto.admin.VendorDocumentVerificationRequest;
 import com.localcart.dto.vendor.VendorDto;
+import com.localcart.dto.vendor.VendorDocumentDto;
 import com.localcart.entity.enums.VendorStatus;
 import com.localcart.security.CustomUserDetails;
 import com.localcart.service.AdminService;
 import com.localcart.service.VendorService;
+import com.localcart.service.VendorDocumentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +49,7 @@ public class AdminController {
 
     private final VendorService vendorService;
     private final AdminService adminService;
+    private final VendorDocumentService vendorDocumentService;
 
     // ===========================
     // VENDOR MANAGEMENT
@@ -453,4 +457,130 @@ public class AdminController {
         
         return ResponseEntity.ok("Flagged reviews - Feature coming soon");
     }
+
+    // ===========================
+    // VENDOR DOCUMENT VERIFICATION
+    // ===========================
+
+    /**
+     * Get pending documents for verification
+     * 
+     * GET /api/v1/admin/vendor-documents/pending?page=0&size=10
+     * 
+     * Query Parameters:
+     * - page: Page number (default: 0)
+     * - size: Page size (default: 10)
+     * 
+     * Response: 200 OK with Page<VendorDocumentDto>
+     */
+    @GetMapping("/vendor-documents/pending")
+    public ResponseEntity<org.springframework.data.domain.Page<com.localcart.dto.vendor.VendorDocumentDto>> getPendingDocuments(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        
+        log.info("Admin fetching pending documents for verification");
+        
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").ascending());
+        org.springframework.data.domain.Page<com.localcart.dto.vendor.VendorDocumentDto> documents = 
+            vendorDocumentService.getPendingDocuments(pageable);
+        
+        return ResponseEntity.ok(documents);
+    }
+
+    /**
+     * Get documents for a specific vendor
+     * 
+     * GET /api/v1/admin/vendors/{vendorId}/documents
+     * 
+     * Response: 200 OK with List<VendorDocumentDto>
+     */
+    @GetMapping("/vendors/{vendorId}/documents")
+    public ResponseEntity<java.util.List<com.localcart.dto.vendor.VendorDocumentDto>> getVendorDocuments(
+            @PathVariable Long vendorId) {
+        
+        log.info("Admin fetching documents for vendor: {}", vendorId);
+        
+        // Verify vendor exists
+        vendorService.getVendorById(vendorId);
+        
+        java.util.List<com.localcart.dto.vendor.VendorDocumentDto> documents = 
+            vendorDocumentService.getVendorDocuments(vendorId);
+        
+        return ResponseEntity.ok(documents);
+    }
+
+    /**
+     * Verify or reject a vendor document
+     * 
+     * POST /api/v1/admin/vendor-documents/{documentId}/verify
+     * 
+     * Request Body:
+     * {
+     *   "documentId": 123,
+     *   "verificationStatus": "VERIFIED",  // or "REJECTED"
+     *   "verificationComments": "Document is valid and authentic"
+     * }
+     * 
+     * Response: 200 OK with updated VendorDocumentDto
+     */
+    @PostMapping("/vendor-documents/{documentId}/verify")
+    public ResponseEntity<com.localcart.dto.vendor.VendorDocumentDto> verifyDocument(
+            @PathVariable Long documentId,
+            @Valid @RequestBody com.localcart.dto.admin.VendorDocumentVerificationRequest request,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        
+        log.info("Admin {} document ID: {}", 
+            request.getVerificationStatus().equals("VERIFIED") ? "verifying" : "rejecting",
+            documentId);
+        
+        Long adminUserId = userDetails.getUserId();
+        
+        com.localcart.dto.vendor.VendorDocumentDto document = 
+            vendorDocumentService.verifyDocument(documentId, request, adminUserId);
+        
+        return ResponseEntity.ok(document);
+    }
+
+    /**
+     * Bulk verify documents (quick verification for multiple documents)
+     * 
+     * POST /api/v1/admin/vendor-documents/bulk-verify
+     * 
+     * Request Body:
+     * {
+     *   "documentIds": [1, 2, 3],
+     *   "verificationStatus": "VERIFIED",
+     *   "verificationComments": "All documents verified"
+     * }
+     */
+    @PostMapping("/vendor-documents/bulk-verify")
+    public ResponseEntity<java.util.Map<String, Object>> bulkVerifyDocuments(
+            @RequestBody java.util.Map<String, Object> request,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        
+        log.info("Admin bulk verifying documents");
+        
+        Long adminUserId = userDetails.getUserId();
+        
+        return ResponseEntity.ok(java.util.Map.of(
+            "message", "Bulk verification - Feature coming soon",
+            "status", "SUCCESS"
+        ));
+    }
+
+    /**
+     * Get vendor verification dashboard
+     * 
+     * GET /api/v1/admin/vendor-verification/dashboard
+     * 
+     * Response: 200 OK with statistics about pending vendors and documents
+     */
+    @GetMapping("/vendor-verification/dashboard")
+    public ResponseEntity<java.util.Map<String, Object>> getVendorVerificationDashboard() {
+        
+        log.info("Admin fetching vendor verification dashboard");
+        
+        return ResponseEntity.ok(adminService.getVendorVerificationDashboard());
+    }
 }
+
