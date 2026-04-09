@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Vendor DTO for displaying vendor information
@@ -50,6 +51,7 @@ public class VendorDto {
     // Vendor Photos & Signature
     private String vendorPhotoUrl;
     private String vendorSignatureUrl;
+    private List<VendorDocumentDto> documents;
     
     // Status
     private VendorStatus status;

@@ -2,6 +2,7 @@ package com.localcart.controller;
 
 import com.localcart.dto.admin.DashboardStatsDto;
 import com.localcart.dto.admin.AdminAccountDto;
+import com.localcart.dto.admin.AdminActionHistoryDto;
 import com.localcart.dto.admin.AdminCreateRequest;
 import com.localcart.dto.admin.ContactInfoDto;
 import com.localcart.dto.admin.ContactInfoRequest;
@@ -12,6 +13,7 @@ import com.localcart.dto.admin.VendorApprovalRequest;
 import com.localcart.dto.admin.VendorDocumentVerificationRequest;
 import com.localcart.dto.vendor.VendorDto;
 import com.localcart.dto.vendor.VendorDocumentDto;
+import com.localcart.entity.enums.AdminActionTargetType;
 import com.localcart.entity.enums.VendorStatus;
 import com.localcart.security.CustomUserDetails;
 import com.localcart.service.AdminService;
@@ -295,6 +297,17 @@ public class AdminController {
         UserSummaryDto user = adminService.getUserById(id);
         
         return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/history")
+    public ResponseEntity<Page<AdminActionHistoryDto>> getActionHistory(
+            @RequestParam(required = false) AdminActionTargetType targetType,
+            @RequestParam(required = false) Long targetId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        return ResponseEntity.ok(adminService.getActionHistory(targetType, targetId, pageable));
     }
 
     @GetMapping("/admins")

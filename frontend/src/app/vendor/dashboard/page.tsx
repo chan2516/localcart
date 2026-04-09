@@ -9,10 +9,12 @@ import { apiClient } from '@/lib/api-client'
 import { useCategories, useProducts, Product } from '@/hooks/use-api'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { AccountPanel } from '@/components/account-panel'
-import { AlertTriangle, BarChart3, Boxes, CheckCircle2, Clock3, Wallet } from 'lucide-react'
+import { AlertTriangle, BarChart3, Boxes, CheckCircle2, Clock3, RefreshCw, ShieldCheck, Wallet } from 'lucide-react'
 
 type ProductForm = {
   id?: string | number
@@ -23,6 +25,7 @@ type ProductForm = {
   discountPrice: string
   stock: string
   categoryId: string
+  isFeatured: boolean
 }
 
 type VendorProfile = {
@@ -41,6 +44,14 @@ type VendorInsights = {
   activeProducts?: number
   averageRating?: number
   totalReviews?: number
+}
+
+type CatalogAccess = {
+  canAddItems: boolean
+  vendorApproved: boolean
+  allDocumentsVerified: boolean
+  unverifiedDocumentCount: number
+  vendorStatus?: string
 }
 
 type VendorOrder = {
@@ -81,6 +92,7 @@ const initialProductForm: ProductForm = {
   discountPrice: '',
   stock: '0',
   categoryId: '',
+  isFeatured: false,
 }
 
 export default function VendorDashboardPage() {
@@ -94,6 +106,8 @@ export default function VendorDashboardPage() {
   const [productForm, setProductForm] = useState<ProductForm>(initialProductForm)
   const [vendorProfile, setVendorProfile] = useState<VendorProfile | null>(null)
   const [vendorInsights, setVendorInsights] = useState<VendorInsights | null>(null)
+  const [catalogAccess, setCatalogAccess] = useState<CatalogAccess | null>(null)
+  const [checkingAccess, setCheckingAccess] = useState(false)
   const [activeTab, setActiveTab] = useState<'overview' | 'catalog' | 'orders' | 'payouts' | 'coupons' | 'analytics'>('overview')
   const [vendorOrders, setVendorOrders] = useState<VendorOrder[]>([])
   const [vendorPayouts, setVendorPayouts] = useState<VendorPayout[]>([])
@@ -114,13 +128,14 @@ export default function VendorDashboardPage() {
 
     const loadVendorData = async () => {
       try {
-        const [vendorRes, dashboardRes, ordersRes, payoutsRes, couponsRes, analyticsRes] = await Promise.all([
+        const [vendorRes, dashboardRes, ordersRes, payoutsRes, couponsRes, analyticsRes, accessRes] = await Promise.all([
           apiClient.get<VendorProfile>('/vendors/me'),
           apiClient.get<VendorInsights>('/vendors/me/dashboard'),
           apiClient.get<{ content?: VendorOrder[]; orders?: VendorOrder[] }>('/vendors/me/orders?page=0&size=10').catch(() => ({ content: [], orders: [] })),
           apiClient.get<{ content?: VendorPayout[]; payouts?: VendorPayout[] }>('/vendors/me/payouts?page=0&size=10').catch(() => ({ content: [], payouts: [] })),
           apiClient.get<{ content?: VendorCoupon[]; coupons?: VendorCoupon[] }>('/vendors/me/coupons?page=0&size=10').catch(() => ({ content: [], coupons: [] })),
           apiClient.get<VendorAnalytics>('/vendors/me/analytics').catch(() => null),
+          apiClient.get<CatalogAccess>('/vendors/me/can-add-items').catch(() => null),
         ])
         setVendorProfile(vendorRes)
         setVendorInsights(dashboardRes)
@@ -128,6 +143,7 @@ export default function VendorDashboardPage() {
         setVendorPayouts(payoutsRes.content || payoutsRes.payouts || [])
         setVendorCoupons(couponsRes.content || couponsRes.coupons || [])
         setVendorAnalytics(analyticsRes)
+        setCatalogAccess(accessRes)
       } catch (error: any) {
         toast.error(error?.message || 'Failed to load vendor data')
       }
@@ -159,7 +175,20 @@ export default function VendorDashboardPage() {
     [inventoryHealth.outOfStock, inventoryHealth.lowStock]
   )
 
-  const canManageCatalog = (vendorProfile?.status || user?.vendorStatus) === 'APPROVED' && !vendorProfile?.isDeleted
+  const canManageCatalog = Boolean(catalogAccess?.canAddItems) && !vendorProfile?.isDeleted
+
+  const recheckCatalogAccess = async () => {
+    try {
+      setCheckingAccess(true)
+      const response = await apiClient.get<CatalogAccess>('/vendors/me/can-add-items')
+      setCatalogAccess(response)
+      toast.success(response.canAddItems ? 'Catalog access confirmed' : 'Catalog access still pending')
+    } catch (error: any) {
+      toast.error(error?.message || 'Unable to recheck catalog access')
+    } finally {
+      setCheckingAccess(false)
+    }
+  }
 
   const resetProductForm = () => {
     setProductForm(initialProductForm)
@@ -177,12 +206,13 @@ export default function VendorDashboardPage() {
       discountPrice: product.discountPrice ? String(product.discountPrice) : '',
       stock: String(product.stock),
       categoryId: String(product.categoryId || ''),
+      isFeatured: Boolean(product.isFeatured),
     })
   }
 
   const handleSaveProduct = async () => {
     if (!canManageCatalog) {
-      toast.error('Your vendor account is not approved yet')
+      toast.error('Your vendor account is not ready for product creation yet')
       return
     }
 
@@ -202,7 +232,7 @@ export default function VendorDashboardPage() {
         stock: Number(productForm.stock),
         categoryId: Number(productForm.categoryId),
         isActive: true,
-        isFeatured: false,
+        isFeatured: productForm.isFeatured,
       }
 
       if (editingProductId) {
@@ -239,28 +269,85 @@ export default function VendorDashboardPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-10 space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">Vendor Dashboard</h1>
-        <p className="text-gray-600">Manage your products and track your business insights.</p>
-        <div className="mt-3">
-          <Link href="/vendor/verification">
-            <Button variant="outline">View Verification Status</Button>
-          </Link>
+      <div className="rounded-2xl border bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-900 p-6 text-white shadow-lg">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div className="space-y-2">
+            <p className="text-sm uppercase tracking-[0.24em] text-emerald-200">Vendor Workspace</p>
+            <h1 className="text-3xl font-bold md:text-4xl">Vendor Dashboard</h1>
+            <p className="max-w-2xl text-sm text-slate-200 md:text-base">
+              Manage products, verify your catalog access, and keep your store presentation professional.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Link href="/vendor/verification">
+              <Button variant="outline" className="border-white/20 bg-white/10 text-white hover:bg-white/20">
+                View Verification Status
+              </Button>
+            </Link>
+            <Button
+              type="button"
+              variant="outline"
+              className="border-white/20 bg-white/10 text-white hover:bg-white/20"
+              onClick={recheckCatalogAccess}
+              disabled={checkingAccess}
+            >
+              <RefreshCw className={`mr-2 h-4 w-4 ${checkingAccess ? 'animate-spin' : ''}`} />
+              Recheck Access
+            </Button>
+          </div>
         </div>
       </div>
 
       {user && <AccountPanel user={user} />}
 
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+        <Card className="border-emerald-200 bg-emerald-50/70">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-emerald-900">Catalog Access</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2 text-sm text-emerald-950">
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="h-4 w-4" />
+              <span className="font-semibold">{catalogAccess?.canAddItems ? 'Ready to sell' : 'Waiting for verification'}</span>
+            </div>
+            <p className="text-xs text-emerald-800">
+              {catalogAccess?.allDocumentsVerified
+                ? 'All required documents are verified.'
+                : `${catalogAccess?.unverifiedDocumentCount ?? 0} document(s) still need review.`}
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Products</CardTitle>
+          </CardHeader>
+          <CardContent className="text-2xl font-bold">{myProducts.length}</CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Low Stock</CardTitle>
+          </CardHeader>
+          <CardContent className="text-2xl font-bold">{inventoryHealth.lowStock.length}</CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Featured Ready</CardTitle>
+          </CardHeader>
+          <CardContent className="text-2xl font-bold">{inventoryHealth.discounted.length}</CardContent>
+        </Card>
+      </div>
+
       {!canManageCatalog && (
         <Card className="border-amber-300 bg-amber-50">
           <CardHeader>
-            <CardTitle>Verification In Progress</CardTitle>
+            <CardTitle className="flex items-center gap-2"><ShieldCheck className="h-4 w-4" />Verification In Progress</CardTitle>
           </CardHeader>
           <CardContent className="text-sm text-amber-900">
             <p>
-              Vendor status: <span className="font-semibold">{vendorProfile?.status || user?.vendorStatus || 'PENDING'}</span>
+              Vendor status: <span className="font-semibold">{catalogAccess?.vendorStatus || vendorProfile?.status || user?.vendorStatus || 'PENDING'}</span>
             </p>
             <p className="mt-1">Product management is locked until admin verification is complete.</p>
+            <p className="mt-1">Use the recheck button after your documents are approved.</p>
             {vendorProfile?.rejectionReason ? <p className="mt-1">Reason: {vendorProfile.rejectionReason}</p> : null}
           </CardContent>
         </Card>
@@ -378,24 +465,106 @@ export default function VendorDashboardPage() {
           <Card>
             <CardHeader>
               <CardTitle>{editingProductId ? 'Edit Product' : 'Add Product'}</CardTitle>
+              <p className="text-sm text-slate-600">Use clear labels, a valid category, and a concise description so the product is easy to review.</p>
             </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <Input placeholder="Product name" value={productForm.name} onChange={(e) => setProductForm((prev) => ({ ...prev, name: e.target.value }))} />
-                <Input placeholder="product-slug" value={productForm.slug} onChange={(e) => setProductForm((prev) => ({ ...prev, slug: e.target.value }))} />
-                <Input placeholder="Price" type="number" min="0" value={productForm.price} onChange={(e) => setProductForm((prev) => ({ ...prev, price: e.target.value }))} />
-                <Input placeholder="Discount price" type="number" min="0" value={productForm.discountPrice} onChange={(e) => setProductForm((prev) => ({ ...prev, discountPrice: e.target.value }))} />
-                <Input placeholder="Stock" type="number" min="0" value={productForm.stock} onChange={(e) => setProductForm((prev) => ({ ...prev, stock: e.target.value }))} />
-                <select className="h-10 rounded-md border px-3" value={productForm.categoryId} onChange={(e) => setProductForm((prev) => ({ ...prev, categoryId: e.target.value }))}>
-                  <option value="">Select category</option>
-                  {(categories || []).map((category) => (
-                    <option key={category.id} value={String(category.id)}>{category.name}</option>
-                  ))}
-                </select>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="space-y-4 rounded-xl border bg-slate-50/70 p-4">
+                  <div>
+                    <h3 className="text-sm font-semibold text-slate-900">Product Basics</h3>
+                    <p className="text-xs text-slate-600">Name and slug should match the product you want customers to find.</p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="product-name">Product Name</Label>
+                    <Input id="product-name" placeholder="Organic Almond Milk" value={productForm.name} onChange={(e) => setProductForm((prev) => ({ ...prev, name: e.target.value }))} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="product-slug">Slug</Label>
+                    <Input id="product-slug" placeholder="organic-almond-milk" value={productForm.slug} onChange={(e) => setProductForm((prev) => ({ ...prev, slug: e.target.value }))} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="product-description">Description</Label>
+                    <textarea
+                      id="product-description"
+                      className="min-h-28 w-full rounded-md border border-slate-300 bg-white p-3 text-sm outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-200"
+                      placeholder="Describe the product, pack size, and key benefits."
+                      value={productForm.description}
+                      onChange={(e) => setProductForm((prev) => ({ ...prev, description: e.target.value }))}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-4 rounded-xl border bg-white p-4">
+                  <div>
+                    <h3 className="text-sm font-semibold text-slate-900">Pricing & Inventory</h3>
+                    <p className="text-xs text-slate-600">Keep price, stock, and featured status accurate for customers.</p>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="product-price">Price</Label>
+                      <Input id="product-price" placeholder="199.00" type="number" min="0" value={productForm.price} onChange={(e) => setProductForm((prev) => ({ ...prev, price: e.target.value }))} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="product-discount">Discount Price</Label>
+                      <Input id="product-discount" placeholder="149.00" type="number" min="0" value={productForm.discountPrice} onChange={(e) => setProductForm((prev) => ({ ...prev, discountPrice: e.target.value }))} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="product-stock">Stock</Label>
+                      <Input id="product-stock" placeholder="0" type="number" min="0" value={productForm.stock} onChange={(e) => setProductForm((prev) => ({ ...prev, stock: e.target.value }))} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="product-category">Category</Label>
+                      <Select value={productForm.categoryId} onValueChange={(value) => setProductForm((prev) => ({ ...prev, categoryId: value }))}>
+                        <SelectTrigger id="product-category" className="w-full">
+                          <SelectValue placeholder="Select category" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {(categories || []).map((category) => (
+                            <SelectItem key={category.id} value={String(category.id)}>
+                              {category.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div className="rounded-lg border border-dashed border-slate-300 bg-slate-50 p-3">
+                    <label className="flex items-start gap-3 text-sm text-slate-700">
+                      <input
+                        type="checkbox"
+                        className="mt-1 h-4 w-4 rounded border-slate-300"
+                        checked={productForm.isFeatured}
+                        onChange={(e) => setProductForm((prev) => ({ ...prev, isFeatured: e.target.checked }))}
+                      />
+                      <span>
+                        Mark this product as featured to promote it in featured product placements.
+                      </span>
+                    </label>
+                  </div>
+                </div>
               </div>
-              <textarea className="w-full min-h-24 rounded-md border p-3" placeholder="Description" value={productForm.description} onChange={(e) => setProductForm((prev) => ({ ...prev, description: e.target.value }))} />
-              <div className="flex gap-2">
-                <Button onClick={handleSaveProduct} disabled={savingProduct || !canManageCatalog}>{savingProduct ? 'Saving...' : editingProductId ? 'Update Product' : 'Create Product'}</Button>
+
+              <div className="rounded-xl border bg-emerald-50 p-4">
+                <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                  <div>
+                    <p className="text-sm font-semibold text-emerald-900">Available product categories</p>
+                    <p className="text-xs text-emerald-800">Electronics, Dairy & Staples, Kirana & Groceries, and Sports are ready for vendor catalog use.</p>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {(categories || []).slice(0, 6).map((category) => (
+                      <Badge key={category.id} variant="secondary" className="bg-white text-emerald-900">
+                        {category.name}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <Button onClick={handleSaveProduct} disabled={savingProduct || !canManageCatalog} className="sm:min-w-44">
+                  {savingProduct ? 'Saving...' : editingProductId ? 'Update Product' : 'Create Product'}
+                </Button>
                 {editingProductId && <Button variant="outline" onClick={resetProductForm}>Cancel Edit</Button>}
               </div>
             </CardContent>

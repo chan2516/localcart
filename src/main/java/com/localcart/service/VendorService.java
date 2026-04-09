@@ -4,7 +4,10 @@ import com.localcart.dto.vendor.*;
 import com.localcart.entity.User;
 import com.localcart.entity.Vendor;
 import com.localcart.entity.Role;
+import com.localcart.entity.VendorDocument;
 import com.localcart.entity.enums.RoleType;
+import com.localcart.entity.enums.AdminActionTargetType;
+import com.localcart.entity.enums.AdminActionType;
 import com.localcart.entity.enums.VendorStatus;
 import com.localcart.exception.PaymentException;
 import com.localcart.repository.VendorRepository;
@@ -41,6 +44,7 @@ public class VendorService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final WebhookService webhookService;
+    private final AdminActionHistoryService adminActionHistoryService;
 
     /**
      * Register a new vendor (user applies to become a vendor)
@@ -197,6 +201,8 @@ public class VendorService {
         User admin = userRepository.findById(adminUserId)
             .orElseThrow(() -> new PaymentException("Admin user not found", "USER_NOT_FOUND"));
         
+        String targetLabel = vendor.getBusinessName();
+
         if (newStatus == VendorStatus.APPROVED) {
             vendor.setStatus(VendorStatus.APPROVED);
             vendor.setApprovedAt(LocalDate.now());
@@ -208,9 +214,7 @@ public class VendorService {
             }
             
             log.info("Vendor approved. Vendor ID: {}, Approved by: {}", vendorId, adminUserId);
-            
-            vendor = vendorRepository.save(vendor);
-            
+
             // Trigger webhook for vendor approval
             webhookService.triggerVendorApproved(vendor);
         } else if (newStatus == VendorStatus.REJECTED) {
@@ -223,11 +227,22 @@ public class VendorService {
             vendor.setRejectionReason(reason);
             
             log.info("Vendor suspended. Vendor ID: {}, Reason: {}", vendorId, reason);
-            
-            vendor = vendorRepository.save(vendor);
-        } else {
-            vendor = vendorRepository.save(vendor);
         }
+
+        vendor = vendorRepository.save(vendor);
+        AdminActionType actionType = switch (newStatus) {
+            case APPROVED -> AdminActionType.APPROVE;
+            case REJECTED -> AdminActionType.REJECT;
+            case SUSPENDED -> AdminActionType.SUSPEND;
+            default -> AdminActionType.APPROVE;
+        };
+        adminActionHistoryService.recordAction(
+                AdminActionTargetType.VENDOR,
+                vendor.getId(),
+                targetLabel,
+                actionType,
+                reason,
+                adminUserId);
         
         return convertToDto(vendor);
     }
@@ -259,6 +274,14 @@ public class VendorService {
         vendor = vendorRepository.save(vendor);
         userRepository.save(user);
 
+        adminActionHistoryService.recordAction(
+            AdminActionTargetType.VENDOR,
+            vendor.getId(),
+            vendor.getBusinessName(),
+            AdminActionType.BAN,
+            banReason,
+            adminUserId);
+
         log.info("Vendor banned. Vendor ID: {}, Admin ID: {}", vendorId, admin.getId());
         return convertToDto(vendor);
     }
@@ -286,6 +309,14 @@ public class VendorService {
 
         vendor = vendorRepository.save(vendor);
         userRepository.save(user);
+
+        adminActionHistoryService.recordAction(
+            AdminActionTargetType.VENDOR,
+            vendor.getId(),
+            vendor.getBusinessName(),
+            AdminActionType.RESTORE,
+            "Vendor access restored",
+            adminUserId);
 
         log.info("Vendor restored. Vendor ID: {}, Admin ID: {}", vendorId, admin.getId());
         return convertToDto(vendor);
@@ -363,6 +394,9 @@ public class VendorService {
             .businessType(vendor.getBusinessType())
             .vendorPhotoUrl(vendor.getVendorPhotoUrl())
             .vendorSignatureUrl(vendor.getVendorSignatureUrl())
+            .documents(vendor.getDocuments().stream()
+                .map(this::convertDocumentToDto)
+                .toList())
             .status(vendor.getStatus())
             .isDeleted(vendor.getIsDeleted())
             .approvedAt(vendor.getApprovedAt())
@@ -384,6 +418,25 @@ public class VendorService {
             .createdAt(vendor.getCreatedAt())
             .updatedAt(vendor.getUpdatedAt())
             .build();
+    }
+
+    private com.localcart.dto.vendor.VendorDocumentDto convertDocumentToDto(VendorDocument document) {
+        return com.localcart.dto.vendor.VendorDocumentDto.builder()
+                .id(document.getId())
+                .documentType(document.getDocumentType())
+                .documentUrl(document.getDocumentUrl())
+                .fileName(document.getFileName())
+                .fileSize(document.getFileSize())
+                .mimeType(document.getMimeType())
+                .verificationStatus(document.getVerificationStatus())
+                .verifiedAt(document.getVerifiedAt())
+                .verificationComments(document.getVerificationComments())
+                .documentNumber(document.getDocumentNumber())
+                .expiryDate(document.getExpiryDate())
+                .uploadNotes(document.getUploadNotes())
+                .createdAt(document.getCreatedAt())
+                .updatedAt(document.getUpdatedAt())
+                .build();
     }
 
     /**

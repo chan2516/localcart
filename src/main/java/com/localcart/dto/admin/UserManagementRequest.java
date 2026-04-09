@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 /**
  * User Management Request DTO
  * 
- * Used by admin to suspend, activate, or ban users.
+ * Used by admin to suspend, activate, ban, or delete users.
  */
 @Data
 @Builder
@@ -21,8 +21,8 @@ public class UserManagementRequest {
     @NotNull(message = "User ID is required")
     private Long userId;
     
-    @NotNull(message = "Action is required (ACTIVATE, SUSPEND, BAN)")
-    private UserAction action; // ACTIVATE, SUSPEND, BAN
+    @NotNull(message = "Action is required (ACTIVATE, SUSPEND, BAN, DELETE)")
+    private UserAction action; // ACTIVATE, SUSPEND, BAN, DELETE
     
     @Size(max = 500, message = "Reason cannot exceed 500 characters")
     private String reason; // Required for SUSPEND and BAN
@@ -37,6 +37,7 @@ public class UserManagementRequest {
     public enum UserAction {
         ACTIVATE,
         SUSPEND,
-        BAN
+        BAN,
+        DELETE
     }
 }

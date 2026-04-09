@@ -33,6 +33,7 @@ public class ProductService {
     private final CategoryRepository categoryRepository;
     private final VendorRepository vendorRepository;
     private final ProductImageService productImageService;
+    private final VendorDocumentService vendorDocumentService;
     
     /**
      * Get all active products (paginated)
@@ -118,7 +119,7 @@ public class ProductService {
         // Verify vendor exists
         Vendor vendor = vendorRepository.findById(vendorId)
                 .orElseThrow(() -> new PaymentException("Vendor not found", "VENDOR_NOT_FOUND"));
-        ensureVendorApproved(vendor);
+        ensureVendorReadyForCatalog(vendor);
         
         // Verify category exists
         Category category = categoryRepository.findById(request.getCategoryId())
@@ -166,7 +167,7 @@ public class ProductService {
         if (!product.getVendor().getId().equals(vendorId)) {
             throw new PaymentException("Unauthorized to update this product", "UNAUTHORIZED");
         }
-        ensureVendorApproved(product.getVendor());
+        ensureVendorReadyForCatalog(product.getVendor());
         
         // Check slug uniqueness if changed
         if (!product.getSlug().equals(request.getSlug()) && productRepository.existsBySlug(request.getSlug())) {
@@ -213,7 +214,7 @@ public class ProductService {
         if (!product.getVendor().getId().equals(vendorId)) {
             throw new PaymentException("Unauthorized to delete this product", "UNAUTHORIZED");
         }
-        ensureVendorApproved(product.getVendor());
+        ensureVendorReadyForCatalog(product.getVendor());
         
         // Soft delete
         product.softDelete();
@@ -258,9 +259,15 @@ public class ProductService {
                 .build();
     }
 
-    private void ensureVendorApproved(Vendor vendor) {
+    private void ensureVendorReadyForCatalog(Vendor vendor) {
         if (vendor.getStatus() != VendorStatus.APPROVED) {
             throw new PaymentException("Vendor account is not approved yet", "VENDOR_NOT_APPROVED");
+        }
+
+        if (!vendorDocumentService.hasAllDocumentsVerified(vendor.getId())) {
+            throw new PaymentException(
+                    "Vendor documents are not fully verified yet",
+                    "VENDOR_DOCUMENTS_PENDING");
         }
     }
 }

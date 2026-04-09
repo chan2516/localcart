@@ -5,12 +5,15 @@ import com.localcart.dto.admin.AdminAccountDto;
 import com.localcart.dto.admin.AdminCreateRequest;
 import com.localcart.dto.admin.ContactInfoDto;
 import com.localcart.dto.admin.ContactInfoRequest;
+import com.localcart.dto.admin.AdminActionHistoryDto;
 import com.localcart.dto.admin.PlatformMetricsDto;
 import com.localcart.dto.admin.UserManagementRequest;
 import com.localcart.dto.admin.UserSummaryDto;
 import com.localcart.entity.Role;
 import com.localcart.entity.SiteContactInfo;
 import com.localcart.entity.User;
+import com.localcart.entity.enums.AdminActionTargetType;
+import com.localcart.entity.enums.AdminActionType;
 import com.localcart.entity.enums.OrderStatus;
 import com.localcart.entity.enums.PaymentStatus;
 import com.localcart.entity.enums.RoleType;
@@ -24,6 +27,7 @@ import com.localcart.repository.ReviewRepository;
 import com.localcart.repository.SiteContactInfoRepository;
 import com.localcart.repository.UserRepository;
 import com.localcart.repository.VendorRepository;
+import com.localcart.repository.AdminActionHistoryRepository;
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -56,6 +60,7 @@ public class AdminService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final SiteContactInfoRepository siteContactInfoRepository;
+    private final AdminActionHistoryService adminActionHistoryService;
 
     private static final List<RoleType> ADMIN_ROLES = List.of(RoleType.ADMIN, RoleType.ADMIN_L1, RoleType.ADMIN_L2);
 
@@ -80,12 +85,25 @@ public class AdminService {
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new PaymentException("User not found", "USER_NOT_FOUND"));
 
+        if (request.getAction() == UserManagementRequest.UserAction.DELETE) {
+            if (user.getId().equals(adminUserId)) {
+                throw new PaymentException("You cannot delete your own account", "INVALID_OPERATION");
+            }
+            if (hasAdminRole(user)) {
+                throw new PaymentException("Admin accounts cannot be deleted from this workflow", "INVALID_OPERATION");
+            }
+        }
+
         if (request.getAction() == UserManagementRequest.UserAction.SUSPEND
-                || request.getAction() == UserManagementRequest.UserAction.BAN) {
+                || request.getAction() == UserManagementRequest.UserAction.BAN
+                || request.getAction() == UserManagementRequest.UserAction.DELETE) {
             if (request.getReason() == null || request.getReason().isBlank()) {
                 throw new PaymentException("Reason is required", "REASON_REQUIRED");
             }
         }
+
+        UserSummaryDto summaryBeforeMutation = convertToSummary(user);
+        String targetLabel = buildDisplayName(user);
 
         switch (request.getAction()) {
             case ACTIVATE -> {
@@ -134,12 +152,45 @@ public class AdminService {
                     user.getVendor().setRejectionReason(user.getSuspensionReason());
                 }
             }
+            case DELETE -> {
+                adminActionHistoryService.recordAction(
+                        AdminActionTargetType.USER,
+                        user.getId(),
+                        targetLabel,
+                        AdminActionType.DELETE,
+                        request.getReason(),
+                        adminUserId);
+
+                userRepository.delete(user);
+                log.info("Admin {} deleted user {}", adminUserId, user.getId());
+                return summaryBeforeMutation;
+            }
         }
 
         user = userRepository.save(user);
+
+        AdminActionType actionType = switch (request.getAction()) {
+            case ACTIVATE -> AdminActionType.ACTIVATE;
+            case SUSPEND -> AdminActionType.SUSPEND;
+            case BAN -> AdminActionType.BAN;
+            case DELETE -> AdminActionType.DELETE;
+        };
+        adminActionHistoryService.recordAction(
+                AdminActionTargetType.USER,
+                user.getId(),
+                targetLabel,
+                actionType,
+                request.getReason(),
+                adminUserId);
+
         log.info("Admin {} performed {} for user {}", adminUserId, request.getAction(), user.getId());
 
         return convertToSummary(user);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<AdminActionHistoryDto> getActionHistory(AdminActionTargetType targetType, Long targetId, Pageable pageable) {
+        return adminActionHistoryService.getHistory(targetType, targetId, pageable);
     }
 
     @Transactional(readOnly = true)
@@ -501,6 +552,17 @@ public class AdminService {
 
     private boolean hasRole(User user, RoleType roleType) {
         return user.getRoles().stream().anyMatch(role -> role.getName() == roleType);
+    }
+
+    private boolean hasAdminRole(User user) {
+        return hasRole(user, RoleType.ADMIN) || hasRole(user, RoleType.ADMIN_L1) || hasRole(user, RoleType.ADMIN_L2);
+    }
+
+    private String buildDisplayName(User user) {
+        String firstName = user.getFirstName() != null ? user.getFirstName().trim() : "";
+        String lastName = user.getLastName() != null ? user.getLastName().trim() : "";
+        String displayName = (firstName + " " + lastName).trim();
+        return displayName.isBlank() ? user.getEmail() : displayName;
     }
 
     private double percentChange(double current, double previous) {
