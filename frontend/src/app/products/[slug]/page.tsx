@@ -6,11 +6,11 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useState } from 'react'
 import { useEffect } from 'react'
-import Image from 'next/image'
 import { Skeleton } from '@/components/ui/skeleton'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/lib/auth-store'
 import Link from 'next/link'
+import { resolveMediaUrl } from '@/lib/media-url'
 
 export default function ProductPage() {
   const params = useParams()
@@ -98,11 +98,10 @@ export default function ProductPage() {
         <div>
           {product.imageUrls && product.imageUrls.length > 0 ? (
             <div className="relative bg-gray-100 rounded-lg overflow-hidden aspect-square">
-              <Image
-                src={product.imageUrls[0]}
+              <img
+                src={resolveMediaUrl(product.imageUrls[0])}
                 alt={product.name}
-                fill
-                className="object-cover"
+                className="h-full w-full object-cover"
               />
             </div>
           ) : (
@@ -116,12 +115,16 @@ export default function ProductPage() {
             <div className="grid grid-cols-4 gap-2 mt-4">
               {product.imageUrls.map((url, idx) => (
                 <div key={idx} className="relative bg-gray-100 rounded aspect-square overflow-hidden">
-                  <Image
-                    src={url}
+                  <img
+                    src={resolveMediaUrl(url)}
                     alt={`${product.name} ${idx + 1}`}
-                    fill
-                    className="object-cover"
+                    className="h-full w-full object-cover"
                   />
+                  {idx === 0 && (
+                    <span className="absolute left-1.5 top-1.5 rounded bg-blue-600 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white">
+                      Primary
+                    </span>
+                  )}
                 </div>
               ))}
             </div>

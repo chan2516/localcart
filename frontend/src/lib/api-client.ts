@@ -29,6 +29,16 @@ class ApiClient {
         if (token) {
           config.headers.Authorization = `Bearer ${token}`
         }
+
+        if (typeof FormData !== 'undefined' && config.data instanceof FormData && config.headers) {
+          if (typeof (config.headers as AxiosHeaders).delete === 'function') {
+            ;(config.headers as AxiosHeaders).delete('Content-Type')
+          } else {
+            delete (config.headers as Record<string, string>)['Content-Type']
+            delete (config.headers as Record<string, string>)['content-type']
+          }
+        }
+
         return config
       },
       (error) => Promise.reject(error)
@@ -152,6 +162,15 @@ class ApiClient {
     }
   }
 
+  async upload<T>(url: string, data: FormData, config = {}) {
+    try {
+      const response = await this.client.post<T>(url, data, config)
+      return response.data
+    } catch (error) {
+      throw this.handleError(error)
+    }
+  }
+
   async put<T>(url: string, data = {}, config = {}) {
     try {
       const response = await this.client.put<T>(url, data, config)
@@ -183,7 +202,7 @@ class ApiClient {
     if (axios.isAxiosError(error)) {
       if (error.code === 'ECONNABORTED') {
         return {
-          message: 'Request timed out. Please check if backend is reachable at 127.0.0.1:8080.',
+          message: `Request timed out. Please check if backend is reachable at ${API_URL}.`,
           status: 504,
         }
       }

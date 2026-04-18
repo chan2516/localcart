@@ -62,6 +62,34 @@ public class CategoryController {
                     .body(new ErrorResponse("ERROR", "Failed to fetch categories"));
         }
     }
+
+    /**
+     * GET /api/v1/categories/vendor-catalog
+     *
+     * List only vendor-approved catalog categories for product creation forms.
+     */
+    @GetMapping("/vendor-catalog")
+    public ResponseEntity<?> listVendorCatalogCategories() {
+        try {
+            log.info("Fetching vendor catalog categories");
+
+            var categories = categoryService.getVendorCatalogCategories()
+                    .stream()
+                    .map(categoryService::convertToDto)
+                    .toList();
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("categories", categories);
+            response.put("totalCount", categories.size());
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            log.error("Error fetching vendor catalog categories", e);
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("ERROR", "Failed to fetch vendor catalog categories"));
+        }
+    }
     
     /**
      * GET /api/v1/categories/{id}

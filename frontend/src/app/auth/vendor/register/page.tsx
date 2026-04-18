@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useAuthStore } from '@/lib/auth-store'
+import { apiClient } from '@/lib/api-client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -79,23 +80,45 @@ const DocumentUploadCard: React.FC<DocumentUploadCardProps> = ({
   isPhoto = false,
   icon,
 }) => {
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [uploading, setUploading] = useState(false)
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      const reader = new FileReader()
-      reader.onload = (event) => {
-        const url = event.target?.result as string
-        onCapture(field, url)
+      setUploading(true)
+      try {
+        const documentTypeMap: Record<string, string> = {
+          gstinCertificateUrl: 'GSTIN_CERTIFICATE',
+          fassaiCertificateUrl: 'FASSAI_CERTIFICATE',
+          shopOwnershipCertificateUrl: 'SHOP_OWNERSHIP_CERTIFICATE',
+          vendorPhotoUrl: 'VENDOR_PHOTO',
+          vendorSignatureUrl: 'VENDOR_SIGNATURE',
+        }
+
+        const formData = new FormData()
+        formData.append('file', file)
+
+        const response = await apiClient.upload<{ url?: string }>('/vendors/onboarding/documents/upload?documentType=' + documentTypeMap[field], formData)
+        if (!response.url) {
+          throw new Error('Upload did not return a file URL')
+        }
+
+        onCapture(field, response.url)
+        toast.success(`${title} uploaded`)
+      } catch (error: any) {
+        toast.error(error?.message || `Failed to upload ${title.toLowerCase()}`)
+      } finally {
+        e.target.value = ''
+        setUploading(false)
       }
-      reader.readAsDataURL(file)
     }
   }
 
+  const isPdf = value.toLowerCase().endsWith('.pdf')
+
   return (
-    <div
-      className={`border-2 rounded-lg p-4 ${error ? 'border-red-300 bg-red-50' : 'border-dashed border-gray-300 hover:border-emerald-400'}`}
-    >
-      <div className="flex items-start justify-between mb-3">
+    <div className={`rounded-2xl border p-4 shadow-sm transition ${error ? 'border-red-300 bg-red-50' : 'border-dashed border-gray-300 bg-white hover:border-emerald-400'}`}>
+      <div className="mb-3 flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
           {icon && <div className="text-emerald-600 text-2xl">{icon}</div>}
           <div>
@@ -103,24 +126,32 @@ const DocumentUploadCard: React.FC<DocumentUploadCardProps> = ({
             <p className="text-xs text-gray-600">{description}</p>
           </div>
         </div>
+        <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-emerald-700">
+          Local upload
+        </span>
       </div>
 
       {value ? (
         <div className="space-y-3">
-          <div className="relative w-full h-40 rounded-lg overflow-hidden bg-gray-100">
-            <img
-              src={value}
-              alt={title}
-              className="w-full h-full object-cover"
-            />
+          <div className="relative flex h-40 items-center justify-center overflow-hidden rounded-xl border bg-gray-50">
+            {isPdf ? (
+              <div className="flex flex-col items-center gap-2 text-gray-600">
+                <FileText className="h-8 w-8" />
+                <span className="text-sm font-medium">PDF document saved</span>
+                <span className="text-xs text-gray-500">Admin review will open the uploaded file directly.</span>
+              </div>
+            ) : (
+              <img src={value} alt={title} className="h-full w-full object-cover" />
+            )}
           </div>
           <button
             type="button"
             onClick={() => onCapture(field, '')}
-            className="w-full px-3 py-2 bg-red-100 text-red-700 rounded-lg text-sm font-semibold hover:bg-red-200"
+            className="w-full rounded-lg bg-red-100 px-3 py-2 text-sm font-semibold text-red-700 hover:bg-red-200"
           >
             Remove & Recapture
           </button>
+          <p className="text-[11px] text-gray-500">File URL: {value}</p>
         </div>
       ) : (
         <div className="space-y-2">
@@ -133,10 +164,11 @@ const DocumentUploadCard: React.FC<DocumentUploadCardProps> = ({
                   capture="environment"
                   onChange={handleFileChange}
                   className="hidden"
+                  disabled={uploading}
                 />
                 <div className="flex items-center justify-center gap-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg cursor-pointer hover:bg-blue-100">
                   <Camera className="h-4 w-4 text-blue-600" />
-                  <span className="text-sm font-semibold text-blue-600">Capture Photo</span>
+                  <span className="text-sm font-semibold text-blue-600">{uploading ? 'Uploading...' : 'Capture Photo'}</span>
                 </div>
               </label>
             )}
@@ -147,15 +179,18 @@ const DocumentUploadCard: React.FC<DocumentUploadCardProps> = ({
                 accept={isPhoto ? 'image/*' : 'image/*,.pdf'}
                 onChange={handleFileChange}
                 className="hidden"
+                disabled={uploading}
               />
               <div className="flex items-center justify-center gap-2 px-3 py-2 bg-emerald-50 border border-emerald-200 rounded-lg cursor-pointer hover:bg-emerald-100">
                 <FileText className="h-4 w-4 text-emerald-600" />
                 <span className="text-sm font-semibold text-emerald-600">
-                  {isPhoto ? 'Upload' : 'Upload File'}
+                  {uploading ? 'Uploading...' : isPhoto ? 'Upload' : 'Upload File'}
                 </span>
               </div>
             </label>
           </div>
+
+          <p className="text-[11px] text-gray-500">Accepted formats: JPEG, PNG, WebP, and PDF where applicable.</p>
 
           {error && <p className="text-xs text-red-600 font-semibold">{error}</p>}
         </div>
@@ -533,9 +568,9 @@ export default function VendorRegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 py-12 px-4">
-      <Card className="w-full max-w-2xl shadow-xl">
-        <CardHeader className="text-center space-y-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-t-lg">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 px-4 py-12">
+      <Card className="mx-auto w-full max-w-2xl overflow-hidden shadow-2xl">
+        <CardHeader className="space-y-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-center text-white">
           <div className="flex justify-center mb-2">
             <Store className="h-10 w-10" />
           </div>
@@ -1049,7 +1084,7 @@ export default function VendorRegisterPage() {
           {step === 3 && (
             <form onSubmit={handleStep3Submit} className="space-y-6">
               {/* Info Box */}
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex gap-3">
+              <div className="flex gap-3 rounded-2xl border border-blue-200 bg-blue-50 p-4">
                 <AlertCircle className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm font-semibold text-blue-900">Verification Required</p>
@@ -1118,7 +1153,7 @@ export default function VendorRegisterPage() {
               />
 
               {/* Submit Section */}
-              <div className="bg-gradient-to-r from-emerald-50 to-teal-50 p-4 rounded-lg">
+              <div className="rounded-2xl bg-gradient-to-r from-emerald-50 to-teal-50 p-4">
                 <p className="text-sm text-gray-700 mb-4">
                   <CheckCircle className="inline h-4 w-4 text-green-600 mr-2" />
                   Ready to submit? Make sure all documents are uploaded.

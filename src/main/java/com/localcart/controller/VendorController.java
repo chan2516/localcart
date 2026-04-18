@@ -1,8 +1,12 @@
 package com.localcart.controller;
 
+import com.localcart.dto.product.ProductImageUploadResponse;
 import com.localcart.dto.vendor.*;
 import com.localcart.entity.enums.VendorStatus;
+import com.localcart.entity.enums.VendorDocumentType;
 import com.localcart.security.CustomUserDetails;
+import com.localcart.service.ProductImageStorageService;
+import com.localcart.service.VendorOnboardingStorageService;
 import com.localcart.service.VendorService;
 import com.localcart.service.VendorDocumentService;
 import com.localcart.service.LocationSearchService;
@@ -13,10 +17,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -37,6 +43,8 @@ public class VendorController {
     private final VendorService vendorService;
     private final VendorDocumentService vendorDocumentService;
     private final LocationSearchService locationSearchService;
+    private final ProductImageStorageService productImageStorageService;
+    private final VendorOnboardingStorageService vendorOnboardingStorageService;
 
     /**
      * Register as a vendor (authenticated users)
@@ -343,7 +351,7 @@ public class VendorController {
     }
 
     /**
-     * Check if vendor can add items (must have all required documents verified and be APPROVED)
+     * Check if vendor can add items (must be APPROVED)
      * 
      * GET /api/v1/vendors/me/can-add-items
      */
@@ -360,12 +368,63 @@ public class VendorController {
         long unverifiedCount = vendorDocumentService.getUnverifiedDocumentCount(myVendor.getId());
         
         return ResponseEntity.ok(java.util.Map.of(
-            "canAddItems", canAdd && allDocumentsVerified,
+            "canAddItems", canAdd,
             "vendorApproved", canAdd,
             "allDocumentsVerified", allDocumentsVerified,
             "unverifiedDocumentCount", unverifiedCount,
             "vendorStatus", myVendor.getStatus()
         ));
+    }
+
+    /**
+     * Upload product images for the authenticated vendor.
+     *
+     * POST /api/v1/vendors/me/product-images
+     */
+    @PostMapping(value = "/me/product-images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('VENDOR')")
+    public ResponseEntity<ProductImageUploadResponse> uploadProductImages(
+            @RequestPart("files") java.util.List<MultipartFile> files,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        log.info("Uploading {} product image(s) for vendor user: {}", files != null ? files.size() : 0, userDetails.getUserId());
+
+        VendorDto myVendor = vendorService.getVendorByUserId(userDetails.getUserId());
+        if (!vendorService.canAddItems(myVendor.getId())) {
+            throw new com.localcart.exception.PaymentException("Vendor account is not approved yet", "VENDOR_NOT_APPROVED");
+        }
+
+        java.util.List<String> urls = productImageStorageService.uploadProductImages(myVendor.getId(), files);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(ProductImageUploadResponse.builder()
+                .urls(urls)
+                .uploadedCount(urls.size())
+            .provider("local")
+                .build());
+    }
+
+    /**
+     * Upload an onboarding document before vendor registration is completed.
+     *
+     * POST /api/v1/vendors/onboarding/documents/upload
+     */
+    @PostMapping(value = "/onboarding/documents/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<VendorMediaUploadResponse> uploadOnboardingDocument(
+            @RequestPart("file") MultipartFile file,
+            @RequestParam VendorDocumentType documentType,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        log.info("Uploading onboarding document {} for user {}", documentType, userDetails.getUserId());
+
+        var storedFile = vendorOnboardingStorageService.uploadOnboardingDocument(userDetails.getUserId(), documentType, file);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(VendorMediaUploadResponse.builder()
+                .url(storedFile.url())
+                .fileName(storedFile.fileName())
+                .mimeType(storedFile.mimeType())
+                .provider("local-filesystem")
+                .build());
     }
 
     /**

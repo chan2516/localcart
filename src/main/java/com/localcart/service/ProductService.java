@@ -33,7 +33,6 @@ public class ProductService {
     private final CategoryRepository categoryRepository;
     private final VendorRepository vendorRepository;
     private final ProductImageService productImageService;
-    private final VendorDocumentService vendorDocumentService;
     
     /**
      * Get all active products (paginated)
@@ -217,6 +216,7 @@ public class ProductService {
         ensureVendorReadyForCatalog(product.getVendor());
         
         // Soft delete
+        product.setIsActive(false);
         product.softDelete();
         productRepository.save(product);
     }
@@ -263,11 +263,8 @@ public class ProductService {
         if (vendor.getStatus() != VendorStatus.APPROVED) {
             throw new PaymentException("Vendor account is not approved yet", "VENDOR_NOT_APPROVED");
         }
-
-        if (!vendorDocumentService.hasAllDocumentsVerified(vendor.getId())) {
-            throw new PaymentException(
-                    "Vendor documents are not fully verified yet",
-                    "VENDOR_DOCUMENTS_PENDING");
+        if (Boolean.TRUE.equals(vendor.getIsDeleted())) {
+            throw new PaymentException("Vendor account is not active", "VENDOR_INACTIVE");
         }
     }
 }

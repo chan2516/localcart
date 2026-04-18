@@ -10,7 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -24,6 +26,16 @@ import java.util.Optional;
 public class CategoryService {
     
     private final CategoryRepository categoryRepository;
+
+    private static final LinkedHashMap<String, String> VENDOR_CATEGORY_DEFINITIONS = new LinkedHashMap<>();
+
+    static {
+        VENDOR_CATEGORY_DEFINITIONS.put("electronics", "Electronics");
+        VENDOR_CATEGORY_DEFINITIONS.put("toys", "Toys");
+        VENDOR_CATEGORY_DEFINITIONS.put("hardware", "Hardware");
+        VENDOR_CATEGORY_DEFINITIONS.put("clothes", "Clothes");
+        VENDOR_CATEGORY_DEFINITIONS.put("kirana-items", "Kirana Items");
+    }
     
     /**
      * Get all active categories
@@ -31,7 +43,62 @@ public class CategoryService {
     @Transactional(readOnly = true)
     public List<Category> getAllActiveCategories() {
         log.info("Fetching all active categories");
-        return categoryRepository.findAll();
+        return categoryRepository.findAllActiveOrdered();
+    }
+
+    /**
+     * Vendor-facing catalog categories.
+     * Ensures required category records exist and returns them in configured order.
+     */
+    public List<Category> getVendorCatalogCategories() {
+        List<String> allowedSlugs = List.copyOf(VENDOR_CATEGORY_DEFINITIONS.keySet());
+        Map<String, Category> existingBySlug = categoryRepository.findBySlugIn(allowedSlugs)
+                .stream()
+                .collect(java.util.stream.Collectors.toMap(Category::getSlug, category -> category));
+
+        int order = 1;
+        for (Map.Entry<String, String> definition : VENDOR_CATEGORY_DEFINITIONS.entrySet()) {
+            String slug = definition.getKey();
+            String name = definition.getValue();
+            Category category = existingBySlug.get(slug);
+
+            if (category == null) {
+                Category created = Category.builder()
+                        .name(name)
+                        .slug(slug)
+                        .description(name + " products")
+                        .displayOrder(order)
+                        .build();
+                created.setIsDeleted(false);
+                created.setDeletedAt(null);
+                created = categoryRepository.save(created);
+                existingBySlug.put(slug, created);
+            } else {
+                boolean changed = false;
+                if (!name.equals(category.getName())) {
+                    category.setName(name);
+                    changed = true;
+                }
+                if (category.getDisplayOrder() == null || !category.getDisplayOrder().equals(order)) {
+                    category.setDisplayOrder(order);
+                    changed = true;
+                }
+                if (category.isDeleted() || Boolean.TRUE.equals(category.getIsDeleted())) {
+                    category.restore();
+                    category.setIsDeleted(false);
+                    changed = true;
+                }
+                if (changed) {
+                    categoryRepository.save(category);
+                }
+            }
+            order++;
+        }
+
+        return allowedSlugs.stream()
+                .map(existingBySlug::get)
+                .filter(java.util.Objects::nonNull)
+                .toList();
     }
     
     /**

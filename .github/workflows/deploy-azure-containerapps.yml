@@ -1,0 +1,82 @@
+name: deploy-azure-containerapps
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Target environment name
+        required: true
+        default: production
+
+env:
+  BACKEND_IMAGE: localcart-backend
+  FRONTEND_IMAGE: localcart-frontend
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to ACR
+        run: az acr login --name "${{ secrets.AZURE_ACR_NAME }}"
+
+      - name: Build and push backend image
+        run: |
+          docker build -t "${{ secrets.AZURE_ACR_NAME }}.azurecr.io/${BACKEND_IMAGE}:${{ github.sha }}" -f Dockerfile .
+          docker push "${{ secrets.AZURE_ACR_NAME }}.azurecr.io/${BACKEND_IMAGE}:${{ github.sha }}"
+
+      - name: Build and push frontend image
+        run: |
+          docker build \
+            -t "${{ secrets.AZURE_ACR_NAME }}.azurecr.io/${FRONTEND_IMAGE}:${{ github.sha }}" \
+            --build-arg NEXT_PUBLIC_API_URL="${{ secrets.PUBLIC_API_URL }}" \
+            -f frontend/Dockerfile frontend
+          docker push "${{ secrets.AZURE_ACR_NAME }}.azurecr.io/${FRONTEND_IMAGE}:${{ github.sha }}"
+
+      - name: Deploy backend container app
+        run: |
+          az containerapp update \
+            --name "${{ secrets.AZURE_BACKEND_APP_NAME }}" \
+            --resource-group "${{ secrets.AZURE_RESOURCE_GROUP }}" \
+            --image "${{ secrets.AZURE_ACR_NAME }}.azurecr.io/${BACKEND_IMAGE}:${{ github.sha }}" \
+            --set-env-vars \
+              SPRING_PROFILES_ACTIVE=prod \
+              SPRING_DATASOURCE_URL="${{ secrets.SPRING_DATASOURCE_URL }}" \
+              SPRING_DATASOURCE_USERNAME="${{ secrets.SPRING_DATASOURCE_USERNAME }}" \
+              SPRING_DATASOURCE_PASSWORD="${{ secrets.SPRING_DATASOURCE_PASSWORD }}" \
+              REDIS_HOST="${{ secrets.REDIS_HOST }}" \
+              REDIS_PORT="${{ secrets.REDIS_PORT }}" \
+              JWT_SECRET="${{ secrets.JWT_SECRET }}" \
+              APP_CORS_ALLOWED_ORIGINS="${{ secrets.APP_CORS_ALLOWED_ORIGINS }}" \
+              LOCAL_PUBLIC_BASE_URL="${{ secrets.LOCAL_PUBLIC_BASE_URL }}" \
+              N8N_WEBHOOK_ENABLED=false
+
+      - name: Deploy frontend container app
+        run: |
+          az containerapp update \
+            --name "${{ secrets.AZURE_FRONTEND_APP_NAME }}" \
+            --resource-group "${{ secrets.AZURE_RESOURCE_GROUP }}" \
+            --image "${{ secrets.AZURE_ACR_NAME }}.azurecr.io/${FRONTEND_IMAGE}:${{ github.sha }}"
+
+      - name: Output deployed endpoints
+        run: |
+          echo "Backend FQDN:"
+          az containerapp show --name "${{ secrets.AZURE_BACKEND_APP_NAME }}" --resource-group "${{ secrets.AZURE_RESOURCE_GROUP }}" --query properties.configuration.ingress.fqdn -o tsv
+          echo "Frontend FQDN:"
+          az containerapp show --name "${{ secrets.AZURE_FRONTEND_APP_NAME }}" --resource-group "${{ secrets.AZURE_RESOURCE_GROUP }}" --query properties.configuration.ingress.fqdn -o tsv

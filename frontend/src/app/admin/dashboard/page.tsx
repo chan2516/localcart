@@ -57,7 +57,7 @@ type AdminHistoryEntry = {
 }
 
 type UserAction = 'ACTIVATE' | 'SUSPEND' | 'BAN' | 'DELETE'
-type VendorAction = 'APPROVED' | 'SUSPENDED' | 'BANNED' | 'RESTORED'
+type VendorAction = 'APPROVED' | 'REJECTED' | 'BANNED'
 type ManagementTab = 'users' | 'vendors' | 'history'
 
 export default function AdminDashboardPage() {
@@ -143,16 +143,18 @@ export default function AdminDashboardPage() {
           status: 'APPROVED',
           reason: 'Approved by admin',
         })
-      } else if (action === 'SUSPENDED') {
-        updated = await apiClient.post(`/admin/vendors/${vendor.id}/suspend`, {
-          reason,
+      } else if (action === 'REJECTED') {
+        updated = await apiClient.post('/admin/vendors/approve', {
+          vendorId: vendor.id,
+          status: 'REJECTED',
+          reason: reason || 'Rejected by admin',
         })
       } else if (action === 'BANNED') {
         updated = await apiClient.post(`/admin/vendors/${vendor.id}/ban`, {
           reason,
         })
       } else {
-        updated = await apiClient.post(`/admin/vendors/${vendor.id}/restore`)
+        throw new Error('Unsupported vendor action')
       }
 
       setVendors((prev) => prev.map((v) => (v.id === updated.id ? { ...v, ...updated } : v)))
@@ -262,7 +264,7 @@ export default function AdminDashboardPage() {
 
     const action = vendorActionModal.state.action
     const reason = vendorActionModal.state.reason.trim()
-    if ((action === 'SUSPENDED' || action === 'BANNED') && !reason) {
+    if ((action === 'REJECTED' || action === 'BANNED') && !reason) {
       toast.error('Reason is required')
       return
     }
@@ -295,44 +297,76 @@ export default function AdminDashboardPage() {
 
   return (
     <AdminShell title="Admin Dashboard" subtitle="Platform-level control center">
-      <div className="mt-3 flex gap-2 flex-wrap">
-        <Link href="/admin/verification">
-          <Button variant="outline">Open Verification Dashboard</Button>
-        </Link>
-        {isLevelOneAdmin && (
-          <Link href="/admin/development">
-            <Button variant="outline">Open Development Hub</Button>
-          </Link>
-        )}
-        {isLevelOneAdmin && (
-          <Link href="/admin/admin-users">
-            <Button variant="outline">Manage Admin Access</Button>
-          </Link>
-        )}
+      <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-900 px-6 py-5 text-white shadow-lg">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div className="space-y-2">
+            <p className="text-xs uppercase tracking-[0.3em] text-emerald-200">Admin Workspace</p>
+            <h2 className="text-2xl font-bold md:text-3xl">Run moderation, approvals, and platform oversight from one place.</h2>
+            <p className="max-w-3xl text-sm text-slate-200 md:text-base">
+              Review vendor applications, manage user access, and monitor platform activity without bouncing between screens.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Link href="/admin/verification">
+              <Button variant="outline" className="border-white/20 bg-white/10 text-white hover:bg-white/20">
+                Open Verification Dashboard
+              </Button>
+            </Link>
+            {isLevelOneAdmin && (
+              <Link href="/admin/development">
+                <Button variant="outline" className="border-white/20 bg-white/10 text-white hover:bg-white/20">Open Development Hub</Button>
+              </Link>
+            )}
+            {isLevelOneAdmin && (
+              <Link href="/admin/admin-users">
+                <Button variant="outline" className="border-white/20 bg-white/10 text-white hover:bg-white/20">Manage Admin Access</Button>
+              </Link>
+            )}
+          </div>
+        </div>
       </div>
 
       {user && <AccountPanel user={user} />}
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card><CardHeader><CardTitle>Total Users</CardTitle></CardHeader><CardContent>{stats?.totalUsers ?? 0}</CardContent></Card>
-        <Card><CardHeader><CardTitle>Total Vendors</CardTitle></CardHeader><CardContent>{stats?.totalVendors ?? 0}</CardContent></Card>
-        <Card><CardHeader><CardTitle>Pending Vendors</CardTitle></CardHeader><CardContent>{stats?.pendingVendorApplications ?? pendingVendors.length}</CardContent></Card>
-        <Card><CardHeader><CardTitle>Total Products</CardTitle></CardHeader><CardContent>{stats?.totalProducts ?? 0}</CardContent></Card>
-        <Card><CardHeader><CardTitle>Total Orders</CardTitle></CardHeader><CardContent>{stats?.totalOrders ?? 0}</CardContent></Card>
-        <Card><CardHeader><CardTitle>Total Revenue</CardTitle></CardHeader><CardContent>{stats?.totalRevenue ?? 0}</CardContent></Card>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3 xl:grid-cols-6">
+        <Card className="border-slate-200 shadow-sm">
+          <CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-slate-600">Total Users</CardTitle></CardHeader>
+          <CardContent className="space-y-1"><p className="text-2xl font-bold text-slate-900">{stats?.totalUsers ?? 0}</p><p className="text-xs text-slate-500">Registered platform accounts</p></CardContent>
+        </Card>
+        <Card className="border-slate-200 shadow-sm">
+          <CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-slate-600">Total Vendors</CardTitle></CardHeader>
+          <CardContent className="space-y-1"><p className="text-2xl font-bold text-slate-900">{stats?.totalVendors ?? 0}</p><p className="text-xs text-slate-500">Seller accounts across the catalog</p></CardContent>
+        </Card>
+        <Card className="border-amber-200 bg-amber-50/70 shadow-sm">
+          <CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-amber-900">Pending Vendors</CardTitle></CardHeader>
+          <CardContent className="space-y-1"><p className="text-2xl font-bold text-amber-950">{stats?.pendingVendorApplications ?? pendingVendors.length}</p><p className="text-xs text-amber-800">Waiting on review or verification</p></CardContent>
+        </Card>
+        <Card className="border-slate-200 shadow-sm">
+          <CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-slate-600">Total Products</CardTitle></CardHeader>
+          <CardContent className="space-y-1"><p className="text-2xl font-bold text-slate-900">{stats?.totalProducts ?? 0}</p><p className="text-xs text-slate-500">Catalog items available to shoppers</p></CardContent>
+        </Card>
+        <Card className="border-slate-200 shadow-sm">
+          <CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-slate-600">Total Orders</CardTitle></CardHeader>
+          <CardContent className="space-y-1"><p className="text-2xl font-bold text-slate-900">{stats?.totalOrders ?? 0}</p><p className="text-xs text-slate-500">Completed and in-flight purchases</p></CardContent>
+        </Card>
+        <Card className="border-emerald-200 bg-emerald-50/70 shadow-sm">
+          <CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-emerald-900">Total Revenue</CardTitle></CardHeader>
+          <CardContent className="space-y-1"><p className="text-2xl font-bold text-emerald-950">${Number(stats?.totalRevenue ?? 0).toLocaleString()}</p><p className="text-xs text-emerald-800">Gross sales tracked by the platform</p></CardContent>
+        </Card>
       </div>
 
-      <Card>
-        <CardHeader className="space-y-4">
-          <CardTitle>Management Console</CardTitle>
+      <Card className="border-slate-200 shadow-sm">
+        <CardHeader className="space-y-4 border-b bg-slate-50/70">
+          <CardTitle className="text-lg">Management Console</CardTitle>
+          <p className="text-sm text-slate-600">Switch between user control, vendor management, and action history without losing context.</p>
           <div className="w-full border-b">
             <div className="flex items-center gap-2 overflow-x-auto pb-2">
               <button
                 type="button"
-                className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+                className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                   managementTab === 'users'
-                    ? 'bg-slate-900 text-white'
-                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                    ? 'bg-slate-900 text-white shadow-sm'
+                    : 'bg-white text-slate-700 ring-1 ring-slate-200 hover:bg-slate-100'
                 }`}
                 onClick={() => setManagementTab('users')}
               >
@@ -340,10 +374,10 @@ export default function AdminDashboardPage() {
               </button>
               <button
                 type="button"
-                className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+                className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                   managementTab === 'vendors'
-                    ? 'bg-slate-900 text-white'
-                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                    ? 'bg-slate-900 text-white shadow-sm'
+                    : 'bg-white text-slate-700 ring-1 ring-slate-200 hover:bg-slate-100'
                 }`}
                 onClick={() => setManagementTab('vendors')}
               >
@@ -351,10 +385,10 @@ export default function AdminDashboardPage() {
               </button>
               <button
                 type="button"
-                className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+                className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                   managementTab === 'history'
-                    ? 'bg-slate-900 text-white'
-                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                    ? 'bg-slate-900 text-white shadow-sm'
+                    : 'bg-white text-slate-700 ring-1 ring-slate-200 hover:bg-slate-100'
                 }`}
                 onClick={() => setManagementTab('history')}
               >
@@ -463,9 +497,9 @@ export default function AdminDashboardPage() {
                     <Button
                       variant="secondary"
                       disabled={managingVendorId === vendor.id}
-                      onClick={() => openVendorActionModal(vendor, 'SUSPENDED')}
+                      onClick={() => openVendorActionModal(vendor, 'REJECTED')}
                     >
-                      Suspend
+                      Reject
                     </Button>
                     <Button
                       variant="destructive"
@@ -473,12 +507,6 @@ export default function AdminDashboardPage() {
                       onClick={() => openVendorActionModal(vendor, 'BANNED')}
                     >
                       Ban
-                    </Button>
-                    <Button
-                      disabled={managingVendorId === vendor.id}
-                      onClick={() => handleManageVendor(vendor, 'RESTORED')}
-                    >
-                      Restore
                     </Button>
                   </div>
                 </div>
@@ -553,7 +581,7 @@ export default function AdminDashboardPage() {
 
       <ActionReasonModal
         open={vendorActionModal.state.open && Boolean(vendorActionModal.state.target) && Boolean(vendorActionModal.state.action)}
-        title={vendorActionModal.state.action === 'SUSPENDED' ? 'Suspend Vendor' : 'Ban Vendor'}
+        title={vendorActionModal.state.action === 'REJECTED' ? 'Reject Vendor' : 'Ban Vendor'}
         subtitle={
           vendorActionModal.state.target
             ? `Vendor #${vendorActionModal.state.target.id} - ${vendorActionModal.state.target.businessName}`

@@ -16,6 +16,11 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     Optional<Category> findByName(String name);
     
     boolean existsBySlug(String slug);
+
+    List<Category> findBySlugIn(List<String> slugs);
+
+    @Query("SELECT c FROM Category c WHERE c.deletedAt IS NULL ORDER BY c.displayOrder ASC, c.name ASC")
+    List<Category> findAllActiveOrdered();
     
     List<Category> findByParentIsNull();
     

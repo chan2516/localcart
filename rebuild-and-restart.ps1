@@ -30,6 +30,29 @@ function Write-Info {
     Write-Host "[INFO] $Message" -ForegroundColor Yellow
 }
 
+function Get-PortOwnerProcess {
+    param([Parameter(Mandatory = $true)][int]$Port)
+
+    $connection = Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue | Select-Object -First 1
+    if (-not $connection) {
+        return $null
+    }
+
+    return Get-Process -Id $connection.OwningProcess -ErrorAction SilentlyContinue
+}
+
+function Get-FirstFreePort {
+    param([Parameter(Mandatory = $true)][int[]]$Candidates)
+
+    foreach ($candidate in $Candidates) {
+        if (-not (Get-PortOwnerProcess -Port $candidate)) {
+            return $candidate
+        }
+    }
+
+    throw "No free port found in candidate list: $($Candidates -join ', ')"
+}
+
 function Wait-ForContainerReady {
     param(
         [Parameter(Mandatory = $true)][string]$ContainerName,
@@ -78,6 +101,32 @@ if (-not $SkipDown) {
     Write-Info 'SkipDown enabled; keeping currently running containers until rebuild/up.'
 }
 
+$backendHostPort = if ($env:LC_BACKEND_PORT) { [int]$env:LC_BACKEND_PORT } else { 8080 }
+$adminerHostPort = if ($env:LC_ADMINER_PORT) { [int]$env:LC_ADMINER_PORT } else { 8081 }
+
+$backendPortOwner = Get-PortOwnerProcess -Port $backendHostPort
+if ($backendPortOwner) {
+    Write-Info "Port $backendHostPort is in use by process '$($backendPortOwner.ProcessName)' (PID $($backendPortOwner.Id))."
+    $backendHostPort = Get-FirstFreePort -Candidates @(8082, 8083, 8084, 8085)
+    $env:LC_BACKEND_PORT = [string]$backendHostPort
+    Write-Info "Using alternate backend host port: $backendHostPort"
+}
+
+if ($adminerHostPort -eq $backendHostPort -or (Get-PortOwnerProcess -Port $adminerHostPort)) {
+    if ($adminerHostPort -eq $backendHostPort) {
+        Write-Info "Adminer port matched backend port ($adminerHostPort)."
+    } else {
+        $adminerOwner = Get-PortOwnerProcess -Port $adminerHostPort
+        if ($adminerOwner) {
+            Write-Info "Port $adminerHostPort is in use by process '$($adminerOwner.ProcessName)' (PID $($adminerOwner.Id))."
+        }
+    }
+
+    $adminerHostPort = Get-FirstFreePort -Candidates @(8081, 8086, 8087, 8088)
+    $env:LC_ADMINER_PORT = [string]$adminerHostPort
+    Write-Info "Using alternate Adminer host port: $adminerHostPort"
+}
+
 Write-Step "Building images"
 $buildArgs = @('compose', 'build')
 if ($NoCache) {
@@ -100,6 +149,7 @@ if (-not $SkipHealthChecks) {
 
 Write-Step "Done"
 Write-Host "Frontend: http://localhost:3000" -ForegroundColor White
-Write-Host "Backend:  http://localhost:8080" -ForegroundColor White
-Write-Host "Health:   http://localhost:8080/actuator/health" -ForegroundColor White
+Write-Host "Backend:  http://localhost:$backendHostPort" -ForegroundColor White
+Write-Host "Health:   http://localhost:$backendHostPort/actuator/health" -ForegroundColor White
+Write-Host "Adminer:  http://localhost:$adminerHostPort" -ForegroundColor White
 Write-Host "`nTip: run 'docker compose ps' to verify all services." -ForegroundColor DarkGray

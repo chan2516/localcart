@@ -4,11 +4,11 @@ import { Product } from '@/hooks/use-api'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import Link from 'next/link'
-import Image from 'next/image'
 import { ShoppingCart } from 'lucide-react'
 import { useAddToCart } from '@/hooks/use-api'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/lib/auth-store'
+import { resolveMediaUrl } from '@/lib/media-url'
 
 interface ProductCardProps {
   product: Product
@@ -47,11 +47,10 @@ export function ProductCard({ product }: ProductCardProps) {
         <CardContent className="p-0">
           <div className="relative w-full aspect-square bg-gray-100 overflow-hidden">
             {product.imageUrls && product.imageUrls.length > 0 ? (
-              <Image
-                src={product.imageUrls[0]}
+              <img
+                src={resolveMediaUrl(product.imageUrls[0])}
                 alt={product.name}
-                fill
-                className="object-cover group-hover:scale-105 transition-transform"
+                className="h-full w-full object-cover group-hover:scale-105 transition-transform"
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-gray-400">

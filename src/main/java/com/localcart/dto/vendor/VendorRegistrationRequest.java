@@ -65,6 +65,21 @@ public class VendorRegistrationRequest {
 
     @Size(max = 100)
     private String shopCertificateNumber; // Shop Certificate Number
+
+    @Size(max = 500)
+    private String gstinCertificateUrl;
+
+    @Size(max = 500)
+    private String fassaiCertificateUrl;
+
+    @Size(max = 500)
+    private String shopOwnershipCertificateUrl;
+
+    @Size(max = 500)
+    private String vendorPhotoUrl;
+
+    @Size(max = 500)
+    private String vendorSignatureUrl;
     
     @NotBlank(message = "Business registration number is required")
     @Size(max = 100)

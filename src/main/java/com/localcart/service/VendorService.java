@@ -8,8 +8,10 @@ import com.localcart.entity.VendorDocument;
 import com.localcart.entity.enums.RoleType;
 import com.localcart.entity.enums.AdminActionTargetType;
 import com.localcart.entity.enums.AdminActionType;
+import com.localcart.entity.enums.VendorDocumentType;
 import com.localcart.entity.enums.VendorStatus;
 import com.localcart.exception.PaymentException;
+import com.localcart.dto.vendor.VendorDocumentUploadRequest;
 import com.localcart.repository.VendorRepository;
 import com.localcart.repository.UserRepository;
 import com.localcart.repository.RoleRepository;
@@ -43,6 +45,7 @@ public class VendorService {
     private final VendorRepository vendorRepository;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final VendorDocumentService vendorDocumentService;
     private final WebhookService webhookService;
     private final AdminActionHistoryService adminActionHistoryService;
 
@@ -97,6 +100,9 @@ public class VendorService {
             .returnAddress(request.getReturnAddress())
             .returnPolicy(request.getReturnPolicy())
             .shippingPolicy(request.getShippingPolicy())
+            .vendorPhotoUrl(request.getVendorPhotoUrl())
+            .vendorSignatureUrl(request.getVendorSignatureUrl())
+            .kycDocumentUrl(request.getShopOwnershipCertificateUrl())
             .status(VendorStatus.PENDING)
             .totalSales(BigDecimal.ZERO)
             .totalOrders(0L)
@@ -112,6 +118,12 @@ public class VendorService {
             .orElseThrow(() -> new PaymentException("Vendor role not found", "ROLE_NOT_FOUND"));
         user.getRoles().add(vendorRole);
         userRepository.save(user);
+
+        uploadRegistrationDocumentIfPresent(vendor.getId(), VendorDocumentType.GSTIN_CERTIFICATE, request.getGstinCertificateUrl(), request.getGstinNumber(), "GSTIN certificate uploaded during registration");
+        uploadRegistrationDocumentIfPresent(vendor.getId(), VendorDocumentType.FASSAI_CERTIFICATE, request.getFassaiCertificateUrl(), request.getFassaiNumber(), "FASSAI certificate uploaded during registration");
+        uploadRegistrationDocumentIfPresent(vendor.getId(), VendorDocumentType.SHOP_OWNERSHIP_CERTIFICATE, request.getShopOwnershipCertificateUrl(), request.getShopCertificateNumber(), "Shop ownership certificate uploaded during registration");
+        uploadRegistrationDocumentIfPresent(vendor.getId(), VendorDocumentType.VENDOR_PHOTO, request.getVendorPhotoUrl(), null, "Vendor photo uploaded during registration");
+        uploadRegistrationDocumentIfPresent(vendor.getId(), VendorDocumentType.VENDOR_SIGNATURE, request.getVendorSignatureUrl(), null, "Vendor signature uploaded during registration");
         
         log.info("Vendor registration successful. Vendor ID: {}, Status: PENDING", vendor.getId());
         
@@ -119,6 +131,23 @@ public class VendorService {
         webhookService.triggerVendorApplicationSubmitted(vendor);
         
         return convertToDto(vendor);
+    }
+
+    private void uploadRegistrationDocumentIfPresent(Long vendorId, VendorDocumentType documentType, String documentUrl, String documentNumber, String uploadNotes) {
+        if (documentUrl == null || documentUrl.isBlank()) {
+            return;
+        }
+
+        VendorDocumentUploadRequest request = VendorDocumentUploadRequest.builder()
+                .documentType(documentType)
+                .documentUrl(documentUrl)
+                .fileName(documentType.name().toLowerCase() + ".uploaded")
+                .mimeType(documentType == VendorDocumentType.VENDOR_PHOTO || documentType == VendorDocumentType.VENDOR_SIGNATURE ? "image/*" : "application/pdf")
+                .documentNumber(documentNumber)
+                .uploadNotes(uploadNotes)
+                .build();
+
+        vendorDocumentService.uploadDocument(vendorId, request);
     }
 
     /**
@@ -200,6 +229,8 @@ public class VendorService {
         
         User admin = userRepository.findById(adminUserId)
             .orElseThrow(() -> new PaymentException("Admin user not found", "USER_NOT_FOUND"));
+
+        User vendorUser = vendor.getUser();
         
         String targetLabel = vendor.getBusinessName();
 
@@ -208,6 +239,16 @@ public class VendorService {
             vendor.setApprovedAt(LocalDate.now());
             vendor.setApprovedBy(admin);
             vendor.setRejectionReason(null);
+            vendor.setIsDeleted(false);
+            vendor.setDeletedAt(null);
+
+            if (vendorUser != null) {
+                vendorUser.setIsDeleted(false);
+                vendorUser.setDeletedAt(null);
+                vendorUser.setIsActive(true);
+                vendorUser.setSuspensionReason(null);
+                vendorUser.setAccountLockedUntil(null);
+            }
             
             if (commissionRate != null) {
                 vendor.setCommissionRate(commissionRate);
@@ -220,16 +261,36 @@ public class VendorService {
         } else if (newStatus == VendorStatus.REJECTED) {
             vendor.setStatus(VendorStatus.REJECTED);
             vendor.setRejectionReason(reason);
+            vendor.setIsDeleted(false);
+            vendor.setDeletedAt(null);
+
+            if (vendorUser != null) {
+                vendorUser.setIsDeleted(false);
+                vendorUser.setDeletedAt(null);
+            }
             
             log.info("Vendor rejected. Vendor ID: {}, Reason: {}", vendorId, reason);
         } else if (newStatus == VendorStatus.SUSPENDED) {
             vendor.setStatus(VendorStatus.SUSPENDED);
             vendor.setRejectionReason(reason);
+            vendor.setIsDeleted(false);
+            vendor.setDeletedAt(null);
+
+            if (vendorUser != null) {
+                vendorUser.setIsDeleted(false);
+                vendorUser.setDeletedAt(null);
+                vendorUser.setIsActive(false);
+                vendorUser.setSuspensionReason(reason);
+                vendorUser.setAccountLockedUntil(null);
+            }
             
             log.info("Vendor suspended. Vendor ID: {}, Reason: {}", vendorId, reason);
         }
 
         vendor = vendorRepository.save(vendor);
+        if (vendorUser != null) {
+            userRepository.save(vendorUser);
+        }
         AdminActionType actionType = switch (newStatus) {
             case APPROVED -> AdminActionType.APPROVE;
             case REJECTED -> AdminActionType.REJECT;

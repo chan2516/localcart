@@ -36,14 +36,16 @@ public abstract class BaseEntity implements Serializable {
     }
 
     public boolean isDeleted() {
-        return deletedAt != null;
+        return Boolean.TRUE.equals(isDeleted) || deletedAt != null;
     }
 
     public void softDelete() {
+        this.isDeleted = true;
         this.deletedAt = LocalDateTime.now();
     }
 
     public void restore() {
+        this.isDeleted = false;
         this.deletedAt = null;
     }
 }

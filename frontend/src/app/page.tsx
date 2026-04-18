@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { apiClient } from '@/lib/api-client'
+import { resolveMediaUrl } from '@/lib/media-url'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { ShoppingCart, Store, Shield, TrendingUp, Package, Star, BarChart3, PieChart, Clock, Users } from 'lucide-react'
@@ -386,7 +387,7 @@ export default function Home() {
                       <div className="relative h-48 bg-gray-100 rounded-t-lg overflow-hidden">
                         {product.imageUrl ? (
                           <img
-                            src={product.imageUrl}
+                            src={resolveMediaUrl(product.imageUrl)}
                             alt={product.name}
                             className="w-full h-full object-cover"
                           />
